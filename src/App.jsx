@@ -101,6 +101,7 @@ export default function KitBuilder() {
   const [shippingFile, setShippingFile] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
   const [showLogoWarning, setShowLogoWarning] = useState(false);
+  const [showResolutionWarning, setShowResolutionWarning] = useState(false);
   const [selectedGoods, setSelectedGoods] = useState([]);
   const [configuringGood, setConfiguringGood] = useState(null);
   const [goodConfigurations, setGoodConfigurations] = useState({});
@@ -478,6 +479,7 @@ export default function KitBuilder() {
   ];
 
   const vectorExts = ['svg', 'ai', 'eps', 'pdf'];
+  const rasterExts = ['png', 'jpg', 'jpeg'];
   const allLogoExts = ['svg', 'ai', 'eps', 'pdf', 'png', 'jpg', 'jpeg'];
 
   const handleLogoDrop = (e) => {
@@ -487,10 +489,21 @@ export default function KitBuilder() {
       const ext = file.name.split('.').pop().toLowerCase();
       if (allLogoExts.includes(ext)) {
         setLogoFile(file);
+        setShowLogoWarning(false);
+        setShowResolutionWarning(false);
         if (!vectorExts.includes(ext)) {
           setShowLogoWarning(true);
-        } else {
-          setShowLogoWarning(false);
+        }
+        if (rasterExts.includes(ext)) {
+          const url = URL.createObjectURL(file);
+          const img = new window.Image();
+          img.onload = () => {
+            if (img.naturalWidth < 1000 || img.naturalHeight < 1000) {
+              setShowResolutionWarning(true);
+            }
+            URL.revokeObjectURL(url);
+          };
+          img.src = url;
         }
       }
     }
@@ -540,6 +553,35 @@ export default function KitBuilder() {
           Vector images like SVG and AI files will show up best. PNG files with transparent background will work. JPG files will not have a preview until final review.
         </p>
       </div>
+
+      {/* Low resolution warning modal */}
+      {showResolutionWarning && !showLogoWarning && (
+        <div className="logo-warning-overlay">
+          <div className="logo-warning-modal">
+            <p>
+              Your logo looks a little small. For the best print quality at 5×5 inches, we recommend at least 1500×1500 pixels. Your file may appear blurry in the final product. A vector file (AI or SVG) would give you the sharpest result — no resolution limit.
+            </p>
+            <div className="logo-warning-buttons">
+              <button
+                className="logo-warning-btn-upload"
+                onClick={() => {
+                  setShowResolutionWarning(false);
+                  setLogoFile(null);
+                  document.getElementById('logo-file-input').click();
+                }}
+              >
+                Upload a better file
+              </button>
+              <button
+                className="logo-warning-btn-continue"
+                onClick={() => setShowResolutionWarning(false)}
+              >
+                Continue anyway
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* JPG/non-vector warning modal */}
       {showLogoWarning && (
@@ -627,13 +669,15 @@ export default function KitBuilder() {
 
           <div className="tee-image-wrap">
             <img src={config.image} alt={`${config.name} preview`} className="tee-img" />
-            {logoFile && (
-              <img
-                src={URL.createObjectURL(logoFile)}
-                alt="logo"
-                className={`tee-logo-overlay ${goodCfg.logoPosition === 'Left' ? 'tee-logo-left' : 'tee-logo-center'}`}
-              />
-            )}
+            <div className={`tee-logo-overlay ${goodCfg.logoPosition === 'Left' ? 'tee-logo-left' : 'tee-logo-center'}`}>
+              {logoFile && (
+                <img
+                  src={URL.createObjectURL(logoFile)}
+                  alt="logo"
+                  className="tee-logo-img"
+                />
+              )}
+            </div>
           </div>
 
           <div className="tee-dropdowns-band" onClick={(e) => e.stopPropagation()}>
@@ -704,13 +748,15 @@ export default function KitBuilder() {
               <div className="tee-preview-card">
                 <div className="tee-preview-img-wrap">
                   <img src={config.image} alt={`${config.name} preview`} className="tee-preview-img" />
-                  {logoFile && (
-                    <img
-                      src={URL.createObjectURL(logoFile)}
-                      alt="logo preview"
-                      className={`tee-preview-logo tee-preview-logo-${goodCfg.logoPosition === 'Left' ? 'left' : 'center'}`}
-                    />
-                  )}
+                  <div className={`tee-preview-logo tee-preview-logo-${goodCfg.logoPosition === 'Left' ? 'left' : 'center'}`}>
+                    {logoFile && (
+                      <img
+                        src={URL.createObjectURL(logoFile)}
+                        alt="logo preview"
+                        className="tee-logo-img"
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="tee-preview-close-bar">TAP TO CLOSE</div>

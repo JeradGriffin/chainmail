@@ -268,7 +268,8 @@ input[type="range"]::-moz-range-track {
 /* Content scroll area — clears the fixed bottom bar including safe area inset on iPhone */
 .content-area {
   flex: 1;
-  padding: 24px 28px calc(150px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  padding: 24px 28px calc(160px + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
 }
@@ -680,14 +681,14 @@ input[type="range"]::-moz-range-track {
   align-items: center;
   gap: 12px;
   cursor: pointer;
-  padding: 16px 0;
+  padding: 11px 0;
 }
 
 .goods-option.selected {
   background: var(--color-surface-brand);
   margin-left: -28px;
   margin-right: -28px;
-  padding: 16px 28px;
+  padding: 11px 28px;
 }
 
 .goods-icon {
@@ -758,37 +759,34 @@ input[type="range"]::-moz-range-track {
   display: block;
 }
 
-/* Logo overlay */
+/* Logo print area — 5×5 inch constraint box */
 .tee-logo-overlay {
   position: absolute;
   width: 15%;
-  object-fit: contain;
+  aspect-ratio: 1;
+  border: 1.5px dashed rgba(255, 255, 255, 0.6);
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tee-logo-center {
-  left: 42%;
-  top: 32%;
+  left: 50%;
+  top: 54%;
 }
 
 .tee-logo-left {
-  left: 26%;
-  top: 32%;
+  left: 63%;
+  top: 54%;
 }
 
-.logo-grid-placeholder {
-  width: 72px;
-  height: 72px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  border: 1.5px solid rgba(255, 255, 255, 0.65);
-}
-
-.logo-grid-cell {
-  border: 0.5px solid rgba(255, 255, 255, 0.35);
+.tee-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* Dropdowns band */
@@ -973,23 +971,29 @@ input[type="range"]::-moz-range-track {
   display: block;
 }
 
-/* Logo overlay in preview */
+/* Logo print area in preview */
 .tee-preview-logo {
   position: absolute;
-  object-fit: contain;
+  border: 1.5px dashed rgba(255, 255, 255, 0.6);
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
 }
 
 .tee-preview-logo-center {
   left: 42%;
   top: 19%;
   width: 16%;
+  aspect-ratio: 1;
 }
 
 .tee-preview-logo-left {
   left: 20%;
   top: 19%;
   width: 12%;
+  aspect-ratio: 1;
 }
 
 .tee-preview-close-bar {
