@@ -983,15 +983,15 @@ input[type="range"]::-moz-range-track {
 }
 
 .tee-preview-logo-center {
-  left: 42%;
-  top: 19%;
+  left: 50%;
+  top: 38%;
   width: 16%;
   aspect-ratio: 1;
 }
 
 .tee-preview-logo-left {
-  left: 20%;
-  top: 19%;
+  left: 63%;
+  top: 38%;
   width: 12%;
   aspect-ratio: 1;
 }
