@@ -114,9 +114,7 @@ export default function KitBuilder() {
   const [messageConfirmed, setMessageConfirmed] = useState(false);
 
   const quantities = [24, 48, 72, 96, '120+'];
-  const steps = ['Add Your Product', 'Shipping', 'Logo', 'Customize Goods', 'Spirits', 'Message'];
-
-  const handleQuantitySelect = (idx) => {
+const handleQuantitySelect = (idx) => {
     setKitQuantityIndex(idx);
     if (quantities[idx] === '120+') {
       window.location.href = 'mailto:sales@chainmail.com?subject=Large Order - 120+ Kits';
@@ -936,6 +934,116 @@ export default function KitBuilder() {
     );
   };
 
+  const renderReview = () => {
+    const quantity = quantities[kitQuantityIndex];
+
+    return (
+      <div className="min-h-screen bg-white flex flex-col process-page">
+        {renderHeader()}
+
+        <div className="content-area">
+          {renderStepIndicator()}
+
+          <h2 className="process-title">Review your kit</h2>
+          <p className="process-description">Everything look good? Send it to checkout.</p>
+
+          <div className="review-list">
+
+            <div className="review-row">
+              <span className="review-label">Quantity</span>
+              <span className="review-value">{quantity} kits</span>
+            </div>
+
+            <div className="review-row">
+              <span className="review-label">Your Product</span>
+              {addProduct
+                ? <span className="review-value">Added <span className="review-price">+$250</span></span>
+                : <span className="review-skipped">Skipped</span>
+              }
+            </div>
+
+            <div className="review-row">
+              <span className="review-label">Shipping</span>
+              <span className="review-value">
+                {shippingOption === 'me' ? 'Ship to me' : shippingFile ? shippingFile.name : 'Upload list'}
+              </span>
+            </div>
+
+            <div className="review-row">
+              <span className="review-label">Logo</span>
+              {logoFile
+                ? <span className="review-value">{logoFile.name}</span>
+                : <span className="review-skipped">Skipped</span>
+              }
+            </div>
+
+            <div className="review-row review-row--block">
+              <span className="review-label">Premium Goods</span>
+              {selectedGoods.length === 0
+                ? <span className="review-skipped">Skipped</span>
+                : <div className="review-goods-list">
+                    {selectedGoods.map((gid) => {
+                      const cfg = goodConfigurations[gid] || {};
+                      const g = goodsConfig[gid];
+                      const parts = [cfg.sleeve || cfg.style, cfg.color, cfg.logoPosition, cfg.decoration].filter(Boolean);
+                      return (
+                        <div key={gid} className="review-good-item">
+                          <span className="review-good-name">{g?.name}</span>
+                          {parts.length > 0 && (
+                            <span className="review-good-detail">{parts.join(' · ')}</span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+              }
+            </div>
+
+            <div className="review-row">
+              <span className="review-label">Spirit</span>
+              {selectedSpiritCategory
+                ? <span className="review-value">
+                    {spiritCategories.find((c) => c.id === selectedSpiritCategory)?.name}
+                    {selectedSpiritBrand ? ` — ${selectedSpiritBrand}` : ''}
+                  </span>
+                : <span className="review-skipped">Skipped</span>
+              }
+            </div>
+
+            <div className="review-row review-row--block">
+              <span className="review-label">Message</span>
+              {messageText.trim()
+                ? <span className="review-message-preview">
+                    "{messageText.trim().slice(0, 100)}{messageText.trim().length > 100 ? '…' : ''}"
+                  </span>
+                : <span className="review-skipped">Skipped</span>
+              }
+            </div>
+
+          </div>
+        </div>
+
+        <div className="bottom-area">
+          <div className="bottom-bar-buttons">
+            <button className="back-link" onClick={() => setCurrentStep(5)}>
+              <ChevronLeft size={16} /> Back
+            </button>
+            <button
+              className="continue-btn"
+              onClick={() => {
+                // TODO: push all selections to WooCommerce cart via Store API
+                // then window.location.href = '/checkout'
+              }}
+            >
+              Go to Checkout
+              <ChevronRight size={18} color="#fff" />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderMessage = () => {
     const canReview = messageText.trim().length > 0 && messageConfirmed;
 
@@ -1026,9 +1134,9 @@ export default function KitBuilder() {
     return renderMessage();
   }
 
-  return (
-    <div className="min-h-screen bg-white flex items-center justify-center">
-      <p style={{ color: '#000' }}>Step {currentStep + 1}: {steps[currentStep]} — coming soon...</p>
-    </div>
-  );
+  if (currentStep === 6) {
+    return renderReview();
+  }
+
+  return null;
 }

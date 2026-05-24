@@ -1,0 +1,63 @@
+/*
+ * CHAMEVO PRODUCT CONFIGURATOR — CHAINMAIL BRAND FIXES
+ * Deploy to: wp-content/themes/hello-biz-child/chamevo-fixes.css
+ * Enqueued by: functions.php (see chamevo-fixes-functions.php)
+ *
+ * Two concerns:
+ *  1. CONFIGURATOR PAGE  — reskin the Chamevo editor UI
+ *  2. PRODUCT PAGE       — hide the initial generic Chamevo embed
+ *                          (JS handles show/auto-open on variation select)
+ */
+
+
+/* ==========================================================
+   1. CONFIGURATOR PAGE — Brand color + UI cleanup
+   ========================================================== */
+
+/*
+ * Chamevo injects its own <style> into document.head that sets these
+ * CSS custom properties at :root. Our stylesheet loads AFTER the plugin,
+ * so these declarations win.
+ *
+ * All --cv-* properties are used inside Shadow DOM web components.
+ * Overriding them at :root propagates into the shadow trees automatically.
+ */
+:root {
+  /* Chainmail brand purple instead of default indigo */
+  --cv-primary: #993399;
+  --cv-primary-hover: color-mix(in srgb, #993399, black 10%);
+
+  /*
+   * Left sidebar panel (the asset/layer drawer Cody called "Windows Explorer").
+   * Setting to 0 hides it entirely. The panel is purely cosmetic for customers —
+   * they don't need to manage layers or assets, they just upload a logo.
+   * Uncomment the line below once we confirm on staging:
+   */
+  /* --cv-sidebar-width: 0px; */
+}
+
+
+/* ==========================================================
+   2. PRODUCT PAGE — Hide Chamevo embed placeholder on load
+   ========================================================== */
+
+/*
+ * Chamevo attaches its editor into a container whose ID comes from
+ * window.chamevo_setup_configs.selector (set by wp_localize_script).
+ * Our JS reads that value and adds this class to hide the container.
+ * The container stays hidden; the JS auto-navigates when all 4 variation
+ * dropdowns have been selected (show_variation event).
+ */
+.chainmail-chamevo-hidden {
+  display: none !important;
+}
+
+/*
+ * Failsafe: if the product has cha-variation-needed or
+ * cha-product-variation-needed on its wrapper, Chamevo already hides
+ * #cha-start-customizing-button until a variation matches.
+ * We enforce it here in case those classes aren't applied.
+ */
+body.single-product #cha-start-customizing-button {
+  display: none !important;
+}

@@ -1008,3 +1008,88 @@ input[type="range"]::-moz-range-track {
   cursor: pointer;
   flex-shrink: 0;
 }
+
+/* ===================== */
+/* Review screen         */
+/* ===================== */
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+}
+
+.review-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.review-row--block {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.review-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.review-row--block .review-label {
+  margin-bottom: 2px;
+}
+
+.review-value {
+  font-size: 15px;
+  font-weight: 500;
+  color: #000;
+  text-align: right;
+}
+
+.review-price {
+  color: var(--color-brand);
+  font-weight: 600;
+}
+
+.review-skipped {
+  font-size: 14px;
+  color: var(--color-text-subtle);
+  font-style: italic;
+}
+
+.review-goods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.review-good-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.review-good-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #000;
+}
+
+.review-good-detail {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.review-message-preview {
+  font-size: 14px;
+  font-style: italic;
+  color: #000;
+  line-height: 150%;
+}
