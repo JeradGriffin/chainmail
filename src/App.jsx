@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronRight, ChevronLeft, ShoppingBag, Menu, Upload } from 'lucide-react';
 
 const BRAND_COLOR = 'var(--color-brand)';
@@ -12,9 +12,6 @@ const goodsConfig = {
     dropdowns: [
       { id: 'sleeve', label: 'SLEEVE LENGTH', options: ['Long Sleeve', 'Short Sleeve'], key: 'sleeve' },
       { id: 'color', label: 'COLOR', options: ['Black', 'Tan', 'White'], key: 'color' },
-      // TODO: confirm with client — notes say "Center Chest / Right Chest" vs spec "Center / Left"
-      { id: 'logoPosition', label: 'LOGO POSITION', options: ['Center', 'Left'], key: 'logoPosition' },
-      { id: 'decoration', label: 'DECORATION', options: ['1 Color Print', '4 Color Print', '1 Color Embroider'], key: 'decoration' },
     ],
   },
   hoodie: {
@@ -114,6 +111,27 @@ export default function KitBuilder() {
   const [messageConfirmed, setMessageConfirmed] = useState(false);
 
   const quantities = [24, 48, 72, 96, '120+'];
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('resume') === 'goods') {
+      try {
+        const saved = JSON.parse(localStorage.getItem('chainmail_kit_state') || '{}');
+        if (saved.kitQuantityIndex !== undefined) setKitQuantityIndex(saved.kitQuantityIndex);
+        if (saved.shippingOption) setShippingOption(saved.shippingOption);
+        if (saved.addProduct !== undefined) setAddProduct(saved.addProduct);
+        if (saved.confirmSize !== undefined) setConfirmSize(saved.confirmSize);
+        if (saved.selectedGoods) {
+          const withTee = [...new Set([...saved.selectedGoods, 'tee'])];
+          setSelectedGoods(withTee);
+        }
+        if (saved.goodConfigurations) setGoodConfigurations(saved.goodConfigurations);
+        localStorage.removeItem('chainmail_kit_state');
+      } catch (e) {}
+      setCurrentStep(3);
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
 const handleQuantitySelect = (idx) => {
     setKitQuantityIndex(idx);
     if (quantities[idx] === '120+') {
@@ -456,7 +474,7 @@ const handleQuantitySelect = (idx) => {
             <button
               className="continue-btn"
               disabled={!canContinue}
-              onClick={() => setCurrentStep(2)}
+              onClick={() => setCurrentStep(3)}
             >
               Continue
               <ChevronRight size={18} color={!canContinue ? BRAND_COLOR : '#fff'} />
@@ -786,7 +804,23 @@ const handleQuantitySelect = (idx) => {
               <div
                 key={good.id}
                 className={`goods-option ${isSelected ? 'selected' : ''}`}
-                onClick={() => { setConfiguringGood(good.id); setShowPreview(false); }}
+                onClick={() => {
+                  if (good.id === 'tee') {
+                    const qty = quantities[kitQuantityIndex];
+                    localStorage.setItem('chainmail_kit_state', JSON.stringify({
+                      kitQuantityIndex,
+                      shippingOption,
+                      addProduct,
+                      confirmSize,
+                      selectedGoods,
+                      goodConfigurations,
+                    }));
+                    window.location.href = `https://chainmail.store/dev/product/tee/?quantity=${qty}`;
+                  } else {
+                    setConfiguringGood(good.id);
+                    setShowPreview(false);
+                  }
+                }}
               >
                 <span className={`radio-circle ${isSelected ? 'selected' : ''}`} />
                 <img src={good.icon} alt={good.name} className="goods-icon" />
@@ -809,7 +843,7 @@ const handleQuantitySelect = (idx) => {
             </button>
           </div>
           <div className="bottom-bar-buttons">
-            <button className="back-link" onClick={() => setCurrentStep(2)}>
+            <button className="back-link" onClick={() => setCurrentStep(1)}>
               <ChevronLeft size={16} /> Back
             </button>
             <button
@@ -969,14 +1003,6 @@ const handleQuantitySelect = (idx) => {
               </span>
             </div>
 
-            <div className="review-row">
-              <span className="review-label">Logo</span>
-              {logoFile
-                ? <span className="review-value">{logoFile.name}</span>
-                : <span className="review-skipped">Skipped</span>
-              }
-            </div>
-
             <div className="review-row review-row--block">
               <span className="review-label">Premium Goods</span>
               {selectedGoods.length === 0
@@ -1114,10 +1140,6 @@ const handleQuantitySelect = (idx) => {
 
   if (currentStep === 1) {
     return renderShipping();
-  }
-
-  if (currentStep === 2) {
-    return renderLogo();
   }
 
   if (currentStep === 3) {
