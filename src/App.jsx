@@ -1057,8 +1057,7 @@ const handleQuantitySelect = (idx) => {
             <button
               className="continue-btn"
               onClick={() => {
-                // TODO: push all selections to WooCommerce cart via Store API
-                // then window.location.href = '/checkout'
+                window.location.href = 'https://chainmail.store/dev/checkout/';
               }}
             >
               Go to Checkout
