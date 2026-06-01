@@ -19,7 +19,7 @@ add_action('wp_head', function() {
   height: 100vh;
   height: 100dvh;
   background: #111;
-  z-index: 9000;
+  z-index: 999999;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -41,6 +41,20 @@ add_action('wp_head', function() {
   object-fit: cover;
   object-position: top center;
   display: block;
+}
+
+/* Admin bar offset */
+body.admin-bar #tee-conf {
+  top: 32px;
+  height: calc(100vh - 32px);
+  height: calc(100dvh - 32px);
+}
+@media (max-width: 782px) {
+  body.admin-bar #tee-conf {
+    top: 46px;
+    height: calc(100vh - 46px);
+    height: calc(100dvh - 46px);
+  }
 }
 
 /* Step counter badge top-right */
@@ -69,6 +83,41 @@ add_action('wp_head', function() {
   font-size: 22px;
   font-weight: 700;
   line-height: 1.2;
+}
+
+/* Step tabs row */
+#tee-conf-tabs {
+  display: flex;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tee-ctab {
+  flex: 1;
+  padding: 10px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #999;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.tee-ctab.active {
+  color: #6A449B;
+  border-bottom-color: #6A449B;
+}
+
+.tee-ctab.done {
+  color: #aaa;
 }
 
 /* Options panel */
@@ -249,6 +298,7 @@ jQuery(function($) {
     h += '<div id="tee-conf-counter"></div>';
     h += '<div id="tee-conf-label"></div>';
     h += '</div>';
+    h += '<div id="tee-conf-tabs"></div>';
     h += '<div id="tee-conf-opts"></div>';
     h += '<div id="tee-conf-nav">';
     h += '<button id="tee-conf-back">Back</button>';
@@ -259,6 +309,10 @@ jQuery(function($) {
     h += '</div>';
     $('body').append(h);
 
+    function tabName(lbl) {
+        return lbl.replace('Select ', '');
+    }
+
     function paint(i) {
         var step = steps[i];
         var total = steps.length;
@@ -266,6 +320,18 @@ jQuery(function($) {
         $('#tee-conf-counter').text(
             (i + 1) + ' / ' + total
         );
+
+        var th = '';
+        for (var t = 0; t < steps.length; t++) {
+            var cls = 'tee-ctab';
+            if (t === i) cls += ' active';
+            else if (steps[t].val) cls += ' done';
+            th += '<div class="' + cls + '"';
+            th += ' data-t="' + t + '">';
+            th += tabName(steps[t].label);
+            th += '</div>';
+        }
+        $('#tee-conf-tabs').html(th);
 
         var oh = '';
         for (var j = 0; j < step.opts.length; j++) {
@@ -303,6 +369,14 @@ jQuery(function($) {
     }
 
     paint(0);
+
+    $(document).on('click', '.tee-ctab', function() {
+        var t = parseInt($(this).data('t'), 10);
+        if (t <= cur || steps[t - 1] && steps[t - 1].val) {
+            cur = t;
+            paint(cur);
+        }
+    });
 
     $(document).on('click', '.tee-copt', function() {
         var val = $(this).data('v');
