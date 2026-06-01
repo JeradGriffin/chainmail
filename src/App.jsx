@@ -172,14 +172,14 @@ const handleQuantitySelect = (idx) => {
       </header>
 
       {/* Content */}
-      <div className="flex-1 px-7 pb-8 flex flex-col justify-evenly" style={{ gap: '32px' }}>
+      <div className="welcome-content" style={{ gap: '32px' }}>
         <div className="welcome-body">
           <h1>Welcome.</h1>
           <p>You've made it to the Kit Builder. You'll be guided through a series of easy questions to make this as smooth as possible!</p>
           <p>Each product category has been pre-vetted for your convenience and trust.</p>
         </div>
 
-        <h2 className="font-bold mb-5">How many kits we talking about?</h2>
+        <h2 className="welcome-qty-heading">How many kits we talking about?</h2>
 
         {/* Quantity Selector */}
         <div className="mb-8 qty-selector">

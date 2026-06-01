@@ -60,6 +60,22 @@ button {
   aspect-ratio: 183/34;
 }
 
+/* Welcome content wrapper */
+.welcome-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 0 28px 32px;
+}
+
+.welcome-qty-heading {
+  color: #000;
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
 /* Welcome body */
 .welcome-body {
   color: #000;
@@ -86,11 +102,6 @@ button {
   margin-top: 20px;
 }
 
-/* Kit quantity heading */
-.welcome-page h2 {
-  color: #000;
-  font-size: 17px;
-}
 
 /* Quantity selector */
 .qty-selector {
