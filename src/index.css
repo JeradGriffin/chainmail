@@ -694,14 +694,10 @@ input[type="range"]::-moz-range-track {
 
 .goods-option {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   cursor: pointer;
   padding: 11px 0;
-}
-
-.goods-option .radio-circle {
-  margin-top: 6px;
 }
 
 .goods-option.selected {
