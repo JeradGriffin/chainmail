@@ -283,7 +283,7 @@ input[type="range"]::-moz-range-track {
 }
 
 .process-description {
-  font-size: 16px;
+  font-size: 18px;
   color: #000;
   line-height: 150%;
   margin-bottom: 24px;
@@ -404,15 +404,17 @@ input[type="range"]::-moz-range-track {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 15px;
-  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  color: #555;
   text-align: center;
   padding: 0;
 }
 
 .skip-bold {
-  color: var(--color-brand);
-  font-weight: 700;
+  color: #555;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 /* Bottom area (fixed) */
@@ -467,7 +469,7 @@ input[type="range"]::-moz-range-track {
 }
 
 .continue-btn:disabled {
-  background: #fff;
+  background: transparent;
   color: var(--color-brand);
   border-color: var(--color-brand);
   cursor: not-allowed;
@@ -707,8 +709,8 @@ input[type="range"]::-moz-range-track {
 
 .goods-name {
   flex: 1;
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 30px;
+  font-weight: 600;
   color: #000;
 }
 

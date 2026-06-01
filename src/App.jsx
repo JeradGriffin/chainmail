@@ -499,10 +499,10 @@ const handleQuantitySelect = (idx) => {
   };
 
   const premiumGoods = [
-    { id: 'tee', name: 'Tee', price: 25, icon: '/icon-tee.svg' },
-    { id: 'hoodie', name: 'Hoodie', price: 45, icon: '/icon-hoodie.svg' },
-    { id: 'cap', name: 'Cap', price: 30, icon: '/icon-cap.svg' },
-    { id: 'tote', name: 'Tote', price: 35, icon: '/icon-tote.svg' },
+    { id: 'tee', name: 'Tee', price: 20, icon: '/icon-tee.svg' },
+    { id: 'hoodie', name: 'Hoodie', price: 60, icon: '/icon-hoodie.svg' },
+    { id: 'cap', name: 'Cap', price: 15, icon: '/icon-cap.svg' },
+    { id: 'tote', name: 'Tote', price: 25, icon: '/icon-tote.svg' },
     { id: 'bottle', name: 'Bottle', price: 30, icon: '/icon-bottle.svg' },
     { id: 'journal', name: 'Journal', price: 20, icon: '/icon-journal.svg' },
   ];
@@ -806,7 +806,7 @@ const handleQuantitySelect = (idx) => {
         <div className="content-area">
           {renderStepIndicator()}
 
-          <h2 className="process-title">Add premium goods</h2>
+          <h2 className="process-title" style={{ color: 'var(--color-brand)' }}>Add premium goods</h2>
           <p className="process-description">
             Select 1-3 of our curated premium items to be branded with your logo.
           </p>
