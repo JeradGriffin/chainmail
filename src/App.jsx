@@ -394,7 +394,7 @@ const handleQuantitySelect = (idx) => {
   };
 
   const renderShipping = () => {
-    const canContinue = shippingOption === 'me' || (shippingOption === 'list' && shippingFile);
+    const canContinue = !!shippingOption;
 
     return (
       <div className="min-h-screen bg-white flex flex-col process-page">
