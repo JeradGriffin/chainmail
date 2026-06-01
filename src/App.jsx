@@ -66,27 +66,23 @@ const goodsConfig = {
   },
 };
 
-const spiritCategories = [
-  { id: 'bourbon',   name: 'Bourbon'   },
-  { id: 'vodka',     name: 'Vodka'     },
-  { id: 'rum',       name: 'Rum'       },
-  { id: 'mezcal',    name: 'Mezcal'    },
-  { id: 'champagne', name: 'Champagne' },
-  { id: 'gin',       name: 'Gin'       },
+const spirits = [
+  { id: 'kettle-one',         name: 'Kettle One',         type: 'Vodka',                     price: 25 },
+  { id: 'manojo',             name: 'Manojo',             type: 'Mezcal',                    price: 40 },
+  { id: 'jonnie-walker-black',name: 'Jonnie Walker Black', type: 'Scotch Whiskey',            price: 30 },
+  { id: 'jameson',            name: 'Jameson',            type: 'Irish Whiskey',             price: 25 },
+  { id: 'four-roses',         name: 'Four Roses',         type: 'Kentucky Straight Bourbon', price: 50 },
+  { id: 'casamigos',          name: 'Casamigos',          type: 'Tequila Blanco',            price: 35 },
+  { id: 'maestro-dobel',      name: 'Maestro Dobel',      type: 'Tequila Blanco',            price: 40 },
 ];
 
-// TODO: confirm brand options for all categories with Cody before launch
-const spiritBrands = {
-  bourbon:   [], // TODO
-  vodka:     [], // TODO
-  rum:       [], // TODO
-  mezcal:    [
-    { name: 'Manojo',     price: 40 },
-    { name: 'Del Maguey', price: 30 },
-    { name: 'Ojo de Tigre', price: 35 },
-  ],
-  champagne: [], // TODO
-  gin:       [], // TODO
+const goodsWcUrls = {
+  tee:     'https://chainmail.store/dev/product/tee/',
+  hoodie:  null, // TODO: add WC product URL when created
+  cap:     null,
+  tote:    null,
+  bottle:  null,
+  journal: null,
 };
 
 export default function KitBuilder() {
@@ -104,9 +100,7 @@ export default function KitBuilder() {
   const [goodConfigurations, setGoodConfigurations] = useState({});
   const [openDropdown, setOpenDropdown] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
-  const [selectedSpiritCategory, setSelectedSpiritCategory] = useState(null);
-  const [selectedSpiritBrand, setSelectedSpiritBrand] = useState(null);
-  const [spiritSubStep, setSpiritSubStep] = useState('category'); // 'category' | 'brand'
+  const [selectedSpirit, setSelectedSpirit] = useState(null);
   const [messageText, setMessageText] = useState('');
   const [messageConfirmed, setMessageConfirmed] = useState(false);
 
@@ -114,7 +108,9 @@ export default function KitBuilder() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('resume') === 'goods') {
+    const isResume = params.get('resume') === 'goods';
+    const isBack   = params.get('back')   === 'goods';
+    if (isResume || isBack) {
       try {
         const saved = JSON.parse(localStorage.getItem('chainmail_kit_state') || '{}');
         if (saved.kitQuantityIndex !== undefined) setKitQuantityIndex(saved.kitQuantityIndex);
@@ -122,8 +118,10 @@ export default function KitBuilder() {
         if (saved.addProduct !== undefined) setAddProduct(saved.addProduct);
         if (saved.confirmSize !== undefined) setConfirmSize(saved.confirmSize);
         if (saved.selectedGoods) {
-          const withTee = [...new Set([...saved.selectedGoods, 'tee'])];
-          setSelectedGoods(withTee);
+          const goods = isResume && saved.pendingGood
+            ? [...new Set([...saved.selectedGoods, saved.pendingGood])]
+            : saved.selectedGoods;
+          setSelectedGoods(goods);
         }
         if (saved.goodConfigurations) setGoodConfigurations(saved.goodConfigurations);
         localStorage.removeItem('chainmail_kit_state');
@@ -140,6 +138,10 @@ const handleQuantitySelect = (idx) => {
   };
 
   const handleStartKit = () => {
+    if (quantities[kitQuantityIndex] === '120+') {
+      window.location.href = 'mailto:sales@chainmail.com?subject=Large Order - 120+ Kits';
+      return;
+    }
     setCurrentStep(0);
   };
 
@@ -805,7 +807,8 @@ const handleQuantitySelect = (idx) => {
                 key={good.id}
                 className={`goods-option ${isSelected ? 'selected' : ''}`}
                 onClick={() => {
-                  if (good.id === 'tee') {
+                  const wcUrl = goodsWcUrls[good.id];
+                  if (wcUrl) {
                     const qty = quantities[kitQuantityIndex];
                     localStorage.setItem('chainmail_kit_state', JSON.stringify({
                       kitQuantityIndex,
@@ -814,8 +817,9 @@ const handleQuantitySelect = (idx) => {
                       confirmSize,
                       selectedGoods,
                       goodConfigurations,
+                      pendingGood: good.id,
                     }));
-                    window.location.href = `https://chainmail.store/dev/product/tee/?quantity=${qty}`;
+                    window.location.href = `${wcUrl}?quantity=${qty}`;
                   } else {
                     setConfiguringGood(good.id);
                     setShowPreview(false);
@@ -868,18 +872,22 @@ const handleQuantitySelect = (idx) => {
         {renderStepIndicator()}
 
         <h2 className="process-title">Add some booze</h2>
-        <p className="process-description">Select one premium spirit category.</p>
+        <p className="process-description">Select one premium spirit (750mL)</p>
 
-        {spiritCategories.map((cat) => {
-          const isSelected = selectedSpiritCategory === cat.id;
+        {spirits.map((spirit) => {
+          const isSelected = selectedSpirit === spirit.id;
           return (
             <div
-              key={cat.id}
+              key={spirit.id}
               className={`goods-option ${isSelected ? 'selected' : ''}`}
-              onClick={() => setSelectedSpiritCategory(cat.id)}
+              onClick={() => setSelectedSpirit(spirit.id)}
             >
               <span className={`radio-circle ${isSelected ? 'selected' : ''}`} />
-              <span className={`goods-name ${isSelected ? 'selected' : ''}`}>{cat.name}</span>
+              <span className="option-text">
+                <span className={`goods-name ${isSelected ? 'selected' : ''}`}>{spirit.name}</span>
+                <span className="goods-subtitle">{spirit.type}</span>
+              </span>
+              <span className="goods-price">${spirit.price}</span>
             </div>
           );
         })}
@@ -890,10 +898,7 @@ const handleQuantitySelect = (idx) => {
       <div className="bottom-area">
         <div className="bottom-skip">
           <hr className="process-divider" />
-          <button
-            className="skip-btn"
-            onClick={() => setCurrentStep(5)}
-          >
+          <button className="skip-btn" onClick={() => setCurrentStep(5)}>
             <strong className="skip-bold">Skip to next,</strong> do not include spirit.
           </button>
         </div>
@@ -903,70 +908,16 @@ const handleQuantitySelect = (idx) => {
           </button>
           <button
             className="continue-btn"
-            disabled={!selectedSpiritCategory}
-            onClick={() => setSpiritSubStep('brand')}
+            disabled={!selectedSpirit}
+            onClick={() => setCurrentStep(5)}
           >
             Continue
-            <ChevronRight size={18} color={!selectedSpiritCategory ? BRAND_COLOR : '#fff'} />
+            <ChevronRight size={18} color={!selectedSpirit ? BRAND_COLOR : '#fff'} />
           </button>
         </div>
       </div>
     </div>
   );
-
-  const renderSpiritBrands = () => {
-    const category = spiritCategories.find((c) => c.id === selectedSpiritCategory);
-    const brands = spiritBrands[selectedSpiritCategory] || [];
-
-    return (
-      <div className="min-h-screen bg-white flex flex-col process-page">
-        {renderHeader()}
-
-        <div className="content-area">
-          {renderStepIndicator()}
-
-          <h2 className="process-title">{category?.name} Options</h2>
-          <p className="process-description">Pick your favorite brand!</p>
-
-          {brands.map((brand) => {
-            const isSelected = selectedSpiritBrand === brand.name;
-            return (
-              <div
-                key={brand.name}
-                className={`goods-option ${isSelected ? 'selected' : ''}`}
-                onClick={() => setSelectedSpiritBrand(brand.name)}
-              >
-                <span className={`radio-circle ${isSelected ? 'selected' : ''}`} />
-                <span className={`goods-name ${isSelected ? 'selected' : ''}`}>{brand.name}</span>
-                <span className="goods-price">${brand.price}</span>
-              </div>
-            );
-          })}
-
-          <p className="tbb-note">TBB Compliant Shipping: <em>Learn more</em></p>
-        </div>
-
-        <div className="bottom-area">
-          <div className="bottom-bar-buttons">
-            <button
-              className="back-link"
-              onClick={() => { setSpiritSubStep('category'); setSelectedSpiritBrand(null); }}
-            >
-              <ChevronLeft size={16} /> Back
-            </button>
-            <button
-              className="continue-btn"
-              disabled={!selectedSpiritBrand}
-              onClick={() => setCurrentStep(5)}
-            >
-              Add to Kit
-              <ChevronRight size={18} color={!selectedSpiritBrand ? BRAND_COLOR : '#fff'} />
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   const renderReview = () => {
     const quantity = quantities[kitQuantityIndex];
@@ -1027,10 +978,9 @@ const handleQuantitySelect = (idx) => {
 
             <div className="review-row">
               <span className="review-label">Spirit</span>
-              {selectedSpiritCategory
+              {selectedSpirit
                 ? <span className="review-value">
-                    {spiritCategories.find((c) => c.id === selectedSpiritCategory)?.name}
-                    {selectedSpiritBrand ? ` — ${selectedSpiritBrand}` : ''}
+                    {spirits.find((s) => s.id === selectedSpirit)?.name}
                   </span>
                 : <span className="review-skipped">Skipped</span>
               }
@@ -1147,7 +1097,6 @@ const handleQuantitySelect = (idx) => {
   }
 
   if (currentStep === 4) {
-    if (spiritSubStep === 'brand') return renderSpiritBrands();
     return renderSpirits();
   }
 

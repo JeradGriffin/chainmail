@@ -719,6 +719,14 @@ input[type="range"]::-moz-range-track {
   color: #000;
 }
 
+.goods-subtitle {
+  display: block;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  font-weight: 400;
+  margin-top: 2px;
+}
+
 /* ===================== */
 /* Tee configurator       */
 /* ===================== */
