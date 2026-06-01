@@ -934,6 +934,34 @@ const handleQuantitySelect = (idx) => {
 
   const renderReview = () => {
     const quantity = quantities[kitQuantityIndex];
+    const numQty = Number.isInteger(quantity) ? quantity : 24;
+
+    const goodsPriceTotal = selectedGoods.reduce((sum, gid) => {
+      const g = premiumGoods.find((p) => p.id === gid);
+      return sum + (g ? g.price : 0);
+    }, 0);
+    const spiritObj = selectedSpirit ? spirits.find((s) => s.id === selectedSpirit) : null;
+    const pricePerKit = goodsPriceTotal + (spiritObj ? spiritObj.price : 0) + (addProduct ? 1 : 0);
+
+    const inclusions = [];
+    selectedGoods.forEach((gid) => {
+      const cfg = goodConfigurations[gid] || {};
+      const g = goodsConfig[gid];
+      const good = premiumGoods.find((p) => p.id === gid);
+      const parts = [cfg.sleeve || cfg.style, cfg.color, cfg.decoration].filter(Boolean);
+      inclusions.push({
+        name: g?.name || gid,
+        detail: parts.join(' | '),
+        price: good?.price || 0,
+      });
+    });
+    if (spiritObj) {
+      inclusions.push({
+        name: `Spirits – ${spiritObj.name}`,
+        detail: spiritObj.type,
+        price: spiritObj.price,
+      });
+    }
 
     return (
       <div className="min-h-screen bg-white flex flex-col process-page">
@@ -942,74 +970,71 @@ const handleQuantitySelect = (idx) => {
         <div className="content-area">
           {renderStepIndicator()}
 
-          <h2 className="process-title">Review your kit</h2>
-          <p className="process-description">Everything look good? Send it to checkout.</p>
+          <h2 className="process-title" style={{ color: 'var(--color-brand)' }}>Review your kit</h2>
+          <p className="process-description">Take a look. Ready to approve?</p>
 
-          <div className="review-list">
-
-            <div className="review-row">
-              <span className="review-label">Quantity</span>
-              <span className="review-value">{quantity} kits</span>
+          <div className="review-stats-row">
+            <div className="review-stat">
+              <span className="review-stat-label">Total Kits:</span>
+              <span className="review-stat-num">{quantity}</span>
             </div>
-
-            <div className="review-row">
-              <span className="review-label">Your Product</span>
-              {addProduct
-                ? <span className="review-value">Added <span className="review-price">+$250</span></span>
-                : <span className="review-skipped">Skipped</span>
-              }
+            <div className="review-stat-sep" />
+            <div className="review-stat">
+              <span className="review-stat-label">Price Per Kit:</span>
+              <span className="review-stat-num">${pricePerKit}</span>
             </div>
+          </div>
 
-            <div className="review-row">
-              <span className="review-label">Shipping</span>
-              <span className="review-value">
-                {shippingOption === 'me' ? 'Ship to me' : shippingFile ? shippingFile.name : 'Upload list'}
+          {addProduct && (
+            <div className="review-sendin">
+              <div className="review-sendin-header">
+                <span className="review-sendin-title">Your send in</span>
+                <span className="review-sendin-price">${numQty}</span>
+              </div>
+              <p className="review-sendin-desc">
+                You'll receive an email inbound form shortly to the email address provided in Checkout.
+              </p>
+            </div>
+          )}
+
+          {inclusions.length > 0 && (
+            <div className="review-inclusions">
+              <h3 className="review-inclusions-title">Your inclusions</h3>
+              <p className="review-inclusions-desc">
+                What you selected / customized during the Kit Builder. Pricing is per item.
+              </p>
+              <div className="review-inclusions-list">
+                {inclusions.map((item, i) => (
+                  <div key={i} className="review-inclusion-item">
+                    <div className="review-inclusion-thumb" />
+                    <div className="review-inclusion-info">
+                      <span className="review-inclusion-name">{item.name}</span>
+                      {item.detail && (
+                        <span className="review-inclusion-detail">{item.detail}</span>
+                      )}
+                    </div>
+                    <span className="review-inclusion-price">${item.price}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="review-footer-row">
+            <span className="review-footer-label">Shipping</span>
+            <span className="review-footer-value">
+              {shippingOption === 'me' ? 'Ship to me' : shippingFile ? shippingFile.name : 'List'}
+            </span>
+          </div>
+
+          {messageText.trim() && (
+            <div className="review-footer-row">
+              <span className="review-footer-label">Message</span>
+              <span className="review-footer-value review-footer-italic">
+                "{messageText.trim().slice(0, 80)}{messageText.trim().length > 80 ? '…' : ''}"
               </span>
             </div>
-
-            <div className="review-row review-row--block">
-              <span className="review-label">Premium Goods</span>
-              {selectedGoods.length === 0
-                ? <span className="review-skipped">Skipped</span>
-                : <div className="review-goods-list">
-                    {selectedGoods.map((gid) => {
-                      const cfg = goodConfigurations[gid] || {};
-                      const g = goodsConfig[gid];
-                      const parts = [cfg.sleeve || cfg.style, cfg.color, cfg.logoPosition, cfg.decoration].filter(Boolean);
-                      return (
-                        <div key={gid} className="review-good-item">
-                          <span className="review-good-name">{g?.name}</span>
-                          {parts.length > 0 && (
-                            <span className="review-good-detail">{parts.join(' · ')}</span>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-              }
-            </div>
-
-            <div className="review-row">
-              <span className="review-label">Spirit</span>
-              {selectedSpirit
-                ? <span className="review-value">
-                    {spirits.find((s) => s.id === selectedSpirit)?.name}
-                  </span>
-                : <span className="review-skipped">Skipped</span>
-              }
-            </div>
-
-            <div className="review-row review-row--block">
-              <span className="review-label">Message</span>
-              {messageText.trim()
-                ? <span className="review-message-preview">
-                    "{messageText.trim().slice(0, 100)}{messageText.trim().length > 100 ? '…' : ''}"
-                  </span>
-                : <span className="review-skipped">Skipped</span>
-              }
-            </div>
-
-          </div>
+          )}
         </div>
 
         <div className="bottom-area">
