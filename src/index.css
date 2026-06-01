@@ -756,6 +756,10 @@ input[type="range"]::-moz-range-track {
   align-items: baseline;
 }
 
+.spirit-text .goods-name {
+  font-size: 22px;
+}
+
 .goods-subtitle {
   display: block;
   font-size: 13px;
