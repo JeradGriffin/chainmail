@@ -513,15 +513,16 @@ input[type="range"]::-moz-range-track {
 }
 
 .upload-dropzone-title {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 600;
   color: #000;
   margin-top: 4px;
 }
 
 .upload-dropzone-formats {
-  font-size: 13px;
-  color: #666;
+  font-size: 18px;
+  font-weight: 400;
+  color: #000;
 }
 
 .upload-hint {
