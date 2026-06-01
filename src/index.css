@@ -299,7 +299,7 @@ input[type="range"]::-moz-range-track {
 /* Radio option */
 .process-option {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   cursor: pointer;
   padding: 8px 0;
