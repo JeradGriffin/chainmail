@@ -737,10 +737,23 @@ input[type="range"]::-moz-range-track {
   font-size: 18px;
   font-weight: 600;
   color: #000;
+  flex-shrink: 0;
 }
 
-.goods-option.selected .goods-price {
+.goods-price.selected {
   color: var(--color-brand);
+}
+
+.spirit-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.spirit-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
 }
 
 .goods-subtitle {

@@ -894,11 +894,13 @@ const handleQuantitySelect = (idx) => {
               onClick={() => setSelectedSpirit(spirit.id)}
             >
               <span className={`radio-circle ${isSelected ? 'selected' : ''}`} />
-              <span className="option-text">
-                <span className={`goods-name ${isSelected ? 'selected' : ''}`}>{spirit.name}</span>
+              <span className="spirit-text">
+                <span className="spirit-top-row">
+                  <span className={`goods-name ${isSelected ? 'selected' : ''}`}>{spirit.name}</span>
+                  <span className={`goods-price ${isSelected ? 'selected' : ''}`}>${spirit.price}</span>
+                </span>
                 <span className="goods-subtitle">{spirit.type}</span>
               </span>
-              <span className="goods-price">${spirit.price}</span>
             </div>
           );
         })}
