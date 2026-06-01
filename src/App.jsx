@@ -90,6 +90,7 @@ export default function KitBuilder() {
   const [kitQuantityIndex, setKitQuantityIndex] = useState(0);
   const [addProduct, setAddProduct] = useState(false);
   const [confirmSize, setConfirmSize] = useState(false);
+  const [confirmPrice, setConfirmPrice] = useState(false);
   const [shippingOption, setShippingOption] = useState('list'); // 'list' | 'me'
   const [shippingFile, setShippingFile] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
@@ -323,13 +324,20 @@ const handleQuantitySelect = (idx) => {
           <span className="option-price">$250</span>
         </label>
 
-        {/* Confirm size radio — visible only after Yes is selected */}
+        {/* Checkboxes — visible only after Yes is selected */}
         {addProduct && (
           <>
             <label className="process-checkbox" onClick={() => setConfirmSize(!confirmSize)}>
               <span className={`checkbox-circle ${confirmSize ? 'selected' : ''}`} />
               <span className="checkbox-text">
                 Please confirm your item is less than 12″ x 12″ x 8″
+              </span>
+            </label>
+
+            <label className="process-checkbox" onClick={() => setConfirmPrice(!confirmPrice)}>
+              <span className={`checkbox-circle ${confirmPrice ? 'selected' : ''}`} />
+              <span className="checkbox-text">
+                Adds $1 per item
               </span>
             </label>
 
@@ -350,6 +358,7 @@ const handleQuantitySelect = (idx) => {
             onClick={() => {
               setAddProduct(false);
               setConfirmSize(false);
+              setConfirmPrice(false);
               setCurrentStep(1);
             }}
           >
@@ -362,11 +371,11 @@ const handleQuantitySelect = (idx) => {
           </button>
           <button
             className="continue-btn"
-            disabled={!addProduct || !confirmSize}
+            disabled={!addProduct || !confirmSize || !confirmPrice}
             onClick={() => setCurrentStep(1)}
           >
             Continue
-            <ChevronRight size={18} color={!addProduct || !confirmSize ? BRAND_COLOR : '#fff'} />
+            <ChevronRight size={18} color={!addProduct || !confirmSize || !confirmPrice ? BRAND_COLOR : '#fff'} />
           </button>
         </div>
       </div>

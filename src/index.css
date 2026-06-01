@@ -385,7 +385,7 @@ input[type="range"]::-moz-range-track {
 .process-note {
   font-size: 14px;
   font-style: italic;
-  color: #000;
+  color: var(--color-brand);
   line-height: 150%;
   margin-top: 16px;
   text-align: center;
