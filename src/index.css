@@ -1183,6 +1183,11 @@ input[type="range"]::-moz-range-track {
   flex-shrink: 0;
 }
 
+.review-inclusion-img {
+  object-fit: cover;
+  object-position: top center;
+}
+
 .review-inclusion-info {
   flex: 1;
   display: flex;

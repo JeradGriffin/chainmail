@@ -953,6 +953,7 @@ const handleQuantitySelect = (idx) => {
         name: g?.name || gid,
         detail: parts.join(' | '),
         price: good?.price || 0,
+        image: g?.image || null,
       });
     });
     if (spiritObj) {
@@ -1006,7 +1007,10 @@ const handleQuantitySelect = (idx) => {
               <div className="review-inclusions-list">
                 {inclusions.map((item, i) => (
                   <div key={i} className="review-inclusion-item">
-                    <div className="review-inclusion-thumb" />
+                    {item.image
+                      ? <img src={item.image} alt={item.name} className="review-inclusion-thumb review-inclusion-img" />
+                      : <div className="review-inclusion-thumb" />
+                    }
                     <div className="review-inclusion-info">
                       <span className="review-inclusion-name">{item.name}</span>
                       {item.detail && (
