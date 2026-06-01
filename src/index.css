@@ -587,6 +587,11 @@ input[type="range"]::-moz-range-track {
   margin-top: 24px;
 }
 
+.tbb-note em {
+  color: var(--color-brand);
+  font-style: italic;
+}
+
 .message-textarea {
   width: 100%;
   height: 338px;
@@ -689,14 +694,18 @@ input[type="range"]::-moz-range-track {
 
 .goods-option {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   cursor: pointer;
   padding: 11px 0;
 }
 
+.goods-option .radio-circle {
+  margin-top: 6px;
+}
+
 .goods-option.selected {
-  background: var(--color-surface-brand);
+  background: rgba(106, 68, 155, 0.08);
   margin-left: -28px;
   margin-right: -28px;
   padding: 11px 28px;
@@ -725,9 +734,13 @@ input[type="range"]::-moz-range-track {
 }
 
 .goods-price {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 600;
   color: #000;
+}
+
+.goods-option.selected .goods-price {
+  color: var(--color-brand);
 }
 
 .goods-subtitle {

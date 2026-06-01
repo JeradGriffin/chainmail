@@ -882,7 +882,7 @@ const handleQuantitySelect = (idx) => {
       <div className="content-area">
         {renderStepIndicator()}
 
-        <h2 className="process-title">Add some booze</h2>
+        <h2 className="process-title" style={{ color: 'var(--color-brand)' }}>Add some booze</h2>
         <p className="process-description">Select one premium spirit (750mL)</p>
 
         {spirits.map((spirit) => {
