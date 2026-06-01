@@ -276,7 +276,7 @@ input[type="range"]::-moz-range-track {
 
 /* Process content */
 .process-title {
-  font-size: 26px;
+  font-size: 30px;
   font-weight: 700;
   color: #000;
   margin-bottom: 12px;
@@ -513,7 +513,7 @@ input[type="range"]::-moz-range-track {
 }
 
 .upload-dropzone-title {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 600;
   color: #000;
   margin-top: 4px;
@@ -526,7 +526,8 @@ input[type="range"]::-moz-range-track {
 }
 
 .upload-hint {
-  font-size: 13px;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--color-brand);
   margin-top: 10px;
 }
