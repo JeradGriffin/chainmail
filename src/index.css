@@ -89,7 +89,7 @@ button {
   font-family: Inter;
   font-size: 30px;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 44px;
   margin: 0;
 }
@@ -730,7 +730,7 @@ input[type="range"]::-moz-range-track {
 }
 
 .goods-option.selected .goods-icon {
-  filter: invert(29%) sepia(67%) saturate(700%) hue-rotate(255deg) brightness(85%) contrast(95%);
+  color: var(--color-brand);
 }
 
 .goods-name {
