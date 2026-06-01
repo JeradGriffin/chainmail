@@ -403,7 +403,7 @@ const handleQuantitySelect = (idx) => {
         <div className="content-area">
           {renderStepIndicator()}
 
-          <h2 className="process-title">Shipping</h2>
+          <h2 className="process-title" style={{ color: 'var(--color-brand)' }}>Shipping</h2>
           <p className="process-description">
             Upload your recipient list or we can send it direct to you.
           </p>
@@ -421,6 +421,21 @@ const handleQuantitySelect = (idx) => {
               <strong style={{ fontSize: '22px' }}>Ship to my list</strong>
             </span>
           </label>
+
+        {/* Download template button */}
+        <div className="shipping-template-band">
+          <div className="shipping-template-band-inner">
+            <button
+              className="download-template-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                // TODO: link to actual template file
+              }}
+            >
+              Download shipping list template
+            </button>
+          </div>
+        </div>
 
         {/* Upload area */}
         <div className="shipping-upload-band">
@@ -447,19 +462,6 @@ const handleQuantitySelect = (idx) => {
               />
             </div>
             <p className="upload-hint">Tap or Drag to place file here</p>
-          </div>
-        </div>
-        <div className="shipping-template-band">
-          <div className="shipping-template-band-inner">
-            <button
-              className="download-template-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                // TODO: link to actual template file
-              }}
-            >
-              Download shipping list template
-            </button>
           </div>
         </div>
 

@@ -478,7 +478,7 @@ input[type="range"]::-moz-range-track {
 /* ===================== */
 
 .shipping-upload-band {
-  background: var(--color-surface-brand);
+  background: rgba(106, 68, 155, 0.08);
   margin-left: -28px;
   margin-right: -28px;
   padding: 20px 28px 16px;
