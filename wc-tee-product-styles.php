@@ -25,7 +25,6 @@ add_action('wp_head', function() {
 
 @media (max-width: 768px) {
 
-  /* Hide WP admin bar so page starts at top */
   #wpadminbar {
     display: none !important;
   }
@@ -39,17 +38,14 @@ add_action('wp_head', function() {
     flex-direction: column !important;
   }
 
-  /* Full-bleed gallery — remove gutters */
+  /* Full-bleed gallery */
   .woocommerce-product-gallery {
     width: 100% !important;
     float: none !important;
     margin: 0 !important;
   }
 
-  .woocommerce-product-gallery__wrapper {
-    margin: 0 !important;
-  }
-
+  .woocommerce-product-gallery__wrapper,
   .woocommerce-product-gallery__image {
     margin: 0 !important;
   }
@@ -57,13 +53,12 @@ add_action('wp_head', function() {
   .woocommerce-product-gallery__image img,
   .woocommerce-product-gallery__image a img {
     width: 100% !important;
-    height: 56vw !important;
+    height: 70vw !important;
     object-fit: cover !important;
     object-position: center top !important;
     display: block !important;
   }
 
-  /* Gallery nav dots/arrows — hide on mobile */
   .flex-control-nav,
   .flex-viewport .flex-control-nav,
   .woocommerce-product-gallery__trigger {
@@ -74,7 +69,7 @@ add_action('wp_head', function() {
   .summary.entry-summary {
     width: 100% !important;
     float: none !important;
-    padding: 20px 20px 40px !important;
+    padding: 16px 20px 40px !important;
     margin: 0 !important;
   }
 
@@ -83,79 +78,90 @@ add_action('wp_head', function() {
     font-size: 28px !important;
     font-weight: 800 !important;
     color: #000 !important;
-    margin-bottom: 6px !important;
+    margin-bottom: 4px !important;
     line-height: 1.1 !important;
   }
 
-  /* Short description */
+  /* Short description — smaller, muted */
   .woocommerce-product-details__short-description {
-    font-size: 13px !important;
-    color: #444 !important;
+    font-size: 12px !important;
+    color: #666 !important;
     line-height: 1.5 !important;
-    margin-bottom: 16px !important;
+    margin-bottom: 12px !important;
   }
 
-  /* Variation label column */
-  .variations th.label {
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    color: #6A449B !important;
-    padding-right: 12px !important;
-    white-space: nowrap !important;
+  /* "CHOOSE TEE > POSITION LOGO..." — shrink it down */
+  .woocommerce-product-details__short-description p:last-child,
+  .woocommerce-product-details__short-description a {
+    font-size: 11px !important;
+    color: #999 !important;
+    font-weight: 400 !important;
+    letter-spacing: 0 !important;
   }
 
-  /* Variation select dropdowns */
-  .variations select {
-    width: 100% !important;
-    border: 1px solid #ccc !important;
-    border-radius: 4px !important;
-    padding: 9px 10px !important;
-    font-size: 14px !important;
-    color: #222 !important;
-    background: #fff !important;
-    margin-bottom: 4px !important;
-  }
-
-  /* Variation table spacing */
-  .variations {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    margin-bottom: 16px !important;
-  }
-
-  .variations tr {
-    display: flex !important;
-    flex-direction: column !important;
-    margin-bottom: 10px !important;
-  }
-
+  /* Variations table — convert to stacked list */
+  .variations,
+  .variations tbody,
+  .variations tr,
   .variations td,
   .variations th {
     display: block !important;
+    width: 100% !important;
     padding: 0 !important;
+    border: none !important;
   }
 
-  /* Hide the "clear" link on variations */
+  .variations tr {
+    margin-bottom: 12px !important;
+  }
+
+  .variations th.label {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #6A449B !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    margin-bottom: 4px !important;
+  }
+
+  .variations th.label label {
+    white-space: normal !important;
+  }
+
+  .variations select {
+    width: 100% !important;
+    border: 1px solid #ddd !important;
+    border-radius: 4px !important;
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+    color: #222 !important;
+    background: #fff !important;
+    appearance: auto !important;
+  }
+
   .reset_variations {
     display: none !important;
   }
 
-  /* Product Add-Ons section */
+  /* Product Add-Ons */
   .wc-pao-addon-wrap,
   .pewc-group {
-    margin-bottom: 16px !important;
+    margin-bottom: 12px !important;
   }
 
   .wc-pao-addon-name,
-  .pewc-item-label {
-    font-size: 13px !important;
+  .pewc-item-label,
+  .pewc-group-title {
+    font-size: 11px !important;
     font-weight: 700 !important;
     color: #6A449B !important;
-    margin-bottom: 6px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    margin-bottom: 4px !important;
     display: block !important;
   }
 
-  /* Add to Cart button — full-width brand purple */
+  /* Add to Cart — full-width brand purple */
   .single_add_to_cart_button,
   button.single_add_to_cart_button {
     width: 100% !important;
@@ -169,6 +175,7 @@ add_action('wp_head', function() {
     letter-spacing: 0.02em !important;
     margin-top: 8px !important;
     cursor: pointer !important;
+    text-transform: uppercase !important;
   }
 
   .single_add_to_cart_button:hover {
@@ -184,16 +191,15 @@ add_action('wp_head', function() {
   }
 
   /* Price */
-  p.price,
-  span.price {
+  p.price, span.price {
     color: #6A449B !important;
-    font-size: 20px !important;
+    font-size: 18px !important;
     font-weight: 700 !important;
-    margin-bottom: 12px !important;
+    margin-bottom: 10px !important;
     display: block !important;
   }
 
-  /* Quantity field */
+  /* Quantity */
   .quantity input.qty {
     width: 60px !important;
     border: 1px solid #ccc !important;
@@ -203,7 +209,7 @@ add_action('wp_head', function() {
     text-align: center !important;
   }
 
-  /* Site header — slim it down */
+  /* Site header */
   .site-header {
     padding: 10px 16px !important;
     position: sticky !important;
@@ -213,7 +219,6 @@ add_action('wp_head', function() {
     border-bottom: 1px solid #eee !important;
   }
 
-  /* Page wrapper padding */
   .site-main,
   .woocommerce {
     padding: 0 !important;
@@ -258,8 +263,7 @@ add_action('wp_head', function() {
     border-color: #c4aee0 !important;
   }
 
-  p.price,
-  span.price {
+  p.price, span.price {
     color: #6A449B !important;
     font-weight: 700 !important;
   }
