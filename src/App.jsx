@@ -420,7 +420,7 @@ const handleQuantitySelect = (idx) => {
               onDrop={handleFileDrop}
               onClick={() => document.getElementById('shipping-file-input').click()}
             >
-              <Upload size={28} color="#993399" />
+              <Upload size={28} color="#6A449B" />
               <p className="upload-dropzone-title">
                 {shippingFile ? shippingFile.name : 'Upload your list'}
               </p>
@@ -546,7 +546,7 @@ const handleQuantitySelect = (idx) => {
               onDrop={handleLogoDrop}
               onClick={() => document.getElementById('logo-file-input').click()}
             >
-              <Upload size={28} color="#993399" />
+              <Upload size={28} color="#6A449B" />
               <p className="upload-dropzone-title">
                 {logoFile ? logoFile.name : 'Upload your logo'}
               </p>
