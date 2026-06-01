@@ -466,7 +466,7 @@ const handleQuantitySelect = (idx) => {
         </div>
 
           {/* Ship to me */}
-          <label className="process-option" onClick={() => setShippingOption('me')}>
+          <label className="process-option" style={{ marginTop: '16px' }} onClick={() => setShippingOption('me')}>
             <span className={`radio-circle ${shippingOption === 'me' ? 'selected' : ''}`} />
             <span className="option-text">
               <strong style={{ fontSize: '30px', color: shippingOption === 'me' ? 'var(--color-brand)' : '#000' }}>Ship to me</strong>
