@@ -1,9 +1,10 @@
 <?php
-// Step-by-step configurator overlay for Tee product (ID 1946)
-// Add as a separate Code Snippets entry — keep styles snippet active too.
+// Step-by-step configurator overlay — runs on all WC product pages.
+// Add as a Code Snippets entry. Keep wc-tee-product-styles.php active too.
 
 add_action('wp_head', function() {
-    if (!is_singular() || get_the_ID() !== 1946) return;
+    if (!is_singular() || !function_exists('is_product')) return;
+    if (!is_product()) return;
     echo <<<'STYLE'
 <style>
 
@@ -167,18 +168,23 @@ STYLE;
 });
 
 add_action('wp_footer', function() {
-    if (!is_singular() || get_the_ID() !== 1946) return; ?>
+    if (!is_singular() || !function_exists('is_product')) return;
+    if (!is_product()) return; ?>
 <script>
 jQuery(function($) {
-    var tUrl = '/product/tee';
-    if (window.location.href.indexOf(tUrl) === -1) return;
+    if (!$('form.variations_form').length
+        && !$('.wc-pao-addon-wrap').length) {
+        return;
+    }
 
-    var lblMap = {};
-    lblMap['attribute_pa_color'] = 'Select Color';
-    lblMap['attribute_pa_weight'] = 'Select Weight';
-    lblMap['attribute_pa_sleeve-length'] = 'Select Style';
-    var dmKey = 'attribute_pa_decoration-method';
-    lblMap[dmKey] = 'Select Decoration';
+    function attrLabel(nm) {
+        var s = nm.replace('attribute_pa_', '');
+        s = s.replace(/[-_]/g, ' ');
+        s = s.replace(/\b\w/g, function(c) {
+            return c.toUpperCase();
+        });
+        return 'Select ' + s;
+    }
 
     var steps = [];
     var cur = 0;
@@ -186,7 +192,7 @@ jQuery(function($) {
     $('.variations select').each(function() {
         var $s = $(this);
         var nm = $s.attr('name') || '';
-        var lbl = lblMap[nm] || 'Select Option';
+        var lbl = attrLabel(nm);
         var opts = [];
         $s.find('option').each(function() {
             var v = $(this).val();
@@ -245,10 +251,10 @@ jQuery(function($) {
     h += '</div>';
     h += '<div id="tee-conf-opts"></div>';
     h += '<div id="tee-conf-nav">';
-    h += '<button id="tee-conf-back">‹ Back</button>';
+    h += '<button id="tee-conf-back">Back</button>';
     h += '<button id="tee-conf-preview">Preview</button>';
     h += '<button id="tee-conf-next" disabled>';
-    h += 'Continue ›</button>';
+    h += 'Continue</button>';
     h += '</div>';
     h += '</div>';
     $('body').append(h);
@@ -270,8 +276,7 @@ jQuery(function($) {
             oh += ' data-v="' + o.v + '"';
             oh += ' data-i="' + i + '">';
             oh += '<span>' + o.t + '</span>';
-            oh += '<span class="tee-copt-check">';
-            oh += '✓</span>';
+            oh += '<span class="tee-copt-check">&#10003;</span>';
             oh += '</div>';
         }
         $('#tee-conf-opts').html(oh);
@@ -287,9 +292,7 @@ jQuery(function($) {
         var canNext = isLast ? allDone : !!step.val;
         $('#tee-conf-next').prop('disabled', !canNext);
 
-        var nxt = isLast
-            ? 'Add to Kit ›'
-            : 'Continue ›';
+        var nxt = isLast ? 'Add to Kit' : 'Continue';
         $('#tee-conf-next').text(nxt);
 
         if (i === 0) {
