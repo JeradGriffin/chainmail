@@ -57,6 +57,22 @@ body.admin-bar #tee-conf {
   }
 }
 
+/* Header bar */
+#tee-conf-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
+}
+
+#tee-conf-logo {
+  height: 32px;
+  width: auto;
+}
+
 /* Step counter badge top-right */
 #tee-conf-counter {
   position: absolute;
@@ -183,7 +199,6 @@ body.admin-bar #tee-conf {
   border: none;
   cursor: pointer;
   padding: 10px 4px;
-  visibility: hidden;
 }
 
 #tee-conf-preview {
@@ -228,6 +243,7 @@ jQuery(function($) {
 
     function attrLabel(nm) {
         var s = nm.replace('attribute_pa_', '');
+        s = s.replace('attribute_', '');
         s = s.replace(/[-_]/g, ' ');
         s = s.replace(/\b\w/g, function(c) {
             return c.toUpperCase();
@@ -290,7 +306,15 @@ jQuery(function($) {
     var imgSrc = $gi.attr('data-large_image')
         || $gi.attr('src') || '';
 
+    var logoSrc = $('.custom-logo, .site-header img')
+        .first().attr('src') || '';
+
     var h = '<div id="tee-conf">';
+    if (logoSrc) {
+        h += '<div id="tee-conf-hdr">';
+        h += '<img id="tee-conf-logo" src="' + logoSrc + '">';
+        h += '</div>';
+    }
     h += '<div id="tee-conf-img">';
     if (imgSrc) {
         h += '<img id="tee-conf-photo" src="' + imgSrc + '">';
@@ -361,11 +385,8 @@ jQuery(function($) {
         var nxt = isLast ? 'Add to Kit' : 'Continue';
         $('#tee-conf-next').text(nxt);
 
-        if (i === 0) {
-            $('#tee-conf-back').css('visibility', 'hidden');
-        } else {
-            $('#tee-conf-back').css('visibility', 'visible');
-        }
+        var backTxt = (i === 0) ? 'Exit' : 'Back';
+        $('#tee-conf-back').text(backTxt);
     }
 
     paint(0);
@@ -408,8 +429,23 @@ jQuery(function($) {
     });
 
     $('#tee-conf-back').on('click', function() {
-        if (cur > 0) { cur--; paint(cur); }
+        if (cur === 0) {
+            history.back();
+        } else {
+            cur--;
+            paint(cur);
+        }
     });
+
+    // Demote any rogue high-z-index elements
+    setTimeout(function() {
+        $('body *').not('#tee-conf, #tee-conf *').each(function() {
+            var z = parseInt($(this).css('z-index'), 10);
+            if (!isNaN(z) && z > 9000) {
+                $(this).css('z-index', '1');
+            }
+        });
+    }, 300);
 
     $('#tee-conf-preview').on('click', function() {
         $('.woocommerce-product-gallery__image a')
