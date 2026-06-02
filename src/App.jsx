@@ -45,7 +45,7 @@ const goodsConfig = {
     ],
   },
   bottle: {
-    name: 'Bottle',
+    name: 'Tumbler',
     image: '/bottle-placeholder.png',
     dropdowns: [
       { id: 'style', label: 'STYLE', options: ['16oz', '20oz'], key: 'style' }, // TODO: confirm options
@@ -503,7 +503,7 @@ const handleQuantitySelect = (idx) => {
     { id: 'hoodie', name: 'Hoodie', price: 60, icon: '/icon-hoodie.svg' },
     { id: 'cap', name: 'Cap', price: 15, icon: '/icon-cap.svg' },
     { id: 'tote', name: 'Tote', price: 25, icon: '/icon-tote.svg' },
-    { id: 'bottle', name: 'Bottle', price: 30, icon: '/icon-bottle.svg' },
+    { id: 'bottle', name: 'Tumbler', price: 30, icon: '/icon-bottle.svg' },
     { id: 'journal', name: 'Journal', price: 20, icon: '/icon-journal.svg' },
   ];
 
