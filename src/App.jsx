@@ -104,6 +104,10 @@ export default function KitBuilder() {
   const [selectedSpirit, setSelectedSpirit] = useState(null);
   const [messageText, setMessageText] = useState('');
   const [messageConfirmed, setMessageConfirmed] = useState(false);
+  const [regulatedSubstance, setRegulatedSubstance] = useState(false);
+  const [showRegulatedForm, setShowRegulatedForm] = useState(false);
+  const [regulatedName, setRegulatedName] = useState('');
+  const [regulatedEmail, setRegulatedEmail] = useState('');
 
   const quantities = [24, 48, 72, 96, '120+'];
 
@@ -299,6 +303,77 @@ const handleQuantitySelect = (idx) => {
   );
 
   const renderAddProduct = () => (
+    <>
+    {showRegulatedForm && (
+      <div style={{
+        position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)',
+        zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '24px'
+      }}>
+        <div style={{
+          background: '#fff', borderRadius: '8px', padding: '32px 24px',
+          width: '100%', maxWidth: '400px'
+        }}>
+          <h3 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '8px' }}>
+            Regulated Substance
+          </h3>
+          <p style={{ fontSize: '14px', color: '#555', marginBottom: '24px' }}>
+            We'll reach out to confirm compliance details. Please provide your contact info.
+          </p>
+          <input
+            type="text"
+            placeholder="Your name"
+            value={regulatedName}
+            onChange={e => setRegulatedName(e.target.value)}
+            style={{
+              display: 'block', width: '100%', border: '1px solid #ddd',
+              borderRadius: '4px', padding: '12px', fontSize: '15px',
+              marginBottom: '12px', boxSizing: 'border-box'
+            }}
+          />
+          <input
+            type="email"
+            placeholder="Your email"
+            value={regulatedEmail}
+            onChange={e => setRegulatedEmail(e.target.value)}
+            style={{
+              display: 'block', width: '100%', border: '1px solid #ddd',
+              borderRadius: '4px', padding: '12px', fontSize: '15px',
+              marginBottom: '24px', boxSizing: 'border-box'
+            }}
+          />
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button
+              onClick={() => {
+                setRegulatedSubstance(false);
+                setRegulatedName('');
+                setRegulatedEmail('');
+                setShowRegulatedForm(false);
+              }}
+              style={{
+                flex: 1, padding: '12px', border: '2px solid #6A449B',
+                borderRadius: '4px', background: '#fff', color: '#6A449B',
+                fontSize: '15px', fontWeight: '600', cursor: 'pointer'
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => setShowRegulatedForm(false)}
+              disabled={!regulatedName || !regulatedEmail}
+              style={{
+                flex: 1, padding: '12px', border: 'none',
+                borderRadius: '4px',
+                background: regulatedName && regulatedEmail ? '#6A449B' : '#c4aee0',
+                color: '#fff', fontSize: '15px', fontWeight: '700', cursor: 'pointer'
+              }}
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
     <div className="min-h-screen bg-white flex flex-col process-page">
       {renderHeader()}
 
@@ -333,7 +408,18 @@ const handleQuantitySelect = (idx) => {
             <label className="process-checkbox" onClick={() => setConfirmPrice(!confirmPrice)}>
               <span className={`checkbox-circle ${confirmPrice ? 'selected' : ''}`} />
               <span className="checkbox-text">
-                Adds $1 per item
+                I agree to a $1 per item service fee
+              </span>
+            </label>
+
+            <label className="process-checkbox" onClick={() => {
+              const next = !regulatedSubstance;
+              setRegulatedSubstance(next);
+              if (next) setShowRegulatedForm(true);
+            }}>
+              <span className={`checkbox-circle ${regulatedSubstance ? 'selected' : ''}`} />
+              <span className="checkbox-text">
+                My product contains a regulated substance like alcohol or THC
               </span>
             </label>
 
@@ -376,6 +462,7 @@ const handleQuantitySelect = (idx) => {
         </div>
       </div>
     </div>
+    </>
   );
 
   const handleFileDrop = (e) => {
