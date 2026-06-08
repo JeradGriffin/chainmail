@@ -891,7 +891,7 @@ const handleQuantitySelect = (idx) => {
 
           <h2 className="process-title" style={{ color: 'var(--color-brand)' }}>Add premium goods</h2>
           <p className="process-description">
-            Select 1-3 of our curated premium items to be branded with your logo.
+            Select up to three of our premium curated items to branded with your logo.
           </p>
 
           {premiumGoods.map((good) => {
