@@ -124,6 +124,7 @@ button {
   position: absolute;
   transform: translateX(-50%);
   font-size: 14px;
+  font-style: italic;
   font-weight: 600;
   white-space: nowrap;
   color: #000;
@@ -199,7 +200,6 @@ input[type="range"]::-moz-range-thumb {
   height: 30px;
   border-radius: 50%;
   background: var(--color-brand);
-  border: 2.5px solid white;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
   transform: translate(-50%, -50%);
   pointer-events: none;
