@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, ChevronLeft, ShoppingBag, Menu, Upload } from 'lucide-react';
+import { ChevronRight, ChevronLeft, ShoppingBag, Menu, Upload, Wine } from 'lucide-react';
 
 const BRAND_COLOR = 'var(--color-brand)';
 
@@ -921,9 +921,9 @@ const handleQuantitySelect = (idx) => {
                 }}
               >
                 <span className={`radio-circle ${isSelected ? 'selected' : ''}`} />
-                <img src={good.icon} alt={good.name} className="goods-icon" />
+                <img src={good.icon} alt={good.name} className={`goods-icon ${isSelected ? 'selected' : ''}`} />
                 <span className={`goods-name ${isSelected ? 'selected' : ''}`}>{good.name}</span>
-                <span className="goods-price">${good.price}</span>
+                <span className={`goods-price ${isSelected ? 'selected' : ''}`}>${good.price}</span>
               </div>
             );
           })}
@@ -1037,6 +1037,7 @@ const handleQuantitySelect = (idx) => {
         detail: parts.join(' | '),
         price: good?.price || 0,
         image: g?.image || null,
+        icon: good?.icon || null,
       });
     });
     if (spiritObj) {
@@ -1044,6 +1045,7 @@ const handleQuantitySelect = (idx) => {
         name: `Spirits – ${spiritObj.name}`,
         detail: spiritObj.type,
         price: spiritObj.price,
+        isSpirit: true,
       });
     }
 
@@ -1092,7 +1094,14 @@ const handleQuantitySelect = (idx) => {
                   <div key={i} className="review-inclusion-item">
                     {item.image
                       ? <img src={item.image} alt={item.name} className="review-inclusion-thumb review-inclusion-img" />
-                      : <div className="review-inclusion-thumb" />
+                      : <div className="review-inclusion-thumb review-inclusion-icon">
+                          {item.isSpirit
+                            ? <Wine size={28} color="#6A449B" />
+                            : item.icon
+                              ? <img src={item.icon} alt={item.name} style={{ width: 28, height: 28 }} />
+                              : null
+                          }
+                        </div>
                     }
                     <div className="review-inclusion-info">
                       <span className="review-inclusion-name">{item.name}</span>

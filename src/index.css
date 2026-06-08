@@ -729,8 +729,8 @@ input[type="range"]::-moz-range-track {
   flex-shrink: 0;
 }
 
-.goods-option.selected .goods-icon {
-  color: var(--color-brand);
+.goods-icon.selected {
+  filter: brightness(0) saturate(100%) invert(27%) sepia(53%) saturate(786%) hue-rotate(237deg) brightness(89%) contrast(93%);
 }
 
 .goods-name {
@@ -1186,6 +1186,13 @@ input[type="range"]::-moz-range-track {
 .review-inclusion-img {
   object-fit: cover;
   object-position: top center;
+}
+
+.review-inclusion-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0ebfa;
 }
 
 .review-inclusion-info {
