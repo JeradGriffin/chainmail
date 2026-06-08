@@ -133,9 +133,6 @@ export default function KitBuilder() {
   }, []);
 const handleQuantitySelect = (idx) => {
     setKitQuantityIndex(idx);
-    if (quantities[idx] === '120+') {
-      window.location.href = 'mailto:sales@chainmail.com?subject=Large Order - 120+ Kits';
-    }
   };
 
   const handleStartKit = () => {
