@@ -318,7 +318,6 @@ const handleQuantitySelect = (idx) => {
           <span className="option-text">
             <span><strong style={{ fontSize: '28px' }}>Yes,</strong> add my product</span>
           </span>
-          <span className="option-price">$250</span>
         </label>
 
         {/* Checkboxes — visible only after Yes is selected */}
