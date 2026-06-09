@@ -398,37 +398,39 @@ const handleQuantitySelect = (idx) => {
         {/* Checkboxes — visible only after Yes is selected */}
         {addProduct && (
           <>
-            <label className="process-checkbox" onClick={() => setConfirmSize(!confirmSize)}>
-              <span className={`checkbox-circle ${confirmSize ? 'selected' : ''}`} />
-              <span className="checkbox-text">
-                Please confirm your item is less than 12″ x 12″ x 8″
-              </span>
-            </label>
-
-            <label className="process-checkbox" onClick={() => setConfirmPrice(!confirmPrice)}>
-              <span className={`checkbox-circle ${confirmPrice ? 'selected' : ''}`} />
-              <span className="checkbox-text">
-                I agree to a $1 per item service fee
-              </span>
-            </label>
-
-            <div className="regulated-block">
-              <label className="process-checkbox" onClick={() => {
-                const next = !regulatedSubstance;
-                setRegulatedSubstance(next);
-                if (next) setShowRegulatedForm(true);
-              }}>
-                <span className={`checkbox-circle ${regulatedSubstance ? 'selected' : ''}`} />
+            <div className="checkbox-group">
+              <label className="process-checkbox" onClick={() => setConfirmSize(!confirmSize)}>
+                <span className={`checkbox-circle ${confirmSize ? 'selected' : ''}`} />
                 <span className="checkbox-text">
-                  My item contains Prohibited or Restricted Items.
+                  Please confirm your item is less than 12″ x 12″ x 8″
                 </span>
               </label>
 
-              <p className="policy-link-note">
-                <a href="#" className="policy-link">
-                  Click to see Prohibited / Restricted Items Policy
-                </a>
-              </p>
+              <label className="process-checkbox" onClick={() => setConfirmPrice(!confirmPrice)}>
+                <span className={`checkbox-circle ${confirmPrice ? 'selected' : ''}`} />
+                <span className="checkbox-text">
+                  I agree to a $1 per item service fee
+                </span>
+              </label>
+
+              <div className="regulated-block">
+                <label className="process-checkbox" onClick={() => {
+                  const next = !regulatedSubstance;
+                  setRegulatedSubstance(next);
+                  if (next) setShowRegulatedForm(true);
+                }}>
+                  <span className={`checkbox-circle ${regulatedSubstance ? 'selected' : ''}`} />
+                  <span className="checkbox-text">
+                    My item contains Prohibited or Restricted Items.
+                  </span>
+                </label>
+
+                <p className="policy-link-note">
+                  <a href="#" className="policy-link">
+                    Click to see Prohibited / Restricted Items Policy
+                  </a>
+                </p>
+              </div>
             </div>
 
             <p className="process-note">
