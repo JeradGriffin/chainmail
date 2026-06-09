@@ -415,10 +415,10 @@ input[type="range"]::-moz-range-track {
 }
 
 .process-note {
-  font-size: 14px;
+  font-size: 16px;
   font-style: italic;
   color: var(--color-brand);
-  line-height: 150%;
+  line-height: 140%;
   margin-top: 16px;
   text-align: center;
 }
