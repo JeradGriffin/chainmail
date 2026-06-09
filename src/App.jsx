@@ -426,7 +426,7 @@ const handleQuantitySelect = (idx) => {
                 </label>
 
                 <p className="policy-link-note">
-                  <a href="#" className="policy-link">
+                  <a href="https://chainmail.store/dev/prohibited-and-restricted-shipping-items-policy/" className="policy-link">
                     Click to see Prohibited / Restricted Items Policy
                   </a>
                 </p>
@@ -497,9 +497,6 @@ const handleQuantitySelect = (idx) => {
           {renderStepIndicator()}
 
           <h2 className="process-title" style={{ color: 'var(--color-brand)' }}>Shipping</h2>
-          <p className="process-description">
-            Upload your recipient list or we can send it direct to you.
-          </p>
 
           {/* Ship to my list */}
           {/*
@@ -514,6 +511,10 @@ const handleQuantitySelect = (idx) => {
               <strong style={{ fontSize: '30px', color: shippingOption === 'list' ? 'var(--color-brand)' : '#000' }}>Ship to my list</strong>
             </span>
           </label>
+
+          <p className="process-description">
+            Upload your recipient list or we can send it direct to you.
+          </p>
 
         {/* Download template button */}
         <div className="shipping-template-band">
