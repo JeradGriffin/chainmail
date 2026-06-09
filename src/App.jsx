@@ -423,6 +423,12 @@ const handleQuantitySelect = (idx) => {
               </span>
             </label>
 
+            <p style={{ fontSize: '13px', fontStyle: 'italic', color: '#000', marginLeft: '36px', marginTop: '-4px', marginBottom: '8px' }}>
+              <a href="#" style={{ color: 'var(--color-brand)', fontWeight: '600', textDecoration: 'none' }}>
+                Click to see Prohibited / Restricted Items Policy
+              </a>
+            </p>
+
             <p className="process-note">
               At the end of this process we will send an inbound form to get info about your product and how to ship it to us.
             </p>
