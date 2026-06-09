@@ -513,7 +513,7 @@ const handleQuantitySelect = (idx) => {
           </label>
 
           <p className="process-description">
-            Upload your recipient list or we can send it direct to you.
+            Download our Shipping Template &gt; Fill it out &gt; Upload below for direct to customer shipping.
           </p>
 
         {/* Download template button */}
