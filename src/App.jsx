@@ -412,22 +412,24 @@ const handleQuantitySelect = (idx) => {
               </span>
             </label>
 
-            <label className="process-checkbox" onClick={() => {
-              const next = !regulatedSubstance;
-              setRegulatedSubstance(next);
-              if (next) setShowRegulatedForm(true);
-            }}>
-              <span className={`checkbox-circle ${regulatedSubstance ? 'selected' : ''}`} />
-              <span className="checkbox-text">
-                My item contains Prohibited or Restricted Items.
-              </span>
-            </label>
+            <div className="regulated-block">
+              <label className="process-checkbox" onClick={() => {
+                const next = !regulatedSubstance;
+                setRegulatedSubstance(next);
+                if (next) setShowRegulatedForm(true);
+              }}>
+                <span className={`checkbox-circle ${regulatedSubstance ? 'selected' : ''}`} />
+                <span className="checkbox-text">
+                  My item contains Prohibited or Restricted Items.
+                </span>
+              </label>
 
-            <p className="policy-link-note">
-              <a href="#" className="policy-link">
-                Click to see Prohibited / Restricted Items Policy
-              </a>
-            </p>
+              <p className="policy-link-note">
+                <a href="#" className="policy-link">
+                  Click to see Prohibited / Restricted Items Policy
+                </a>
+              </p>
+            </div>
 
             <p className="process-note">
               At the end of this process we will send an inbound form to get info about your product and how to ship it to us.
