@@ -400,6 +400,20 @@ input[type="range"]::-moz-range-track {
 }
 
 /* Note text */
+.policy-link-note {
+  font-size: 13px;
+  font-style: italic;
+  color: #000;
+  margin-top: -4px;
+  margin-bottom: 8px;
+}
+
+.policy-link {
+  color: #000;
+  font-weight: 600;
+  text-decoration: none;
+}
+
 .process-note {
   font-size: 14px;
   font-style: italic;
