@@ -404,8 +404,7 @@ input[type="range"]::-moz-range-track {
   font-size: 13px;
   font-style: italic;
   color: #000;
-  margin-top: -4px;
-  margin-bottom: 8px;
+  text-align: center;
 }
 
 .policy-link {
