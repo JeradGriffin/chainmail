@@ -423,8 +423,8 @@ const handleQuantitySelect = (idx) => {
               </span>
             </label>
 
-            <p style={{ fontSize: '13px', fontStyle: 'italic', color: '#000', marginLeft: '36px', marginTop: '-4px', marginBottom: '8px' }}>
-              <a href="#" style={{ color: 'var(--color-brand)', fontWeight: '600', textDecoration: 'none' }}>
+            <p style={{ fontSize: '13px', fontStyle: 'italic', color: '#000', marginTop: '-4px', marginBottom: '8px' }}>
+              <a href="#" style={{ color: '#000', fontWeight: '600', textDecoration: 'none' }}>
                 Click to see Prohibited / Restricted Items Policy
               </a>
             </p>
