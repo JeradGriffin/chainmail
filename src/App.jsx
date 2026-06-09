@@ -419,7 +419,7 @@ const handleQuantitySelect = (idx) => {
             }}>
               <span className={`checkbox-circle ${regulatedSubstance ? 'selected' : ''}`} />
               <span className="checkbox-text">
-                My product contains a regulated substance like alcohol or THC
+                My item contains Prohibited or Restricted Items.
               </span>
             </label>
 
