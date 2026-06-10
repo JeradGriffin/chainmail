@@ -128,7 +128,13 @@ export default function KitBuilder() {
             : saved.selectedGoods;
           setSelectedGoods(goods);
         }
-        if (saved.goodConfigurations) setGoodConfigurations(saved.goodConfigurations);
+        const baseCfg = saved.goodConfigurations || {};
+        const wcCaptured = {};
+        ['tee','hoodie','cap','tote','bottle','journal'].forEach(id => {
+          const raw = localStorage.getItem('cm_good_' + id);
+          if (raw) { try { wcCaptured[id] = JSON.parse(raw); } catch(e) {} }
+        });
+        setGoodConfigurations({ ...baseCfg, ...wcCaptured });
         localStorage.removeItem('chainmail_kit_state');
       } catch (e) {}
       setCurrentStep(3);
@@ -927,7 +933,7 @@ const handleQuantitySelect = (idx) => {
                       goodConfigurations,
                       pendingGood: good.id,
                     }));
-                    window.location.href = `${wcUrl}?quantity=${qty}&kit=1`;
+                    window.location.href = `${wcUrl}?quantity=${qty}&kit=1&gid=${good.id}`;
                   } else {
                     setConfiguringGood(good.id);
                     setShowPreview(false);
@@ -1046,11 +1052,13 @@ const handleQuantitySelect = (idx) => {
       const g = goodsConfig[gid];
       const good = premiumGoods.find((p) => p.id === gid);
       const parts = [cfg.sleeve || cfg.style, cfg.color, cfg.decoration].filter(Boolean);
+      const detail = cfg.detail || (parts.length ? parts.join(' | ') : '');
+      const image = cfg.image || g?.image || null;
       inclusions.push({
         name: g?.name || gid,
-        detail: parts.join(' | '),
+        detail,
         price: good?.price || 0,
-        image: g?.image || null,
+        image,
         icon: good?.icon || null,
       });
     });

@@ -31,7 +31,27 @@ jQuery(function($) {
     }
     var resumeUrl = 'https://chainmail-pi.vercel.app/?resume=goods';
     var backUrl = 'https://chainmail-pi.vercel.app/?back=goods';
+    function captureGood() {
+        var gid = params.get('gid');
+        if (!gid) return;
+        var d = {};
+        var im = $('img.wp-post-image').first().attr('src');
+        if (im) d.image = im;
+        var pts = [];
+        $('table.variations select').each(function() {
+            var v = $(this).find('option:selected').text().trim();
+            if (v && v.indexOf('Choose') < 0) pts.push(v);
+        });
+        $('[class*="pewc"] input[type="radio"]:checked').each(function() {
+            var lb = $(this).closest('[class*="pewc-item"]')
+                .find('[class*="pewc-item-label"]').text().trim();
+            if (lb) pts.push(lb);
+        });
+        if (pts.length) d.detail = pts.join(' | ');
+        localStorage.setItem('cm_good_' + gid, JSON.stringify(d));
+    }
     function goResume() {
+        captureGood();
         sessionStorage.removeItem('cm_kit');
         window.location.href = resumeUrl;
     }
