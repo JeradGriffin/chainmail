@@ -79,10 +79,10 @@ const spirits = [
 const goodsWcUrls = {
   tee:     'https://chainmail.store/dev/product/tee/',
   hoodie:  'https://chainmail.store/dev/product/hoodie/',
-  cap:     null,
-  tote:    null,
-  bottle:  null,
-  journal: null,
+  cap:     'https://chainmail.store/dev/product/cap/',
+  tote:    'https://chainmail.store/dev/product/tote/',
+  bottle:  'https://chainmail.store/dev/product/tumbler/',
+  journal: 'https://chainmail.store/dev/product/journal/',
 };
 
 export default function KitBuilder() {
