@@ -47,9 +47,10 @@ jQuery(function($) {
         mutations.forEach(function(mutation) {
             mutation.addedNodes.forEach(function(node) {
                 if (node.nodeType !== 1) return;
-                var txt = node.textContent || node.innerText || '';
-                if (txt.toLowerCase().indexOf('view cart') !== -1) {
-                    console.log('chainmail: view cart detected');
+                var isMsg = $(node).hasClass('woocommerce-message')
+                    || $(node).find('.woocommerce-message').length > 0;
+                if (isMsg) {
+                    console.log('chainmail: woocommerce-message detected');
                     observer.disconnect();
                     window.location.href = resumeUrl;
                 }
