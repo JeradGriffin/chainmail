@@ -18,6 +18,11 @@ jQuery(function($) {
 
     var params = new URLSearchParams(window.location.search);
 
+    if ($('.woocommerce-message').length > 0) {
+        window.location.href = resumeUrl;
+        return;
+    }
+
     console.log('chainmail: revealing page');
     document.documentElement.style.visibility = 'visible';
 
