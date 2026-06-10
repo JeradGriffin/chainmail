@@ -266,7 +266,7 @@ const handleQuantitySelect = (idx) => {
     </div>
   );
 
-  const chainStep = Math.min(Math.max(currentStep + 1, 0), 6);
+  const chainStep = [0,1,2,2,3,4,5,5][currentStep + 1] ?? 0;
 
   const renderStepIndicator = () => (
     <div className="step-indicator-wrap">
@@ -519,15 +519,13 @@ const handleQuantitySelect = (idx) => {
         {/* Download template button */}
         <div className="shipping-template-band">
           <div className="shipping-template-band-inner">
-            <button
+            <a
               className="download-template-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                // TODO: link to actual template file
-              }}
+              href="https://chainmail.store/dev/wp-content/uploads/2026/06/CHAINMAIL-SHIPPING-TEMPLATE.xlsx"
+              download
             >
               Download shipping list template
-            </button>
+            </a>
           </div>
         </div>
 
