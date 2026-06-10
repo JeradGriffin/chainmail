@@ -16,7 +16,10 @@ jQuery(function($) {
     var resumeUrl = 'https://chainmail-pi.vercel.app/?resume=goods';
     var backUrl = 'https://chainmail-pi.vercel.app/?back=goods';
 
-    if ($('.woocommerce-message').length > 0) {
+    var params = new URLSearchParams(window.location.search);
+
+    if ($('.woocommerce-message').length > 0
+        && params.get('added-to-cart')) {
         console.log('chainmail: cart message found, redirecting');
         window.location.href = resumeUrl;
         return;
@@ -41,7 +44,6 @@ jQuery(function($) {
     if (target) target.insertBefore(backLink, target.firstChild);
     console.log('chainmail: back button injected');
 
-    var params = new URLSearchParams(window.location.search);
     var qty = parseInt(params.get('quantity'), 10);
     if (qty > 0) {
         var input = document.querySelector('input.qty');
