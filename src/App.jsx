@@ -910,6 +910,11 @@ const handleQuantitySelect = (idx) => {
                 key={good.id}
                 className={`goods-option ${isSelected ? 'selected' : ''}`}
                 onClick={() => {
+                  if (isSelected) {
+                    setSelectedGoods(selectedGoods.filter(id => id !== good.id));
+                    return;
+                  }
+                  if (selectedGoods.length >= 3) return;
                   const wcUrl = goodsWcUrls[good.id];
                   if (wcUrl) {
                     const qty = quantities[kitQuantityIndex];
