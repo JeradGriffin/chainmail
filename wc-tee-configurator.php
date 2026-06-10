@@ -791,7 +791,7 @@ jQuery(function($) {
         var imgSrc = $gi.attr('data-large_image')
             || $gi.attr('src') || '';
         var cBase = 'https://chainmail-pi.vercel.app/';
-        var cUrl = cBase + 'chain_4.svg';
+        var cUrl = cBase + 'chain_3.svg';
 
         var h = '<div id="tee-conf">';
         h += '<div id="tee-conf-chain">';
