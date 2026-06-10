@@ -1,7 +1,7 @@
 <?php
 add_action( 'wp_head', function() { ?>
 <script>
-if (window.location.href.indexOf('/product/tee') !== -1) {
+if (new URLSearchParams(window.location.search).get('kit') === '1') {
     document.documentElement.style.visibility = 'hidden';
 }
 </script>
@@ -10,8 +10,7 @@ if (window.location.href.indexOf('/product/tee') !== -1) {
 add_action( 'wp_footer', function() { ?>
 <script>
 jQuery(function($) {
-    var teeUrl = '/product/tee';
-    if (window.location.href.indexOf(teeUrl) === -1) return;
+    if (new URLSearchParams(window.location.search).get('kit') !== '1') return;
     console.log('chainmail: snippet running');
 
     var resumeUrl = 'https://chainmail-pi.vercel.app/?resume=goods';

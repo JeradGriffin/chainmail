@@ -78,7 +78,7 @@ const spirits = [
 
 const goodsWcUrls = {
   tee:     'https://chainmail.store/dev/product/tee/',
-  hoodie:  null, // TODO: add WC product URL when created
+  hoodie:  'https://chainmail.store/dev/product/hoodie/',
   cap:     null,
   tote:    null,
   bottle:  null,
@@ -922,7 +922,7 @@ const handleQuantitySelect = (idx) => {
                       goodConfigurations,
                       pendingGood: good.id,
                     }));
-                    window.location.href = `${wcUrl}?quantity=${qty}`;
+                    window.location.href = `${wcUrl}?quantity=${qty}&kit=1`;
                   } else {
                     setConfiguringGood(good.id);
                     setShowPreview(false);
