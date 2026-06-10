@@ -17,7 +17,7 @@ jQuery(function($) {
     var params = new URLSearchParams(window.location.search);
     if (params.get('kit') !== '1') return;
     if (window.location.href.indexOf('/product/tee') !== -1) return;
-    console.log('chainmail: goods snippet running');
+    console.log('chainmail: goods snippet running on ' + window.location.pathname);
 
     var resumeUrl = 'https://chainmail-pi.vercel.app/?resume=goods';
     var backUrl = 'https://chainmail-pi.vercel.app/?back=goods';
