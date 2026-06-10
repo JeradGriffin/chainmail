@@ -18,13 +18,6 @@ jQuery(function($) {
 
     var params = new URLSearchParams(window.location.search);
 
-    if ($('.woocommerce-message').length > 0
-        && params.get('added-to-cart')) {
-        console.log('chainmail: cart message found, redirecting');
-        window.location.href = resumeUrl;
-        return;
-    }
-
     console.log('chainmail: revealing page');
     document.documentElement.style.visibility = 'visible';
 
