@@ -18,7 +18,7 @@ jQuery(function($) {
 
     var params = new URLSearchParams(window.location.search);
 
-    if ($('.woocommerce-message').length > 0) {
+    if (params.get('added-to-cart') && $('.woocommerce-message').length > 0) {
         window.location.href = resumeUrl;
         return;
     }
