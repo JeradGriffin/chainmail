@@ -277,7 +277,7 @@ const handleQuantitySelect = (idx) => {
   const renderStepIndicator = () => (
     <div className="step-indicator-wrap">
       <img
-        src={`/chain_${chainStep}.svg`}
+        src={`/chain_${chainStep}.svg?v=2`}
         alt=""
         className="step-chain-bg"
       />
