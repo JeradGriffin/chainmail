@@ -414,6 +414,10 @@ input[type="range"]::-moz-range-track {
   text-decoration: none;
 }
 
+.policy-link:hover {
+  color: var(--color-brand);
+}
+
 .process-note {
   font-size: 16px;
   font-style: italic;

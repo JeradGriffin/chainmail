@@ -432,7 +432,7 @@ const handleQuantitySelect = (idx) => {
                 </label>
 
                 <p className="policy-link-note">
-                  <a href="https://chainmail.store/dev/prohibited-and-restricted-shipping-items-policy/" className="policy-link">
+                  <a href="https://chainmail.store/dev/prohibited-and-restricted-shipping-items-policy/" className="policy-link" target="_blank" rel="noreferrer">
                     Click to see Prohibited / Restricted Items Policy
                   </a>
                 </p>
