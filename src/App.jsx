@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, ChevronLeft, ShoppingBag, Menu, Upload, Wine } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Upload, Wine } from 'lucide-react';
 
 const BRAND_COLOR = 'var(--color-brand)';
 
@@ -156,26 +156,8 @@ const handleQuantitySelect = (idx) => {
   const renderWelcome = () => (
     <div className="min-h-screen bg-white flex flex-col welcome-page">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-5 py-3 flex items-center justify-between">
+      <header className="bg-white border-b border-gray-200 px-5 py-3 flex items-center">
         <img src="/chainmail-logo.png" alt="chainmail" className="logo" />
-        <div className="flex items-center gap-5">
-          <button onClick={() => {}} aria-label="Search" className="bg-transparent border-none cursor-pointer p-0">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <mask id="mask0_98_67" style={{maskType:'alpha'}} maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-                <rect width="24" height="24" fill="#D9D9D9"/>
-              </mask>
-              <g mask="url(#mask0_98_67)">
-                <path d="M19.5423 20.577L13.2616 14.296C12.7616 14.7088 12.1866 15.0319 11.5366 15.2653C10.8866 15.4986 10.2141 15.6153 9.5193 15.6153C7.81014 15.6153 6.36364 15.0235 5.1798 13.84C3.99597 12.6565 3.40405 11.2103 3.40405 9.5015C3.40405 7.79283 3.9958 6.34617 5.1793 5.1615C6.3628 3.977 7.80897 3.38475 9.5178 3.38475C11.2265 3.38475 12.6731 3.97667 13.8578 5.1605C15.0423 6.34433 15.6346 7.79083 15.6346 9.5C15.6346 10.2142 15.5147 10.8963 15.2751 11.5463C15.0352 12.1963 14.7153 12.7616 14.3153 13.2423L20.5961 19.523L19.5423 20.577ZM9.5193 14.1155C10.8078 14.1155 11.8991 13.6683 12.7933 12.774C13.6876 11.8798 14.1348 10.7885 14.1348 9.5C14.1348 8.2115 13.6876 7.12017 12.7933 6.226C11.8991 5.33167 10.8078 4.8845 9.5193 4.8845C8.2308 4.8845 7.13947 5.33167 6.2453 6.226C5.35097 7.12017 4.9038 8.2115 4.9038 9.5C4.9038 10.7885 5.35097 11.8798 6.2453 12.774C7.13947 13.6683 8.2308 14.1155 9.5193 14.1155Z" fill="#1C1B1F"/>
-              </g>
-            </svg>
-          </button>
-          <button onClick={() => {}} aria-label="Shopping bag" className="bg-transparent border-none cursor-pointer p-0">
-            <ShoppingBag size={20} color="#000" />
-          </button>
-          <button onClick={() => {}} aria-label="Menu" className="bg-transparent border-none cursor-pointer p-0">
-            <Menu size={20} color="#000" />
-          </button>
-        </div>
       </header>
 
       {/* Content */}
@@ -264,9 +246,12 @@ const handleQuantitySelect = (idx) => {
           </button>
         </div>
 
-        {/* Back */}
-        <button className="mt-8 font-semibold flex items-center gap-1 hover:opacity-70 back-btn">
-          <ChevronLeft size={18} /> Back
+        {/* Leave */}
+        <button
+          onClick={() => window.location.href = 'https://chainmail.store/dev/'}
+          className="mt-8 font-semibold flex items-center gap-1 hover:opacity-70 back-btn"
+        >
+          <ChevronLeft size={18} /> Leave Kit Builder
         </button>
       </div>
     </div>
@@ -285,26 +270,8 @@ const handleQuantitySelect = (idx) => {
   );
 
   const renderHeader = () => (
-    <header className="bg-white border-b border-gray-200 px-5 py-3 flex items-center justify-between">
+    <header className="bg-white border-b border-gray-200 px-5 py-3 flex items-center">
       <img src="/chainmail-logo.png" alt="chainmail" className="logo" />
-      <div className="flex items-center gap-5">
-        <button onClick={() => {}} aria-label="Search" className="bg-transparent border-none cursor-pointer p-0">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <mask id="mask0_98_67" style={{maskType:'alpha'}} maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-              <rect width="24" height="24" fill="#D9D9D9"/>
-            </mask>
-            <g mask="url(#mask0_98_67)">
-              <path d="M19.5423 20.577L13.2616 14.296C12.7616 14.7088 12.1866 15.0319 11.5366 15.2653C10.8866 15.4986 10.2141 15.6153 9.5193 15.6153C7.81014 15.6153 6.36364 15.0235 5.1798 13.84C3.99597 12.6565 3.40405 11.2103 3.40405 9.5015C3.40405 7.79283 3.9958 6.34617 5.1793 5.1615C6.3628 3.977 7.80897 3.38475 9.5178 3.38475C11.2265 3.38475 12.6731 3.97667 13.8578 5.1605C15.0423 6.34433 15.6346 7.79083 15.6346 9.5C15.6346 10.2142 15.5147 10.8963 15.2751 11.5463C15.0352 12.1963 14.7153 12.7616 14.3153 13.2423L20.5961 19.523L19.5423 20.577ZM9.5193 14.1155C10.8078 14.1155 11.8991 13.6683 12.7933 12.774C13.6876 11.8798 14.1348 10.7885 14.1348 9.5C14.1348 8.2115 13.6876 7.12017 12.7933 6.226C11.8991 5.33167 10.8078 4.8845 9.5193 4.8845C8.2308 4.8845 7.13947 5.33167 6.2453 6.226C5.35097 7.12017 4.9038 8.2115 4.9038 9.5C4.9038 10.7885 5.35097 11.8798 6.2453 12.774C7.13947 13.6683 8.2308 14.1155 9.5193 14.1155Z" fill="#1C1B1F"/>
-            </g>
-          </svg>
-        </button>
-        <button onClick={() => {}} aria-label="Shopping bag" className="bg-transparent border-none cursor-pointer p-0">
-          <ShoppingBag size={20} color="#000" />
-        </button>
-        <button onClick={() => {}} aria-label="Menu" className="bg-transparent border-none cursor-pointer p-0">
-          <Menu size={20} color="#000" />
-        </button>
-      </div>
     </header>
   );
 
