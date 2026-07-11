@@ -77,12 +77,12 @@ const spirits = [
 ];
 
 const goodsWcUrls = {
-  tee:     'https://chainmail.store/dev/product/tee/',
-  hoodie:  'https://chainmail.store/dev/product/hoodie/',
-  cap:     'https://chainmail.store/dev/product/cap/',
-  tote:    'https://chainmail.store/dev/product/tote/',
-  bottle:  'https://chainmail.store/dev/product/tumbler/',
-  journal: 'https://chainmail.store/dev/product/journal/',
+  tee:     'https://chainmail.store/product/tee/',
+  hoodie:  'https://chainmail.store/product/hoodie/',
+  cap:     'https://chainmail.store/product/cap/',
+  tote:    'https://chainmail.store/product/tote/',
+  bottle:  'https://chainmail.store/product/tumbler/',
+  journal: 'https://chainmail.store/product/journal/',
 };
 
 export default function KitBuilder() {
@@ -104,6 +104,7 @@ export default function KitBuilder() {
   const [selectedSpirit, setSelectedSpirit] = useState(null);
   const [messageText, setMessageText] = useState('');
   const [messageConfirmed, setMessageConfirmed] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [regulatedSubstance, setRegulatedSubstance] = useState(false);
   const [showRegulatedForm, setShowRegulatedForm] = useState(false);
   const [regulatedName, setRegulatedName] = useState('');
@@ -156,8 +157,9 @@ const handleQuantitySelect = (idx) => {
   const renderWelcome = () => (
     <div className="min-h-screen bg-white flex flex-col welcome-page">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-5 py-3 flex items-center">
-        <img src="/chainmail-logo.png" alt="chainmail" className="logo" />
+      <header className="bg-white border-b border-gray-200 px-5 py-3 flex items-center justify-between">
+        <img src="/chainmail-logo.png" alt="chainmail" className="logo" style={{ marginLeft: '12px' }} />
+        <button onClick={() => setShowExitConfirm(true)} aria-label="Exit" className="exit-btn">✕</button>
       </header>
 
       {/* Content */}
@@ -248,7 +250,7 @@ const handleQuantitySelect = (idx) => {
 
         {/* Leave */}
         <button
-          onClick={() => window.location.href = 'https://chainmail.store/dev/'}
+          onClick={() => setShowExitConfirm(true)}
           className="mt-8 font-semibold flex items-center gap-1 hover:opacity-70 back-btn"
         >
           <ChevronLeft size={18} /> Leave Kit Builder
@@ -270,8 +272,9 @@ const handleQuantitySelect = (idx) => {
   );
 
   const renderHeader = () => (
-    <header className="bg-white border-b border-gray-200 px-5 py-3 flex items-center">
-      <img src="/chainmail-logo.png" alt="chainmail" className="logo" />
+    <header className="bg-white border-b border-gray-200 px-5 py-3 flex items-center justify-between">
+      <img src="/chainmail-logo.png" alt="chainmail" className="logo" style={{ marginLeft: '12px' }} />
+      <button onClick={() => setShowExitConfirm(true)} aria-label="Exit" className="exit-btn">✕</button>
     </header>
   );
 
@@ -399,7 +402,7 @@ const handleQuantitySelect = (idx) => {
                 </label>
 
                 <p className="policy-link-note">
-                  <a href="https://chainmail.store/dev/prohibited-and-restricted-shipping-items-policy/" className="policy-link" target="_blank" rel="noreferrer">
+                  <a href="https://chainmail.store/prohibited-and-restricted-shipping-items-policy/" className="policy-link" target="_blank" rel="noreferrer">
                     Click to see Prohibited / Restricted Items Policy
                   </a>
                 </p>
@@ -494,7 +497,7 @@ const handleQuantitySelect = (idx) => {
           <div className="shipping-template-band-inner">
             <a
               className="download-template-btn"
-              href="https://chainmail.store/dev/wp-content/uploads/2026/06/CHAINMAIL-SHIPPING-TEMPLATE.xlsx"
+              href="https://chainmail.store/wp-content/uploads/2026/06/CHAINMAIL-SHIPPING-TEMPLATE.xlsx"
               download
             >
               Download shipping list template
@@ -1130,7 +1133,7 @@ const handleQuantitySelect = (idx) => {
             <button
               className="continue-btn"
               onClick={() => {
-                window.location.href = 'https://chainmail.store/dev/checkout/';
+                window.location.href = 'https://chainmail.store/checkout/';
               }}
             >
               Go to Checkout
@@ -1202,34 +1205,43 @@ const handleQuantitySelect = (idx) => {
     );
   };
 
-  if (currentStep === -1) {
-    return renderWelcome();
-  }
+  const renderExitConfirm = () => (
+    <div className="exit-confirm-overlay" onClick={() => setShowExitConfirm(false)}>
+      <div className="exit-confirm-modal" onClick={(e) => e.stopPropagation()}>
+        <p>Are you sure you want to leave the Kit Builder?</p>
+        <div className="exit-confirm-buttons">
+          <button
+            className="exit-confirm-btn"
+            onClick={() => { window.location.href = 'https://chainmail.store/'; }}
+          >
+            Confirm
+          </button>
+          <button className="exit-cancel-btn" onClick={() => setShowExitConfirm(false)}>
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 
-  if (currentStep === 0) {
-    return renderAddProduct();
-  }
+  const screen = (() => {
+    if (currentStep === -1) return renderWelcome();
+    if (currentStep === 0) return renderAddProduct();
+    if (currentStep === 1) return renderShipping();
+    if (currentStep === 3) {
+      if (configuringGood) return renderGoodConfig(configuringGood);
+      return renderGoods();
+    }
+    if (currentStep === 4) return renderSpirits();
+    if (currentStep === 5) return renderMessage();
+    if (currentStep === 6) return renderReview();
+    return null;
+  })();
 
-  if (currentStep === 1) {
-    return renderShipping();
-  }
-
-  if (currentStep === 3) {
-    if (configuringGood) return renderGoodConfig(configuringGood);
-    return renderGoods();
-  }
-
-  if (currentStep === 4) {
-    return renderSpirits();
-  }
-
-  if (currentStep === 5) {
-    return renderMessage();
-  }
-
-  if (currentStep === 6) {
-    return renderReview();
-  }
-
-  return null;
+  return (
+    <>
+      {screen}
+      {showExitConfirm && renderExitConfirm()}
+    </>
+  );
 }
