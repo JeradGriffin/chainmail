@@ -261,6 +261,7 @@ input[type="range"]::-moz-range-track {
   margin: 0 auto;
   background: #fff;
   height: 100dvh;
+  min-height: unset;
   overflow: hidden;
   display: flex;
   flex-direction: column;
