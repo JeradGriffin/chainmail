@@ -43,8 +43,8 @@ jQuery(function($) {
             if (v && v.indexOf('Choose') < 0) pts.push(v);
         });
         $('[class*="pewc"] input[type="radio"]:checked').each(function() {
-            var lb = $(this).closest('[class*="pewc-item"]')
-                .find('[class*="pewc-item-label"]').text().trim();
+            var lb = $(this).closest('label').text().trim();
+            if (!lb) lb = $(this).val().replace(/_/g, ' ');
             if (lb) pts.push(lb);
         });
         if (pts.length) d.detail = pts.join(' | ');
