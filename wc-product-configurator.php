@@ -687,6 +687,10 @@ jQuery(function($) {
             };
             $fi.off('change.conf')
                 .on('change.conf', function() {
+                    document.body.style.position
+                        = 'fixed';
+                    document.body.style.top
+                        = '-' + _sy + 'px';
                     var file = this.files
                         && this.files[0];
                     if (file) {
@@ -967,13 +971,22 @@ jQuery(function($) {
     $(document).on('click', '#tee-upbtn', function() {
         var step = steps[cur];
         if (!step || step.kind !== 'file') return;
-        
+        document.body.style.position = '';
+        document.body.style.top = '';
         var $realInput = step.wrap
             ? step.wrap.find('input[type="file"]')
             : step.ref;
         if ($realInput && $realInput.length) {
             $realInput.trigger('click');
         }
+        $(window).one('focus', function() {
+            setTimeout(function() {
+                document.body.style.position
+                    = 'fixed';
+                document.body.style.top
+                    = '-' + _sy + 'px';
+            }, 100);
+        });
     });
 
     $(document).on('click', '.tee-ctab', function() {
@@ -1047,6 +1060,30 @@ jQuery(function($) {
                                 .trigger('change');
                         }
                     });
+                var fs = null;
+                for (
+                    var _f = 0;
+                    _f < steps.length;
+                    _f++
+                ) {
+                    if (steps[_f].kind
+                        === 'file') {
+                        fs = steps[_f];
+                        break;
+                    }
+                }
+                if (fs && fs.fileObj
+                    && fs.ref[0]) {
+                    try {
+                        var dt =
+                            new DataTransfer();
+                        dt.items.add(
+                            fs.fileObj
+                        );
+                        fs.ref[0].files
+                            = dt.files;
+                    } catch(e) {}
+                }
                 var $btn = $(
                     '.single_add_to_cart_button'
                 );

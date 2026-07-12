@@ -80,7 +80,7 @@ public/
   tee-preview.jpg                    — Tee product image (real photo)
   chain_0.svg … chain_5.svg          — Step indicator chain graphics (5-link)
   icon-tee.svg … icon-journal.svg    — Goods list icons
-wc-tee-configurator.php              — WP Code Snippets: mobile overlay + desktop tabs on all WC product pages
+wc-product-configurator.php              — WP Code Snippets: mobile overlay + desktop tabs on all WC product pages
 wc-redirect-after-tee.php           — Repo version (NOT what's in WP — see below)
 wc-redirect-after-tee.wp-backup-2026-06-10.php  — ← THIS is what's currently in WP
 wc-redirect-after-goods.php         — WP Code Snippets: redirect for hoodie/cap/tote/tumbler/journal
@@ -95,7 +95,7 @@ wc-tee-product-styles.php           — WP Code Snippets: mobile CSS for Tee pro
 |---|---|---|
 | `wc-redirect-after-tee.wp-backup-2026-06-10.php` | `/product/tee` URL | Hide page, inject Back button, detect add-to-cart, redirect to kit builder |
 | `wc-redirect-after-goods.php` | `?kit=1` on any non-Tee page | Same as above for hoodie/cap/tote/tumbler/journal |
-| `wc-tee-configurator.php` | All WC product pages | Mobile overlay + desktop tabs UI, step chain indicator |
+| `wc-product-configurator.php` | All WC product pages | Mobile overlay + desktop tabs UI, step chain indicator |
 | `wc-tee-product-styles.php` | Post ID 1946 (Tee) only | Mobile CSS polish for Tee product page |
 
 **CRITICAL:** The file `wc-redirect-after-tee.php` in the repo is NOT what's deployed to WP. The backup file (`wc-redirect-after-tee.wp-backup-2026-06-10.php`) is what's in Code Snippets. Do not update the Tee redirect snippet without extensive testing — it broke twice in one session.
@@ -106,7 +106,7 @@ wc-tee-product-styles.php           — WP Code Snippets: mobile CSS for Tee pro
 
 ### Tee
 1. Kit builder redirects to `chainmail.store/dev/product/tee/?quantity={qty}&kit=1&gid=tee`
-2. `wc-tee-configurator.php` shows the step overlay; user configures (color, sleeve, logo, decoration)
+2. `wc-product-configurator.php` shows the step overlay; user configures (color, sleeve, logo, decoration)
 3. User clicks "Add to Kit" → AJAX add-to-cart → `added_to_cart` jQuery event fires
 4. Configurator redirects to `chainmail-pi.vercel.app/?resume=goods`
 5. Kit builder restores state from localStorage, marks Tee selected, returns to goods list
@@ -143,7 +143,7 @@ setCurrentStep(3); // returns to goods list
 
 ## Critical Rules — Do Not Break These
 
-### 1. NEVER modify `wc-tee-configurator.php` for redirect logic
+### 1. NEVER modify `wc-product-configurator.php` for redirect logic
 The configurator's `added_to_cart` handler (`window.location.href = cBase + '?resume=goods'`) is fragile. Adding code before it broke the Tee twice. Leave it alone. Only change the configurator for UI changes.
 
 ### 2. Keep the two redirect snippets separate
