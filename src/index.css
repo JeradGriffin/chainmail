@@ -801,28 +801,35 @@ input[type="range"]::-moz-range-track {
 /* Goods step             */
 /* ===================== */
 
+.goods-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
 .goods-option {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   cursor: pointer;
-  padding: 7px 0;
+  padding: 4px 0;
 }
 
 .goods-option .radio-circle {
-  margin-top: 4px;
+  flex-shrink: 0;
 }
 
 .goods-option.selected {
   background: rgba(106, 68, 155, 0.08);
   margin-left: -28px;
   margin-right: -28px;
-  padding: 7px 28px;
+  padding: 4px 28px;
 }
 
 .goods-icon {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -833,7 +840,7 @@ input[type="range"]::-moz-range-track {
 
 .goods-name {
   flex: 1;
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 600;
   color: #000;
 }
