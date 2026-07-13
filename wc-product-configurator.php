@@ -28,6 +28,24 @@ add_action('wp_head', function() {
   font-family: 'Inter', -apple-system, sans-serif;
 }
 
+#tee-conf-topbar {
+  flex-shrink: 0;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 10px 16px;
+  gap: 20px;
+}
+
+#tee-conf-topbar a {
+  color: #fff;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 #tee-conf-chain {
   flex-shrink: 0;
   background: #fff;
@@ -830,6 +848,33 @@ jQuery(function($) {
         var cUrl = cBase + 'chain_3.svg';
 
         var h = '<div id="tee-conf">';
+        h += '<div id="tee-conf-topbar">';
+        h += '<a href="/cart/"';
+        h += ' aria-label="Cart">';
+        h += '<svg width="22" height="22"';
+        h += ' viewBox="0 0 24 24" fill="none"';
+        h += ' stroke="#fff" stroke-width="2"';
+        h += ' stroke-linecap="round">';
+        h += '<circle cx="9" cy="21" r="1"/>';
+        h += '<circle cx="20" cy="21" r="1"/>';
+        h += '<path d="M1 1h4l2.68 13.39';
+        h += 'A2 2 0 0 0 7.68 16h9.72';
+        h += 'a2 2 0 0 0 1.97-1.61L23 6H6"/>';
+        h += '</svg></a>';
+        h += '<a href="/"';
+        h += ' aria-label="Menu">';
+        h += '<svg width="22" height="22"';
+        h += ' viewBox="0 0 24 24" fill="none"';
+        h += ' stroke="#fff" stroke-width="2"';
+        h += ' stroke-linecap="round">';
+        h += '<line x1="3" y1="6"';
+        h += ' x2="21" y2="6"/>';
+        h += '<line x1="3" y1="12"';
+        h += ' x2="21" y2="12"/>';
+        h += '<line x1="3" y1="18"';
+        h += ' x2="21" y2="18"/>';
+        h += '</svg></a>';
+        h += '</div>';
         h += '<div id="tee-conf-chain">';
         h += '<img src="' + cUrl + '">';
         h += '</div>';
