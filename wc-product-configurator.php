@@ -69,6 +69,26 @@ add_action('wp_head', function() {
   letter-spacing: -0.02em;
 }
 
+#tee-conf-nav-panel {
+  display: none;
+  flex-direction: column;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+#tee-conf-nav-panel.open {
+  display: flex;
+}
+
+#tee-conf-nav-panel a {
+  padding: 16px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  text-decoration: none;
+  border-bottom: 1px solid #f0f0f0;
+}
+
 #tee-conf-chain {
   flex-shrink: 0;
   background: #fff;
@@ -912,6 +932,10 @@ jQuery(function($) {
         h += ' x2="21" y2="18"/>';
         h += '</svg></button>';
         h += '</div></div>';
+        h += '<div id="tee-conf-nav-panel">';
+        h += '<a href="/">Home</a>';
+        h += '<a href="/shop/">Shop</a>';
+        h += '</div>';
         h += '<div id="tee-conf-chain">';
         h += '<img src="' + cUrl + '">';
         h += '</div>';
@@ -1302,21 +1326,8 @@ jQuery(function($) {
         $(document).on(
             'click', '#tee-menu-btn',
             function() {
-                var _t = Math.abs(parseInt(
-                    document.body.style.top, 10
-                ));
-                var _de3 =
-                    document.documentElement;
-                _de3.style.overflow = '';
-                _de3.style.height = '';
-                document.body.style.position = '';
-                document.body.style.top = '';
-                document.body.style.width = '';
-                document.body.style.height = '';
-                document.body.style.overflow = '';
-                window.scrollTo(0, _t);
-                $('#tee-conf').hide();
-                $('.menu-toggle').trigger('click');
+                $('#tee-conf-nav-panel')
+                    .toggleClass('open');
             }
         );
     }
