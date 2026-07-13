@@ -381,27 +381,22 @@ body.cm-kit-mode
 
 /* Hide native WC form behind overlay */
 body.cm-kit-mode table.variations,
-body.cm-kit-mode .wc-pao-addon-wrap,
-body.cm-kit-mode .pewc-group,
-body.cm-kit-mode .pewc-item,
 body.cm-kit-mode .woocommerce-variation-add-to-cart,
 body.cm-kit-mode .woocommerce-variation-description,
 body.cm-kit-mode .quantity {
   display: none !important;
 }
 
-/* Show native PEWC widget in overlay */
-body.cm-kit-mode
-.wc-pao-addon-wrap.cm-pewc-show,
-body.cm-kit-mode
-.pewc-item.cm-pewc-show,
-body.cm-kit-mode
-.pewc-group.cm-pewc-show {
-  display: block !important;
+/* Logo dropzone positioned over overlay opts area */
+.cm-file-active {
+  z-index: 1000000 !important;
+  background: #fff !important;
+  padding: 16px 20px !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
 }
 
-/* Make Dropzone.js upload visible in overlay */
-.cm-pewc-show .dropzone {
+.cm-file-active .dropzone {
   display: block !important;
   min-height: 80px !important;
   border: 2px dashed #6A449B !important;
@@ -409,18 +404,17 @@ body.cm-kit-mode
   background: #f5f0ff !important;
   padding: 20px 16px !important;
   text-align: center !important;
-  margin-top: 12px !important;
   cursor: pointer !important;
   box-sizing: border-box !important;
 }
 
-.cm-pewc-show .dz-message,
-.cm-pewc-show .dz-default {
+.cm-file-active .dz-message,
+.cm-file-active .dz-default {
   display: block !important;
   visibility: visible !important;
 }
 
-.cm-pewc-show .dz-button {
+.cm-file-active .dz-button {
   display: block !important;
   color: #6A449B !important;
   font-size: 15px !important;
@@ -1064,14 +1058,11 @@ jQuery(function($) {
         if (_pewcFileEl
             && step.kind !== 'file') {
             _pewcFileEl
-                .removeClass('cm-pewc-show')
+                .removeClass('cm-file-active')
                 .css({
                     position: '',
                     top: '', left: '',
-                    width: '', zIndex: '',
-                    background: '',
-                    padding: '',
-                    boxSizing: '', margin: ''
+                    width: ''
                 });
             _pewcFileEl = null;
         }
@@ -1095,19 +1086,12 @@ jQuery(function($) {
                 _ownChange = false;
             }, 0);
             if ($pw.length && r && r.width) {
-                $pw
-                    .addClass('cm-pewc-show')
+                $pw.addClass('cm-file-active')
                     .css({
                         position: 'fixed',
                         top: r.top + 'px',
                         left: r.left + 'px',
-                        width: r.width + 'px',
-                        zIndex: '1000000',
-                        background: '#fff',
-                        padding: '16px 20px',
-                        boxSizing:
-                            'border-box',
-                        margin: '0'
+                        width: r.width + 'px'
                     });
                 _pewcFileEl = $pw;
             }
@@ -1333,7 +1317,7 @@ jQuery(function($) {
         // Release scroll lock for Dropzone
         $(document).on(
             'touchstart',
-            '.cm-pewc-show .dz-clickable',
+            '.cm-file-active .dz-clickable',
             function() {
                 var _t2 = Math.abs(
                     parseInt(
