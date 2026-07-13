@@ -224,6 +224,7 @@ add_action('wp_head', function() {
 #tee-conf-opts {
   background: #fff;
   flex-shrink: 0;
+  overflow: visible;
 }
 
 .tee-sel-wrap {
@@ -414,10 +415,6 @@ add_action('wp_head', function() {
 
 body.cm-kit-mode .single_add_to_cart_button {
   display: none !important;
-}
-
-#tee-conf-opts {
-  overflow-y: auto;
 }
 
 #tee-conf-opts [class*="pewc-item"],
@@ -867,6 +864,12 @@ jQuery(function($) {
         var tabsChanged = (newSnapshot !== oldSnapshot);
         var valsChanged = (newValues !== oldValues);
         var dropOpen = $('.tee-opt-list.open').length;
+        console.log(
+            'cm-conf: detect end'
+            + ' tc=' + tabsChanged
+            + ' vc=' + valsChanged
+            + ' drop=' + dropOpen
+        );
         if (tabsChanged || (valsChanged && !dropOpen)) {
             if (cur >= steps.length) {
                 cur = Math.max(0, steps.length - 1);
@@ -930,7 +933,10 @@ jQuery(function($) {
     if (!steps.length) return;
 
     var _moTimer;
+    var _ownChange = false;
     var _mo = new MutationObserver(function() {
+        if (_ownChange) return;
+        if ($('.tee-opt-list.open').length) return;
         clearTimeout(_moTimer);
         _moTimer = setTimeout(detectAddons, 300);
     });
@@ -1106,7 +1112,11 @@ jQuery(function($) {
                         .not('#tee-conf *')
                         .closest('p, div');
                 }
+                _ownChange = true;
                 $oEl.empty().append($pEl);
+                setTimeout(function() {
+                    _ownChange = false;
+                }, 0);
             }
         } else {
             var selTxt = 'tap to select';
@@ -1149,7 +1159,13 @@ jQuery(function($) {
             oh += '</div>';
             oh += '</div>';
         }
-        if (!skipOpts) $(optsId).html(oh);
+        if (!skipOpts) {
+            _ownChange = true;
+            $(optsId).html(oh);
+            setTimeout(function() {
+                _ownChange = false;
+            }, 0);
+        }
 
         if (isMob) {
             var isLast = (i === steps.length - 1);
