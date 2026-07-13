@@ -873,30 +873,6 @@ jQuery(function($) {
         tabsId = '#tee-conf-tabs';
         optsId = '#tee-conf-opts';
 
-        var $siteHdr = $([
-            'header.site-header',
-            '#masthead',
-            '.site-header'
-        ].join(',')).first();
-        var hH = 0;
-        if ($siteHdr.length) {
-            hH = $siteHdr.outerHeight() || 0;
-            $siteHdr.css({
-                position: 'fixed',
-                top: '0',
-                left: '0',
-                right: '0',
-                width: '100%'
-            });
-        }
-        if (hH > 0) {
-            $('#tee-conf').css({
-                top: hH + 'px',
-                height: 'calc(100dvh - '
-                    + hH + 'px)'
-            });
-        }
-
         setTimeout(function() {
             $('body *').not(
                 '#tee-conf, #tee-conf *'
@@ -908,9 +884,6 @@ jQuery(function($) {
                     $(this).css('z-index', '1');
                 }
             });
-            if ($siteHdr.length) {
-                $siteHdr.css('zIndex', '999998');
-            }
         }, 300);
 
     } else {
