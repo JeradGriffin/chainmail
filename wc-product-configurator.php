@@ -675,11 +675,19 @@ add_action('wp_footer', function() {
     if (!is_product()) return; ?>
 <script>
 jQuery(function($) {
+    console.log('cm-conf: jQuery ready');
     var mq = '(max-width: 767px)';
     var isMob = window.matchMedia(mq).matches;
+    console.log('cm-conf: isMob=' + isMob);
 
-    if (!$('form.variations_form').length
-        && !$('.wc-pao-addon-wrap').length) {
+    var hasVarForm = $('form.variations_form').length;
+    var hasPaoWrap = $('.wc-pao-addon-wrap').length;
+    console.log(
+        'cm-conf: varForm=' + hasVarForm
+        + ' paoWrap=' + hasPaoWrap
+    );
+    if (!hasVarForm && !hasPaoWrap) {
+        console.log('cm-conf: bailing — no form/pao');
         return;
     }
 
@@ -842,6 +850,13 @@ jQuery(function($) {
         } // end if (isMob) addons block
 
         steps = nextSteps;
+        console.log(
+            'cm-conf: detectAddons → '
+            + steps.length + ' steps: '
+            + steps.map(function(s) {
+                return s.kind + ':' + s.label;
+            }).join(', ')
+        );
         var newSnapshot = steps
             .map(function(s) { return s.label; })
             .join('|');
@@ -1050,6 +1065,11 @@ jQuery(function($) {
     function paint(i) {
         var step = steps[i];
         var total = steps.length;
+        console.log(
+            'cm-conf: paint(' + i + ')'
+            + ' kind=' + step.kind
+            + ' label=' + step.label
+        );
 
         if (isMob) {
             $('#tee-conf-step').text(step.label);
@@ -1175,6 +1195,10 @@ jQuery(function($) {
         var ok = !isMob
             || t <= cur
             || (prev && prev.val);
+        console.log(
+            'cm-conf: tab click t=' + t
+            + ' cur=' + cur + ' ok=' + ok
+        );
         if (ok) {
             cur = t;
             paint(cur);
@@ -1182,6 +1206,7 @@ jQuery(function($) {
     });
 
     $(document).on('click', '.tee-sel-bar', function() {
+        console.log('cm-conf: sel-bar click');
         var $list = $(this).siblings('.tee-opt-list');
         $list.toggleClass('open');
         var isOpen = $list.hasClass('open');
@@ -1198,6 +1223,10 @@ jQuery(function($) {
     $(document).on('click', '.tee-copt', function() {
         var val = $(this).data('v');
         var idx = $(this).data('i');
+        console.log(
+            'cm-conf: copt click val='
+            + val + ' idx=' + idx
+        );
         steps[idx].val = val;
         var step = steps[idx];
         if (step.kind === 'select') {
