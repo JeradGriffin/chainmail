@@ -776,9 +776,15 @@ jQuery(function($) {
             .first();
         if ($fi.length) {
             var prevF = findPrev('Upload Your Logo');
+            var fiId = $fi.attr('id') || '';
+            if (!fiId) {
+                fiId = 'cm-logo-upload';
+                $fi.attr('id', fiId);
+            }
             var fStep = {
                 kind: 'file',
                 ref: $fi,
+                inputId: fiId,
                 label: 'Upload Your Logo',
                 tab: 'Logo',
                 val: prevF ? prevF.val : '',
@@ -786,10 +792,6 @@ jQuery(function($) {
             };
             $fi.off('change.conf')
                 .on('change.conf', function() {
-                    document.body.style.position
-                        = 'fixed';
-                    document.body.style.top
-                        = '-' + _sy + 'px';
                     var file = this.files
                         && this.files[0];
                     if (file) {
@@ -1033,8 +1035,10 @@ jQuery(function($) {
 
         var oh = '';
         if (step.kind === 'file') {
-            oh = '<div class="tee-upload-area"';
-            oh += ' id="tee-upbtn">';
+            var fid = step.inputId || '';
+            oh = '<label class="tee-upload-area"';
+            if (fid) oh += ' for="' + fid + '"';
+            oh += '>';
             if (step.val) {
                 oh += '<span class="tee-upload-name">';
                 oh += step.val + '</span>';
@@ -1043,7 +1047,7 @@ jQuery(function($) {
                 oh += 'Tap to upload your logo';
                 oh += '</span>';
             }
-            oh += '</div>';
+            oh += '</label>';
         } else {
             var selTxt = 'tap to select';
             var selCls = 'tee-sel-val';
@@ -1122,26 +1126,6 @@ jQuery(function($) {
 
     paint(0);
 
-    $(document).on('click', '#tee-upbtn', function() {
-        var step = steps[cur];
-        if (!step || step.kind !== 'file') return;
-        document.body.style.position = '';
-        document.body.style.top = '';
-        var $realInput = step.wrap
-            ? step.wrap.find('input[type="file"]')
-            : step.ref;
-        if ($realInput && $realInput.length) {
-            $realInput.trigger('click');
-        }
-        $(window).one('focus', function() {
-            setTimeout(function() {
-                document.body.style.position
-                    = 'fixed';
-                document.body.style.top
-                    = '-' + _sy + 'px';
-            }, 100);
-        });
-    });
 
     $(document).on('click', '.tee-ctab', function() {
         var t = parseInt($(this).data('t'), 10);
