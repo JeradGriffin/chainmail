@@ -30,20 +30,43 @@ add_action('wp_head', function() {
 
 #tee-conf-topbar {
   flex-shrink: 0;
-  background: #111;
+  background: #fff;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: 10px 16px;
+}
+
+#tee-conf-icons {
+  display: flex;
+  align-items: center;
   gap: 20px;
 }
 
-#tee-conf-topbar a {
-  color: #fff;
+#tee-conf-topbar a,
+#tee-menu-btn {
+  color: #000;
   display: flex;
   align-items: center;
   text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+}
+
+#tee-conf-site-logo {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+
+#tee-conf-logo-txt {
+  font-size: 17px;
+  font-weight: 700;
+  color: #000;
+  letter-spacing: -0.02em;
 }
 
 #tee-conf-chain {
@@ -847,13 +870,26 @@ jQuery(function($) {
         var cBase = 'https://chainmail-pi.vercel.app/';
         var cUrl = cBase + 'chain_3.svg';
 
+        var $cLogo = $('.custom-logo').first();
+        var lSrc = $cLogo.length
+            ? $cLogo.attr('src') : '';
         var h = '<div id="tee-conf">';
         h += '<div id="tee-conf-topbar">';
+        if (lSrc) {
+            h += '<img src="' + lSrc + '"';
+            h += ' id="tee-conf-site-logo"';
+            h += ' alt="Chainmail">';
+        } else {
+            h += '<span id="tee-conf-logo-txt">';
+            h += 'chainmail</span>';
+        }
+        h += '<div id="tee-conf-icons">';
         h += '<a href="/cart/"';
         h += ' aria-label="Cart">';
         h += '<svg width="22" height="22"';
         h += ' viewBox="0 0 24 24" fill="none"';
-        h += ' stroke="#fff" stroke-width="2"';
+        h += ' stroke="currentColor"';
+        h += ' stroke-width="2"';
         h += ' stroke-linecap="round">';
         h += '<circle cx="9" cy="21" r="1"/>';
         h += '<circle cx="20" cy="21" r="1"/>';
@@ -861,11 +897,12 @@ jQuery(function($) {
         h += 'A2 2 0 0 0 7.68 16h9.72';
         h += 'a2 2 0 0 0 1.97-1.61L23 6H6"/>';
         h += '</svg></a>';
-        h += '<a href="/"';
+        h += '<button id="tee-menu-btn"';
         h += ' aria-label="Menu">';
         h += '<svg width="22" height="22"';
         h += ' viewBox="0 0 24 24" fill="none"';
-        h += ' stroke="#fff" stroke-width="2"';
+        h += ' stroke="currentColor"';
+        h += ' stroke-width="2"';
         h += ' stroke-linecap="round">';
         h += '<line x1="3" y1="6"';
         h += ' x2="21" y2="6"/>';
@@ -873,8 +910,8 @@ jQuery(function($) {
         h += ' x2="21" y2="12"/>';
         h += '<line x1="3" y1="18"';
         h += ' x2="21" y2="18"/>';
-        h += '</svg></a>';
-        h += '</div>';
+        h += '</svg></button>';
+        h += '</div></div>';
         h += '<div id="tee-conf-chain">';
         h += '<img src="' + cUrl + '">';
         h += '</div>';
@@ -1261,6 +1298,27 @@ jQuery(function($) {
             window.location.href =
                 cBase + '?resume=goods';
         });
+
+        $(document).on(
+            'click', '#tee-menu-btn',
+            function() {
+                var _t = Math.abs(parseInt(
+                    document.body.style.top, 10
+                ));
+                var _de3 =
+                    document.documentElement;
+                _de3.style.overflow = '';
+                _de3.style.height = '';
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                document.body.style.height = '';
+                document.body.style.overflow = '';
+                window.scrollTo(0, _t);
+                $('#tee-conf').hide();
+                $('.menu-toggle').trigger('click');
+            }
+        );
     }
 });
 </script>
