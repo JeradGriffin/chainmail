@@ -71,9 +71,15 @@ add_action('wp_head', function() {
 
 #tee-conf-nav-panel {
   display: none;
+  position: absolute;
+  top: 52px;
+  left: 0;
+  right: 0;
+  z-index: 2;
   flex-direction: column;
   background: #fff;
   border-bottom: 1px solid #eee;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
 }
 
 #tee-conf-nav-panel.open {
