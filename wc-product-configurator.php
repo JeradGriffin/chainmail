@@ -416,6 +416,57 @@ body.cm-kit-mode .single_add_to_cart_button {
   display: none !important;
 }
 
+#tee-conf-opts {
+  overflow-y: auto;
+}
+
+#tee-conf-opts [class*="pewc-item"],
+#tee-conf-opts [class*="pewc-group"] {
+  padding: 12px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+#tee-conf-opts [class*="pewc-item-label"],
+#tee-conf-opts [class*="pewc-group-title"] {
+  font-size: 14px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+  color: #000;
+}
+
+#tee-conf-opts label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 15px;
+  color: #000;
+  cursor: pointer;
+}
+
+#tee-conf-opts input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #6A449B;
+  flex-shrink: 0;
+}
+
+#tee-conf-opts input[type="file"] {
+  display: block;
+  width: calc(100% - 40px);
+  margin: 0 20px 12px;
+  padding: 24px 20px;
+  border: 2px dashed #6A449B;
+  border-radius: 8px;
+  background: #f5f0ff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6A449B;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
 body.cm-kit-mode.cm-last-step .single_add_to_cart_button {
   display: block !important;
   position: fixed !important;
@@ -770,39 +821,24 @@ jQuery(function($) {
                 }
             });
 
-        // File input = logo upload step (last)
-        var $fi = $('input[type="file"]')
-            .not('.variations *')
-            .first();
-        if ($fi.length) {
-            var prevF = findPrev('Upload Your Logo');
-            var fiId = $fi.attr('id') || '';
-            if (!fiId) {
-                fiId = 'cm-logo-upload';
-                $fi.attr('id', fiId);
-            }
-            var fStep = {
-                kind: 'file',
-                ref: $fi,
-                inputId: fiId,
-                label: 'Upload Your Logo',
-                tab: 'Logo',
-                val: prevF ? prevF.val : '',
-                fileObj: prevF ? prevF.fileObj : null
-            };
-            $fi.off('change.conf')
-                .on('change.conf', function() {
-                    var file = this.files
-                        && this.files[0];
-                    if (file) {
-                        fStep.val = file.name;
-                        fStep.fileObj = file;
-                        paint(cur);
-                        updateLogoOverlay();
-                    }
-                });
-            nextSteps.push(fStep);
+        var hasPewc = $('[class*="pewc"]')
+            .not('.variations *').length > 0;
+        var hasFile = $('input[type="file"]')
+            .not('.variations *').length > 0;
+        if (hasPewc || hasFile) {
+            nextSteps.push({
+                kind: 'addons',
+                label: 'Customize',
+                tab: 'Add-Ons',
+                val: 'ready'
+            });
         }
+        $('input[type="file"]')
+            .not('.variations *')
+            .off('change.preview')
+            .on('change.preview', function() {
+                updateLogoOverlay();
+            });
         } // end if (isMob) addons block
 
         steps = nextSteps;
@@ -826,50 +862,51 @@ jQuery(function($) {
 
     function updateLogoOverlay() {
         if (!isMob) return;
-        var logoStep = null;
-        var posStep = null;
-        for (var _u = 0; _u < steps.length; _u++) {
-            if (steps[_u].tab === 'Logo') {
-                logoStep = steps[_u];
-            }
-            if (steps[_u].tab === 'Position') {
-                posStep = steps[_u];
-            }
-        }
+        var $fi = $('input[type="file"]')
+            .not('.variations *').first();
+        var file = $fi.length
+            && $fi[0].files
+            && $fi[0].files[0];
         var $logoImg = $('#tee-conf-logo-img');
-        
-        if (logoStep && logoStep.fileObj) {
+        if (file) {
             var reader = new FileReader();
             reader.onload = function(e) {
                 $logoImg.attr('src', e.target.result);
             };
-            reader.readAsDataURL(logoStep.fileObj);
+            reader.readAsDataURL(file);
         } else {
             $logoImg.attr('src', '');
         }
-
+        var posVal = '';
+        $('input[type="radio"]:checked')
+            .not('.variations *')
+            .each(function() {
+                var v = $(this).val().toLowerCase();
+                if (v.indexOf('left') !== -1
+                    || v.indexOf('center') !== -1
+                    || v.indexOf('right') !== -1) {
+                    posVal = v;
+                }
+            });
         var $ov = $('#tee-conf-logo-overlay');
-        if (posStep && posStep.val) {
-            var rv = (posStep.val || '').toLowerCase();
-            if (rv.indexOf('left') !== -1) {
-                $ov.css({
-                    left: 'auto',
-                    right: '33%',
-                    transform: 'none'
-                });
-            } else if (rv.indexOf('right') !== -1) {
-                $ov.css({
-                    left: '22%',
-                    right: 'auto',
-                    transform: 'none'
-                });
-            } else {
-                $ov.css({
-                    left: '50%',
-                    right: 'auto',
-                    transform: 'translateX(-50%)'
-                });
-            }
+        if (posVal.indexOf('left') !== -1) {
+            $ov.css({
+                left: 'auto',
+                right: '33%',
+                transform: 'none'
+            });
+        } else if (posVal.indexOf('right') !== -1) {
+            $ov.css({
+                left: '22%',
+                right: 'auto',
+                transform: 'none'
+            });
+        } else {
+            $ov.css({
+                left: '50%',
+                right: 'auto',
+                transform: 'translateX(-50%)'
+            });
         }
     }
 
@@ -1034,20 +1071,23 @@ jQuery(function($) {
         $(tabsId).html(th);
 
         var oh = '';
-        if (step.kind === 'file') {
-            var fid = step.inputId || '';
-            oh = '<label class="tee-upload-area"';
-            if (fid) oh += ' for="' + fid + '"';
-            oh += '>';
-            if (step.val) {
-                oh += '<span class="tee-upload-name">';
-                oh += step.val + '</span>';
-            } else {
-                oh += '<span class="tee-upload-hint">';
-                oh += 'Tap to upload your logo';
-                oh += '</span>';
+        var skipOpts = false;
+        if (step.kind === 'addons') {
+            skipOpts = true;
+            var $oEl = $(optsId);
+            if (!$oEl.find('[class*="pewc"]').length
+                && !$oEl.find('input[type="file"]').length) {
+                var $pEl = $('[class*="pewc"]')
+                    .not('.variations *')
+                    .not('#tee-conf *');
+                if (!$pEl.length) {
+                    $pEl = $('input[type="file"]')
+                        .not('.variations *')
+                        .not('#tee-conf *')
+                        .closest('p, div');
+                }
+                $oEl.empty().append($pEl);
             }
-            oh += '</label>';
         } else {
             var selTxt = 'tap to select';
             var selCls = 'tee-sel-val';
@@ -1089,14 +1129,15 @@ jQuery(function($) {
             oh += '</div>';
             oh += '</div>';
         }
-        $(optsId).html(oh);
+        if (!skipOpts) $(optsId).html(oh);
 
         if (isMob) {
             var isLast = (i === steps.length - 1);
             var allDone = true;
             for (var k = 0; k < steps.length; k++) {
                 var sk = steps[k];
-                if (!sk.val && sk.kind !== 'file') {
+                if (!sk.val && sk.kind !== 'addons'
+                    && sk.kind !== 'file') {
                     allDone = false;
                     break;
                 }
@@ -1114,7 +1155,8 @@ jQuery(function($) {
                 $('body')
                     .removeClass('cm-last-step');
                 var canNext =
-                    step.kind === 'file'
+                    step.kind === 'addons'
+                    || step.kind === 'file'
                     || !!step.val;
                 $('#tee-conf-next')
                     .prop('disabled', !canNext)
@@ -1312,6 +1354,12 @@ jQuery(function($) {
             window.location.href =
                 cBase + '?resume=goods';
         });
+
+        $(document).on(
+            'change',
+            'input[type="radio"]:not(.variations *)',
+            function() { updateLogoOverlay(); }
+        );
 
         $(document).on(
             'click', '#tee-menu-btn',
