@@ -345,38 +345,6 @@ add_action('wp_head', function() {
   cursor: not-allowed;
 }
 
-body.cm-kit-mode .single_add_to_cart_button {
-  display: none !important;
-}
-
-body.cm-kit-mode.cm-last-step .single_add_to_cart_button {
-  display: block !important;
-  position: fixed !important;
-  bottom: calc(12px + env(safe-area-inset-bottom)) !important;
-  right: 20px !important;
-  z-index: 9999999 !important;
-  font-size: 15px !important;
-  font-weight: 700 !important;
-  color: #fff !important;
-  background: #6A449B !important;
-  border: 2px solid #6A449B !important;
-  padding: 9px 14px !important;
-  border-radius: 4px !important;
-  white-space: nowrap !important;
-  cursor: pointer !important;
-  font-family: 'Inter', -apple-system, sans-serif !important;
-  line-height: normal !important;
-  text-transform: none !important;
-  letter-spacing: normal !important;
-  box-shadow: none !important;
-}
-
-body.cm-kit-mode.cm-last-step .single_add_to_cart_button:disabled {
-  background: transparent !important;
-  color: #6A449B !important;
-  cursor: not-allowed !important;
-}
-
 } /* end mobile */
 
 /* ---- Desktop: inline tab widget ---- */
@@ -856,10 +824,6 @@ jQuery(function($) {
         h += '</div></div>';
         $('body').append(h);
 
-        document.body.classList.add('cm-kit-mode');
-        $('.single_add_to_cart_button')
-            .text('Add to Kit ›');
-
         var _sy = window.scrollY || 0;
         var _de = document.documentElement;
         _de.style.overflow = 'hidden';
@@ -873,30 +837,6 @@ jQuery(function($) {
         tabsId = '#tee-conf-tabs';
         optsId = '#tee-conf-opts';
 
-        var $siteHdr = $([
-            'header.site-header',
-            '#masthead',
-            '.site-header'
-        ].join(',')).first();
-        var hH = 0;
-        if ($siteHdr.length) {
-            hH = $siteHdr.outerHeight() || 0;
-            $siteHdr.css({
-                position: 'fixed',
-                top: '0',
-                left: '0',
-                right: '0',
-                width: '100%'
-            });
-        }
-        if (hH > 0) {
-            $('#tee-conf').css({
-                top: hH + 'px',
-                height: 'calc(100dvh - '
-                    + hH + 'px)'
-            });
-        }
-
         setTimeout(function() {
             $('body *').not(
                 '#tee-conf, #tee-conf *'
@@ -908,9 +848,6 @@ jQuery(function($) {
                     $(this).css('z-index', '1');
                 }
             });
-            if ($siteHdr.length) {
-                $siteHdr.css('zIndex', '999998');
-            }
         }, 300);
 
     } else {
@@ -1004,6 +941,7 @@ jQuery(function($) {
 
         if (isMob) {
             var isLast = (i === steps.length - 1);
+            var isFile = (step.kind === 'file');
             var allDone = true;
             for (var k = 0; k < steps.length; k++) {
                 var sk = steps[k];
@@ -1012,26 +950,19 @@ jQuery(function($) {
                     break;
                 }
             }
+            var canNext = isLast
+                ? allDone
+                : (step.kind === 'file' || !!step.val);
+            $('#tee-conf-next')
+                .prop('disabled', !canNext);
+            var nxt = isLast
+                ? 'Add to Kit &gt;'
+                : 'Continue &gt;';
+            $('#tee-conf-next').html(nxt);
             var bk = (i === 0)
                 ? '&lt; Exit'
                 : '&lt; Back';
             $('#tee-conf-back').html(bk);
-            if (isLast) {
-                $('#tee-conf-next').hide();
-                $('body').addClass('cm-last-step');
-                $('.single_add_to_cart_button')
-                    .prop('disabled', !allDone);
-            } else {
-                $('body')
-                    .removeClass('cm-last-step');
-                var canNext =
-                    step.kind === 'file'
-                    || !!step.val;
-                $('#tee-conf-next')
-                    .prop('disabled', !canNext)
-                    .html('Continue &gt;')
-                    .show();
-            }
         }
     }
 
@@ -1113,54 +1044,56 @@ jQuery(function($) {
 
     if (isMob) {
         $('#tee-conf-next').on('click', function() {
-            cur++;
-            paint(cur);
-        });
-
-        $(document).on(
-            'click',
-            '.single_add_to_cart_button',
-            function() {
-                if (!$('body').hasClass(
-                    'cm-kit-mode'
-                )) return;
+            var isLast = (cur === steps.length - 1);
+            if (isLast) {
                 var seen = {};
-                $(
-                    '[class*="pewc"]'
-                    + ' input[type="radio"]'
-                ).each(function() {
-                    var $r = $(this);
-                    var rn = $r.attr('name') || '';
-                    if (!rn || seen[rn]) return;
-                    seen[rn] = true;
-                    var chk = $(
-                        '[name="' + rn + '"]:checked'
-                    );
-                    if (!chk.length) {
-                        $r.prop('checked', true)
-                            .trigger('change');
-                    }
-                });
+                $('[class*="pewc"] input[type="radio"]')
+                    .each(function() {
+                        var $r = $(this);
+                        var rn = $r.attr('name') || '';
+                        if (!rn || seen[rn]) return;
+                        seen[rn] = true;
+                        var chk = $('[name="' + rn
+                            + '"]:checked');
+                        if (!chk.length) {
+                            $r.prop('checked', true)
+                                .trigger('change');
+                        }
+                    });
                 var fs = null;
                 for (
                     var _f = 0;
                     _f < steps.length;
                     _f++
                 ) {
-                    if (steps[_f].kind === 'file') {
+                    if (steps[_f].kind
+                        === 'file') {
                         fs = steps[_f];
                         break;
                     }
                 }
-                if (fs && fs.fileObj && fs.ref[0]) {
+                if (fs && fs.fileObj
+                    && fs.ref[0]) {
                     try {
-                        var dt = new DataTransfer();
-                        dt.items.add(fs.fileObj);
-                        fs.ref[0].files = dt.files;
+                        var dt =
+                            new DataTransfer();
+                        dt.items.add(
+                            fs.fileObj
+                        );
+                        fs.ref[0].files
+                            = dt.files;
                     } catch(e) {}
                 }
+                var $btn = $(
+                    '.single_add_to_cart_button'
+                );
+                $btn.removeAttr('disabled');
+                $btn.trigger('click');
+            } else {
+                cur++;
+                paint(cur);
             }
-        );
+        });
 
         $('#tee-conf-back').on('click', function() {
             if (cur === 0) {
@@ -1233,9 +1166,7 @@ jQuery(function($) {
                     $('#tee-conf-photo')
                         .attr('src', v.image.src);
                 }
-                $('.single_add_to_cart_button')
-                    .text('Add to Kit ›');
-                setTimeout(detectAddons, 150);
+                setTimeout(detectAddons, 150); // Slightly increased timeout
             }
         );
 
