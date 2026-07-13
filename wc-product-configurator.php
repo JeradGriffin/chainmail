@@ -610,13 +610,12 @@ jQuery(function($) {
 
         // Move native form into overlay
         var $tcf = $('#tee-conf-form');
-        $('form.variations_form').appendTo($tcf);
-        // Move any PEWC elements outside the form
-        $('[class*="pewc"]')
-            .not('#tee-conf *')
-            .each(function() {
-                $tcf.append($(this));
-            });
+        try {
+            $('form.variations_form')
+                .appendTo($tcf);
+        } catch(e) {
+            console.log('cm: form move err', e);
+        }
 
         // Scroll lock
         var _sy = window.scrollY || 0;
