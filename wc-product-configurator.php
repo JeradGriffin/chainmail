@@ -387,42 +387,41 @@ body.cm-kit-mode .quantity {
   display: none !important;
 }
 
-/* Logo dropzone positioned over overlay opts area */
-.cm-file-active {
-  z-index: 1000000 !important;
-  background: #fff !important;
-  padding: 16px 20px !important;
-  box-sizing: border-box !important;
-  margin: 0 !important;
+/* Logo upload button */
+.tee-upload-wrap {
+  padding: 0 20px 16px;
 }
 
-.cm-file-active .dropzone {
-  display: block !important;
-  min-height: 80px !important;
-  border: 2px dashed #6A449B !important;
-  border-radius: 8px !important;
-  background: #f5f0ff !important;
-  padding: 20px 16px !important;
-  text-align: center !important;
-  cursor: pointer !important;
-  box-sizing: border-box !important;
+.tee-upload-btn {
+  display: block;
+  width: 100%;
+  padding: 20px;
+  border: 2px dashed #6A449B;
+  border-radius: 8px;
+  background: #f5f0ff;
+  color: #6A449B;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Inter', -apple-system,
+    sans-serif;
+  text-align: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color:
+    transparent;
 }
 
-.cm-file-active .dz-message,
-.cm-file-active .dz-default {
-  display: block !important;
-  visibility: visible !important;
+.tee-upload-btn.done {
+  background: #f0fff0;
+  border-color: #2a7d2a;
+  color: #1a5a1a;
 }
 
-.cm-file-active .dz-button {
-  display: block !important;
-  color: #6A449B !important;
-  font-size: 15px !important;
-  font-weight: 600 !important;
-  background: none !important;
-  border: none !important;
-  cursor: pointer !important;
-  padding: 0 !important;
+.tee-upload-hint {
+  font-size: 12px;
+  color: #888;
+  text-align: center;
+  margin-top: 8px;
 }
 
 } /* end mobile */
@@ -898,7 +897,6 @@ jQuery(function($) {
     });
 
     var tabsId, optsId;
-    var _pewcFileEl = null;
 
     /* ====== MOBILE OVERLAY ====== */
     if (isMob) {
@@ -1054,48 +1052,28 @@ jQuery(function($) {
             _ownChange = false;
         }, 0);
 
-        // Restore any previously floated PEWC widget
-        if (_pewcFileEl
-            && step.kind !== 'file') {
-            _pewcFileEl
-                .removeClass('cm-file-active')
-                .css({
-                    position: '',
-                    top: '', left: '',
-                    width: ''
-                });
-            _pewcFileEl = null;
-        }
-
         var oh = '';
         if (step.kind === 'file') {
-            // Float native PEWC widget over opts
-            var $pw = step.ref.closest(
-                '.wc-pao-addon-wrap'
-                + ',.pewc-item,.pewc-group'
-            );
-            var od = document.querySelector(
-                optsId
-            );
-            var r = od
-                ? od.getBoundingClientRect()
-                : null;
-            _ownChange = true;
-            $(optsId).html('');
-            setTimeout(function() {
-                _ownChange = false;
-            }, 0);
-            if ($pw.length && r && r.width) {
-                $pw.addClass('cm-file-active')
-                    .css({
-                        position: 'fixed',
-                        top: r.top + 'px',
-                        left: r.left + 'px',
-                        width: r.width + 'px'
-                    });
-                _pewcFileEl = $pw;
-            }
-            return;
+            var isDone = step.val === 'done';
+            var btnC = isDone
+                ? 'tee-upload-btn done'
+                : 'tee-upload-btn';
+            var btnT = isDone
+                ? '✓ Logo uploaded'
+                : 'Tap to upload logo';
+            var hintT = isDone
+                ? 'Tap to replace'
+                : 'PNG, JPG or SVG';
+            oh = '<div class='
+                + '"tee-upload-wrap">';
+            oh += '<button class="'
+                + btnC + '"';
+            oh += ' id="tee-logo-btn">';
+            oh += btnT + '</button>';
+            oh += '<div class='
+                + '"tee-upload-hint">';
+            oh += hintT + '</div>';
+            oh += '</div>';
         } else {
             var selTxt = 'tap to select';
             var selCls = 'tee-sel-val';
@@ -1314,43 +1292,62 @@ jQuery(function($) {
             }
         );
 
-        // Release scroll lock for Dropzone
+        // Logo upload button
         $(document).on(
-            'touchstart',
-            '.cm-file-active .dz-clickable',
+            'click', '#tee-logo-btn',
             function() {
+                var fSt = null;
+                for (
+                    var _fs = 0;
+                    _fs < steps.length;
+                    _fs++
+                ) {
+                    if (steps[_fs].kind
+                        === 'file') {
+                        fSt = steps[_fs];
+                        break;
+                    }
+                }
+                if (!fSt) return;
                 var _t2 = Math.abs(
                     parseInt(
-                        document.body.style.top,
+                        document.body
+                            .style.top,
                         10
                     )
                 );
                 _de.style.overflow = '';
                 _de.style.height = '';
-                document.body.style.position
+                document.body.style
+                    .position = '';
+                document.body.style.top
                     = '';
-                document.body.style.top = '';
-                document.body.style.width = '';
-                document.body.style.overflow
+                document.body.style.width
                     = '';
+                document.body.style
+                    .overflow = '';
+                fSt.ref[0].click();
                 function dzRelock() {
                     document.body.style
                         .position = 'fixed';
-                    document.body.style.top
-                        = '-' + _t2 + 'px';
-                    document.body.style.width
-                        = '100%';
+                    document.body.style
+                        .top = '-' + _t2
+                        + 'px';
+                    document.body.style
+                        .width = '100%';
                     document.body.style
                         .overflow = 'hidden';
                     _de.style.overflow
                         = 'hidden';
-                    _de.style.height = '100%';
+                    _de.style.height
+                        = '100%';
                 }
-                $(this)
-                    .find('input[type="file"]')
+                fSt.ref
                     .off('change.cmu')
-                    .one('change.cmu', dzRelock);
-                $(window).off('focus.cmu')
+                    .one('change.cmu',
+                    dzRelock);
+                $(window)
+                    .off('focus.cmu')
                     .one('focus.cmu',
                     function() {
                         setTimeout(
