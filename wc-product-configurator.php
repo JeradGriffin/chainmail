@@ -387,40 +387,41 @@ body.cm-kit-mode .quantity {
   display: none !important;
 }
 
-/* PEWC Dropzone moved into overlay opts */
-#tee-conf-opts .pewc-group,
-#tee-conf-opts .pewc-item,
-#tee-conf-opts
-.wc-pao-addon-wrap {
+/* Logo upload button */
+.tee-upload-wrap {
   padding: 0 20px 16px;
-  box-sizing: border-box;
+}
+
+.tee-upload-btn {
+  display: block;
   width: 100%;
-}
-
-#tee-conf-opts .dropzone {
-  border: 2px dashed #6A449B !important;
-  border-radius: 8px !important;
-  background: #f5f0ff !important;
-  min-height: 80px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  cursor: pointer !important;
-  padding: 20px !important;
-  box-sizing: border-box !important;
-}
-
-#tee-conf-opts .dz-message {
-  text-align: center;
-}
-
-#tee-conf-opts .dz-button {
+  padding: 20px;
+  border: 2px dashed #6A449B;
+  border-radius: 8px;
+  background: #f5f0ff;
   color: #6A449B;
   font-size: 16px;
   font-weight: 700;
-  background: none;
-  border: none;
+  font-family: 'Inter', -apple-system,
+    sans-serif;
+  text-align: center;
   cursor: pointer;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color:
+    transparent;
+}
+
+.tee-upload-btn.done {
+  background: #f0fff0;
+  border-color: #2a7d2a;
+  color: #1a5a1a;
+}
+
+.tee-upload-hint {
+  font-size: 12px;
+  color: #888;
+  text-align: center;
+  margin-top: 8px;
 }
 
 } /* end mobile */
@@ -960,7 +961,6 @@ jQuery(function($) {
     });
 
     var tabsId, optsId;
-    var _pewcMoved = null;
 
     /* ====== MOBILE OVERLAY ====== */
     if (isMob) {
@@ -1119,54 +1119,29 @@ jQuery(function($) {
             _ownChange = false;
         }, 0);
 
-        // Restore PEWC if leaving file step
-        if (_pewcMoved
-            && step.kind !== 'file') {
-            _ownChange = true;
-            $('form.cart')
-                .append(_pewcMoved);
-            _pewcMoved = null;
-            setTimeout(function() {
-                _ownChange = false;
-            }, 10);
-        }
-
         var oh = '';
         if (step.kind === 'file') {
-            // Find PEWC container — step.ref
-            // may be Dropzone's hidden input
-            // appended to body (not inside a
-            // PEWC wrapper), so fall back to
-            // searching for the .dropzone div
-            var $pw = step.ref.closest(
-                '.pewc-group,.pewc-item'
-                + ',.wc-pao-addon-wrap'
-            );
-            if (!$pw.length) {
-                $pw = $(
-                    '.wc-pao-addon-wrap'
-                    + ',.pewc-group'
-                    + ',.pewc-item'
-                ).not('.variations *')
-                .filter(function() {
-                    return $(this).find(
-                        '.dropzone'
-                        + ',input[type="file"]'
-                    ).length > 0;
-                }).first();
-            }
-            // Always clear opts (prevents
-            // stale content from prev tab)
-            _ownChange = true;
-            $(optsId).empty();
-            if ($pw.length) {
-                $(optsId).append($pw);
-                _pewcMoved = $pw;
-            }
-            setTimeout(function() {
-                _ownChange = false;
-            }, 10);
-            return;
+            var isDone = step.val === 'done';
+            var btnC = isDone
+                ? 'tee-upload-btn done'
+                : 'tee-upload-btn';
+            var btnT = isDone
+                ? '✓ Logo uploaded'
+                : 'Tap to upload logo';
+            var hintT = isDone
+                ? 'Tap to replace'
+                : 'PNG, JPG or SVG';
+            oh = '<div class='
+                + '"tee-upload-wrap">';
+            oh += '<button class="'
+                + btnC + '"';
+            oh += ' type="button"';
+            oh += ' id="tee-logo-btn">';
+            oh += btnT + '</button>';
+            oh += '<div class='
+                + '"tee-upload-hint">';
+            oh += hintT + '</div>';
+            oh += '</div>';
         } else {
             var selTxt = 'tap to select';
             var selCls = 'tee-sel-val';
@@ -1385,13 +1360,23 @@ jQuery(function($) {
             }
         );
 
-        // Release scroll lock when Dropzone
-        // is tapped (iOS needs body unfixed
-        // before file picker can open)
+        // Logo upload button
         $(document).on(
-            'touchstart',
-            '#tee-conf-opts .dz-clickable',
+            'click', '#tee-logo-btn',
             function() {
+                var fSt = null;
+                for (
+                    var _fs = 0;
+                    _fs < steps.length;
+                    _fs++
+                ) {
+                    if (steps[_fs].kind
+                        === 'file') {
+                        fSt = steps[_fs];
+                        break;
+                    }
+                }
+                if (!fSt) return;
                 var _t2 = Math.abs(
                     parseInt(
                         document.body
@@ -1409,6 +1394,7 @@ jQuery(function($) {
                     = '';
                 document.body.style
                     .overflow = '';
+                fSt.ref[0].click();
                 function dzRelock() {
                     document.body.style
                         .position = 'fixed';
@@ -1424,11 +1410,9 @@ jQuery(function($) {
                     _de.style.height
                         = '100%';
                 }
-                $(
-                    '#tee-conf-opts'
-                    + ' input[type="file"]'
-                ).off('change.cmu')
-                .one('change.cmu',
+                fSt.ref
+                    .off('change.cmu')
+                    .one('change.cmu',
                     dzRelock);
                 $(window)
                     .off('focus.cmu')
