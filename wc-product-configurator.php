@@ -425,6 +425,17 @@ body.cm-kit-mode .quantity {
   margin-top: 8px;
 }
 
+/* Hide 3rd-party accessibility widgets
+   that overlay the configurator UI */
+body.cm-kit-mode [id*="userway"],
+body.cm-kit-mode [class*="userway"],
+body.cm-kit-mode [id*="accessib"],
+body.cm-kit-mode [class*="accessib"],
+body.cm-kit-mode [id*="audioeye"],
+body.cm-kit-mode [class*="audioeye"] {
+  display: none !important;
+}
+
 } /* end mobile */
 
 /* ---- Desktop: inline tab widget ---- */
@@ -1062,18 +1073,24 @@ jQuery(function($) {
         document.body.style.width = '100%';
         document.body.style.overflow = 'hidden';
 
-        setTimeout(function() {
+        function _supZ() {
             $('body *').not(
                 '#tee-conf, #tee-conf *'
             ).each(function() {
                 var z = parseInt(
-                    $(this).css('z-index'), 10
+                    $(this).css('z-index'),
+                    10
                 );
                 if (!isNaN(z) && z > 9000) {
-                    $(this).css('z-index', '1');
+                    $(this).css(
+                        'z-index', '1'
+                    );
                 }
             });
-        }, 300);
+        }
+        setTimeout(_supZ, 300);
+        setTimeout(_supZ, 1000);
+        setTimeout(_supZ, 3000);
 
         tabsId = '#tee-conf-tabs';
         optsId = '#tee-conf-opts';
