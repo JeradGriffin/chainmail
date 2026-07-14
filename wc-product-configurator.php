@@ -387,41 +387,40 @@ body.cm-kit-mode .quantity {
   display: none !important;
 }
 
-/* Logo upload button */
-.tee-upload-wrap {
+/* PEWC Dropzone moved into overlay opts */
+#tee-conf-opts .pewc-group,
+#tee-conf-opts .pewc-item,
+#tee-conf-opts
+.wc-pao-addon-wrap {
   padding: 0 20px 16px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
-.tee-upload-btn {
-  display: block;
-  width: 100%;
-  padding: 20px;
-  border: 2px dashed #6A449B;
-  border-radius: 8px;
-  background: #f5f0ff;
+#tee-conf-opts .dropzone {
+  border: 2px dashed #6A449B !important;
+  border-radius: 8px !important;
+  background: #f5f0ff !important;
+  min-height: 80px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+}
+
+#tee-conf-opts .dz-message {
+  text-align: center;
+}
+
+#tee-conf-opts .dz-button {
   color: #6A449B;
   font-size: 16px;
   font-weight: 700;
-  font-family: 'Inter', -apple-system,
-    sans-serif;
-  text-align: center;
+  background: none;
+  border: none;
   cursor: pointer;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color:
-    transparent;
-}
-
-.tee-upload-btn.done {
-  background: #f0fff0;
-  border-color: #2a7d2a;
-  color: #1a5a1a;
-}
-
-.tee-upload-hint {
-  font-size: 12px;
-  color: #888;
-  text-align: center;
-  margin-top: 8px;
 }
 
 } /* end mobile */
@@ -961,6 +960,7 @@ jQuery(function($) {
     });
 
     var tabsId, optsId;
+    var _pewcMoved = null;
 
     /* ====== MOBILE OVERLAY ====== */
     if (isMob) {
@@ -1002,6 +1002,7 @@ jQuery(function($) {
         h += 'a2 2 0 0 0 1.97-1.61L23 6H6"/>';
         h += '</svg></a>';
         h += '<button id="tee-menu-btn"';
+        h += ' type="button"';
         h += ' aria-label="Menu">';
         h += '<svg width="22" height="22"';
         h += ' viewBox="0 0 24 24" fill="none"';
@@ -1037,12 +1038,14 @@ jQuery(function($) {
         h += '<div id="tee-conf-step"></div>';
         h += '<div id="tee-conf-opts"></div>';
         h += '<div id="tee-conf-nav">';
-        h += '<button id="tee-conf-back">';
+        h += '<button id="tee-conf-back"';
+        h += ' type="button">';
         h += '&lt; Exit</button>';
-        h += '<button id="tee-conf-preview">';
+        h += '<button id="tee-conf-preview"';
+        h += ' type="button">';
         h += 'Preview</button>';
         h += '</div></div>';
-        $('body').append(h);
+        $('form.cart').append(h);
 
         document.body.classList.add('cm-kit-mode');
         $('.single_add_to_cart_button')
@@ -1116,28 +1119,41 @@ jQuery(function($) {
             _ownChange = false;
         }, 0);
 
+        // Restore PEWC if leaving file step
+        if (_pewcMoved
+            && step.kind !== 'file') {
+            _ownChange = true;
+            $('form.cart')
+                .append(_pewcMoved);
+            _pewcMoved = null;
+            setTimeout(function() {
+                _ownChange = false;
+            }, 10);
+        }
+
         var oh = '';
         if (step.kind === 'file') {
-            var isDone = step.val === 'done';
-            var btnC = isDone
-                ? 'tee-upload-btn done'
-                : 'tee-upload-btn';
-            var btnT = isDone
-                ? '✓ Logo uploaded'
-                : 'Tap to upload logo';
-            var hintT = isDone
-                ? 'Tap to replace'
-                : 'PNG, JPG or SVG';
-            oh = '<div class='
-                + '"tee-upload-wrap">';
-            oh += '<button class="'
-                + btnC + '"';
-            oh += ' id="tee-logo-btn">';
-            oh += btnT + '</button>';
-            oh += '<div class='
-                + '"tee-upload-hint">';
-            oh += hintT + '</div>';
-            oh += '</div>';
+            // Move native PEWC widget into
+            // opts — same behavior as desktop,
+            // just in our mobile container
+            var $pw = step.ref.closest(
+                '.pewc-group,.pewc-item'
+                + ',.wc-pao-addon-wrap'
+            );
+            if ($pw.length
+                && !$(optsId)
+                    .find($pw).length) {
+                _ownChange = true;
+                $(optsId).empty()
+                    .append($pw);
+                _pewcMoved = $pw;
+                setTimeout(function() {
+                    _ownChange = false;
+                }, 10);
+            }
+            // tabs already rendered; skip
+            // the opts html render below
+            return;
         } else {
             var selTxt = 'tap to select';
             var selCls = 'tee-sel-val';
@@ -1356,23 +1372,13 @@ jQuery(function($) {
             }
         );
 
-        // Logo upload button
+        // Release scroll lock when Dropzone
+        // is tapped (iOS needs body unfixed
+        // before file picker can open)
         $(document).on(
-            'click', '#tee-logo-btn',
+            'touchstart',
+            '#tee-conf-opts .dz-clickable',
             function() {
-                var fSt = null;
-                for (
-                    var _fs = 0;
-                    _fs < steps.length;
-                    _fs++
-                ) {
-                    if (steps[_fs].kind
-                        === 'file') {
-                        fSt = steps[_fs];
-                        break;
-                    }
-                }
-                if (!fSt) return;
                 var _t2 = Math.abs(
                     parseInt(
                         document.body
@@ -1390,7 +1396,6 @@ jQuery(function($) {
                     = '';
                 document.body.style
                     .overflow = '';
-                fSt.ref[0].click();
                 function dzRelock() {
                     document.body.style
                         .position = 'fixed';
@@ -1406,9 +1411,11 @@ jQuery(function($) {
                     _de.style.height
                         = '100%';
                 }
-                fSt.ref
-                    .off('change.cmu')
-                    .one('change.cmu',
+                $(
+                    '#tee-conf-opts'
+                    + ' input[type="file"]'
+                ).off('change.cmu')
+                .one('change.cmu',
                     dzRelock);
                 $(window)
                     .off('focus.cmu')
