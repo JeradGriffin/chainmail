@@ -1133,26 +1133,39 @@ jQuery(function($) {
 
         var oh = '';
         if (step.kind === 'file') {
-            // Move native PEWC widget into
-            // opts — same behavior as desktop,
-            // just in our mobile container
+            // Find PEWC container — step.ref
+            // may be Dropzone's hidden input
+            // appended to body (not inside a
+            // PEWC wrapper), so fall back to
+            // searching for the .dropzone div
             var $pw = step.ref.closest(
                 '.pewc-group,.pewc-item'
                 + ',.wc-pao-addon-wrap'
             );
-            if ($pw.length
-                && !$(optsId)
-                    .find($pw).length) {
-                _ownChange = true;
-                $(optsId).empty()
-                    .append($pw);
-                _pewcMoved = $pw;
-                setTimeout(function() {
-                    _ownChange = false;
-                }, 10);
+            if (!$pw.length) {
+                $pw = $(
+                    '.wc-pao-addon-wrap'
+                    + ',.pewc-group'
+                    + ',.pewc-item'
+                ).not('.variations *')
+                .filter(function() {
+                    return $(this).find(
+                        '.dropzone'
+                        + ',input[type="file"]'
+                    ).length > 0;
+                }).first();
             }
-            // tabs already rendered; skip
-            // the opts html render below
+            // Always clear opts (prevents
+            // stale content from prev tab)
+            _ownChange = true;
+            $(optsId).empty();
+            if ($pw.length) {
+                $(optsId).append($pw);
+                _pewcMoved = $pw;
+            }
+            setTimeout(function() {
+                _ownChange = false;
+            }, 10);
             return;
         } else {
             var selTxt = 'tap to select';
