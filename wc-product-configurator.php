@@ -790,6 +790,8 @@ jQuery(function($) {
                 });
                 $fi.off('change.cf')
                     .on('change.cf', function() {
+                        var _f = this.files[0]
+                            || null;
                         for (
                             var _fs = 0;
                             _fs < steps.length;
@@ -798,14 +800,32 @@ jQuery(function($) {
                             if (steps[_fs].kind
                                 === 'file') {
                                 steps[_fs].fileObj
-                                    = this.files[0]
-                                    || null;
+                                    = _f;
                                 steps[_fs].val
-                                    = steps[_fs]
-                                    .fileObj
+                                    = _f
                                     ? 'done' : '';
                                 break;
                             }
+                        }
+                        // Keep file in input
+                        // so PEWC validation
+                        // passes (Dropzone
+                        // clears input after
+                        // processing)
+                        if (_f) {
+                            try {
+                                var _dt =
+                                    new DataTransfer();
+                                _dt.items.add(_f);
+                                $(
+                                    'input[type'
+                                    + '="file"]'
+                                ).not('.variations *')
+                                .each(function() {
+                                    this.files =
+                                        _dt.files;
+                                });
+                            } catch(_e) {}
                         }
                         updateLogoOverlay();
                         paint(cur);
@@ -813,6 +833,34 @@ jQuery(function($) {
             });
 
         steps = next;
+        // Re-apply saved file whenever steps
+        // are rebuilt (Dropzone may have
+        // cleared or replaced the input)
+        (function() {
+            var _rf = null;
+            for (
+                var _rs = 0;
+                _rs < steps.length;
+                _rs++
+            ) {
+                if (steps[_rs].kind === 'file'
+                    && steps[_rs].fileObj) {
+                    _rf = steps[_rs].fileObj;
+                    break;
+                }
+            }
+            if (!_rf) return;
+            try {
+                var _rdt = new DataTransfer();
+                _rdt.items.add(_rf);
+                $(
+                    'input[type="file"]'
+                ).not('.variations *')
+                .each(function() {
+                    this.files = _rdt.files;
+                });
+            } catch(_re) {}
+        })();
         var newSnap = steps
             .map(function(s) {
                 return s.label;
