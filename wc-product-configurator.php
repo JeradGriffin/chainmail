@@ -1374,6 +1374,41 @@ jQuery(function($) {
             }
         );
 
+        // Re-apply logo file before submit
+        // (Dropzone recreates hidden input,
+        //  making ref stale; DataTransfer
+        //  restores it right before WC reads it)
+        $(document).on(
+            'click',
+            '.single_add_to_cart_button',
+            function() {
+                var fSt = null;
+                for (
+                    var _fi = 0;
+                    _fi < steps.length;
+                    _fi++
+                ) {
+                    if (steps[_fi].kind
+                        === 'file') {
+                        fSt = steps[_fi];
+                        break;
+                    }
+                }
+                if (!fSt || !fSt.fileObj) {
+                    return;
+                }
+                try {
+                    var dt = new DataTransfer();
+                    dt.items.add(fSt.fileObj);
+                    $('input[type="file"]')
+                        .not('.variations *')
+                        .each(function() {
+                            this.files = dt.files;
+                        });
+                } catch(e) {}
+            }
+        );
+
         // Redirect after add to cart
         $(document).on(
             'added_to_cart', function() {
