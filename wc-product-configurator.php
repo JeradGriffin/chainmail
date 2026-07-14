@@ -1360,6 +1360,7 @@ jQuery(function($) {
             }
         );
 
+        var _dzWired = false;
         // Logo upload button
         $(document).on(
             'click', '#tee-logo-btn',
@@ -1394,7 +1395,22 @@ jQuery(function($) {
                     = '';
                 document.body.style
                     .overflow = '';
-                fSt.ref[0].click();
+                // Click Dropzone's own
+                // hiddenFileInput — PEWC
+                // validates via Dropzone
+                // queue, not our input
+                var _dzIn = null;
+                try {
+                    if (window.Dropzone
+                        && Dropzone
+                        .instances[0]) {
+                        _dzIn = Dropzone
+                        .instances[0]
+                        .hiddenFileInput;
+                    }
+                } catch (_e2) {}
+                (_dzIn || fSt.ref[0])
+                    .click();
                 function dzRelock() {
                     document.body.style
                         .position = 'fixed';
@@ -1410,10 +1426,17 @@ jQuery(function($) {
                     _de.style.height
                         = '100%';
                 }
-                fSt.ref
-                    .off('change.cmu')
-                    .one('change.cmu',
-                    dzRelock);
+                if (_dzIn) {
+                    $(_dzIn)
+                        .off('change.cmu')
+                        .one('change.cmu',
+                        dzRelock);
+                } else {
+                    fSt.ref
+                        .off('change.cmu')
+                        .one('change.cmu',
+                        dzRelock);
+                }
                 $(window)
                     .off('focus.cmu')
                     .one('focus.cmu',
@@ -1423,6 +1446,36 @@ jQuery(function($) {
                         );
                     }
                 );
+                // Wire Dropzone addedfile
+                // once to update overlay
+                if (!_dzWired && _dzIn) {
+                    _dzWired = true;
+                    Dropzone
+                    .instances[0].on(
+                        'addedfile',
+                        function(file) {
+                            var _st = steps;
+                            for (
+                            var _dzi = 0;
+                            _dzi < _st.length;
+                            _dzi++) {
+                                if (_st[_dzi]
+                                .kind !==
+                                'file') {
+                                    continue;
+                                }
+                                _st[_dzi]
+                                    .fileObj
+                                    = file;
+                                _st[_dzi].val
+                                    = 'done';
+                                break;
+                            }
+                            updateLogoOverlay();
+                            paint(cur);
+                        }
+                    );
+                }
             }
         );
 
