@@ -579,6 +579,22 @@ jQuery(function($) {
         return;
     }
 
+    // Logo upload forces form submit (not
+    // AJAX) — detect page reload & redirect
+    if (window.location.href
+        .indexOf('/product/tee') !== -1) {
+        var _qs = new URLSearchParams(
+            window.location.search
+        );
+        if (_qs.get('added-to-cart')) {
+            window.location.href =
+                'https://chainmail-pi'
+                + '.vercel.app'
+                + '/?resume=goods';
+            return;
+        }
+    }
+
     var uP = new URLSearchParams(
         window.location.search
     );
