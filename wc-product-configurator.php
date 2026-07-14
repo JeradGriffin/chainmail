@@ -427,6 +427,8 @@ body.cm-kit-mode .quantity {
 
 /* Hide 3rd-party accessibility widgets
    that overlay the configurator UI */
+body.cm-kit-mode #ea11y-root,
+body.cm-kit-mode .ea11y-widget,
 body.cm-kit-mode [id*="userway"],
 body.cm-kit-mode [class*="userway"],
 body.cm-kit-mode [id*="accessib"],
