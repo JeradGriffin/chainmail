@@ -35,6 +35,10 @@ jQuery(function($) {
         .getItem('cm_tee_kit');
     var isKitPage =
         stored === window.location.pathname;
+    console.log('cm-tee isKit=' + isKit
+        + ' stored=' + stored
+        + ' path=' + window.location.pathname
+        + ' isKitPage=' + isKitPage);
     if (!isKit && !isKitPage) return;
 
     var resumeUrl =
@@ -55,6 +59,8 @@ jQuery(function($) {
         .length > 0;
     var justAdded =
         p.get('added-to-cart') !== null;
+    console.log('cm-tee msg=' + msg
+        + ' justAdded=' + justAdded);
 
     function goResume() {
         sessionStorage.removeItem(
