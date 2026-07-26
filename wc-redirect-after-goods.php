@@ -35,7 +35,16 @@ jQuery(function($) {
         var gid = params.get('gid');
         if (!gid) return;
         var d = {};
-        var im = $('img.wp-post-image').first().attr('src');
+        var $gi = $(
+            '.woocommerce-product'
+            + '-gallery__image img'
+        ).first();
+        var im =
+            $('img.wp-post-image')
+            .first().attr('src')
+            || $gi.attr('data-large_image')
+            || $gi.attr('src')
+            || '';
         if (im) d.image = im;
         var pts = [];
         $('table.variations select').each(function() {
