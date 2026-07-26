@@ -605,21 +605,35 @@ jQuery(function($) {
         if (_qs.get('added-to-cart')) {
             var _dr = sessionStorage
                 .getItem('cm_tee_draft');
+            var _dI = '', _dD = '';
             if (_dr) {
                 try {
-                    localStorage.setItem(
-                        'cm_good_tee', _dr
-                    );
+                    var _dp = JSON.parse(_dr);
+                    _dI = _dp.image || '';
+                    _dD = _dp.detail || '';
                     sessionStorage
                         .removeItem(
                         'cm_tee_draft'
                     );
                 } catch(_le) {}
             }
-            window.location.href =
+            var _ru =
                 'https://chainmail-pi'
                 + '.vercel.app'
-                + '/?resume=goods';
+                + '/?resume=goods&gid=tee';
+            if (_dI) {
+                _ru += '&img='
+                    + encodeURIComponent(
+                        _dI
+                    );
+            }
+            if (_dD) {
+                _ru += '&detail='
+                    + encodeURIComponent(
+                        _dD
+                    );
+            }
+            window.location.href = _ru;
             return;
         }
     }
@@ -1663,19 +1677,34 @@ jQuery(function($) {
                 if (!isTee) return;
                 var _d = sessionStorage
                     .getItem('cm_tee_draft');
+                var _aI = '', _aD = '';
                 if (_d) {
                     try {
-                        localStorage.setItem(
-                            'cm_good_tee', _d
-                        );
+                        var _dp2 =
+                            JSON.parse(_d);
+                        _aI = _dp2.image || '';
+                        _aD = _dp2.detail || '';
                         sessionStorage
                             .removeItem(
                             'cm_tee_draft'
                         );
                     } catch(_le) {}
                 }
-                window.location.href =
-                    cBase + '?resume=goods';
+                var _ru2 = cBase
+                    + '?resume=goods&gid=tee';
+                if (_aI) {
+                    _ru2 += '&img='
+                    + encodeURIComponent(
+                        _aI
+                    );
+                }
+                if (_aD) {
+                    _ru2 += '&detail='
+                    + encodeURIComponent(
+                        _aD
+                    );
+                }
+                window.location.href = _ru2;
             }
         );
     }

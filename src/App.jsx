@@ -136,6 +136,15 @@ export default function KitBuilder() {
           if (raw) { try { wcCaptured[id] = JSON.parse(raw); } catch(e) {} }
           localStorage.removeItem('cm_good_' + id);
         });
+        // URL params carry cross-origin captured data from WC product pages
+        if (isResume) {
+          const urlGid    = params.get('gid');
+          const urlImg    = params.get('img');
+          const urlDetail = params.get('detail');
+          if (urlGid && (urlImg || urlDetail)) {
+            wcCaptured[urlGid] = { image: urlImg || '', detail: urlDetail || '' };
+          }
+        }
         setGoodConfigurations({ ...baseCfg, ...wcCaptured });
         localStorage.removeItem('chainmail_kit_state');
       } catch (e) {}

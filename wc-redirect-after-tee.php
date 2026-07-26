@@ -65,11 +65,12 @@ jQuery(function($) {
     function goResume() {
         var _d = sessionStorage
             .getItem('cm_tee_draft');
+        var _tI = '', _tD = '';
         if (_d) {
             try {
-                localStorage.setItem(
-                    'cm_good_tee', _d
-                );
+                var _dp = JSON.parse(_d);
+                _tI = _dp.image || '';
+                _tD = _dp.detail || '';
             } catch(_e) {}
         }
         sessionStorage.removeItem(
@@ -78,7 +79,16 @@ jQuery(function($) {
         sessionStorage.removeItem(
             'cm_tee_draft'
         );
-        window.location.href = resumeUrl;
+        var _ru = resumeUrl + '&gid=tee';
+        if (_tI) {
+            _ru += '&img='
+                + encodeURIComponent(_tI);
+        }
+        if (_tD) {
+            _ru += '&detail='
+                + encodeURIComponent(_tD);
+        }
+        window.location.href = _ru;
     }
 
     // Post-add-to-cart reload
