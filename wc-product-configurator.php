@@ -601,6 +601,19 @@ jQuery(function($) {
             window.location.search
         );
         if (_qs.get('added-to-cart')) {
+            var _dr = sessionStorage
+                .getItem('cm_tee_draft');
+            if (_dr) {
+                try {
+                    localStorage.setItem(
+                        'cm_good_tee', _dr
+                    );
+                    sessionStorage
+                        .removeItem(
+                        'cm_tee_draft'
+                    );
+                } catch(_le) {}
+            }
             window.location.href =
                 'https://chainmail-pi'
                 + '.vercel.app'
@@ -1486,14 +1499,66 @@ jQuery(function($) {
             }
         );
 
-        // Re-apply logo file before submit
-        // (Dropzone recreates hidden input,
-        //  making ref stale; DataTransfer
-        //  restores it right before WC reads it)
+        // Capture config + re-apply logo
+        // before submit
         $(document).on(
             'click',
             '.single_add_to_cart_button',
             function() {
+                var _pts = [];
+                for (
+                    var _ci = 0;
+                    _ci < steps.length;
+                    _ci++
+                ) {
+                    var _cs = steps[_ci];
+                    if (_cs.kind === 'file') {
+                        if (_cs.val === 'done') {
+                            _pts.push('Logo');
+                        }
+                        continue;
+                    }
+                    if (!_cs.val) continue;
+                    for (
+                        var _co = 0;
+                        _co < _cs.opts.length;
+                        _co++
+                    ) {
+                        var _cop =
+                            _cs.opts[_co];
+                        if (_cop.v === _cs.val) {
+                            _pts.push(_cop.t);
+                            break;
+                        }
+                    }
+                }
+                var _ph = '';
+                var _pEl = document
+                    .getElementById(
+                    'tee-conf-photo'
+                );
+                if (_pEl) {
+                    _ph = _pEl.src || '';
+                }
+                if (!_ph) {
+                    var _gi = $(
+                        '.woocommerce-product'
+                        + '-gallery__image img'
+                    );
+                    _ph = _gi.attr(
+                        'data-large_image'
+                    ) || _gi.attr('src') || '';
+                }
+                try {
+                    sessionStorage.setItem(
+                        'cm_tee_draft',
+                        JSON.stringify({
+                            image: _ph,
+                            detail: _pts
+                                .join(' | ')
+                        })
+                    );
+                } catch(_se) {}
                 var fSt = null;
                 for (
                     var _fi = 0;
@@ -1515,7 +1580,8 @@ jQuery(function($) {
                     $('input[type="file"]')
                         .not('.variations *')
                         .each(function() {
-                            this.files = dt.files;
+                            this.files
+                                = dt.files;
                         });
                 } catch(e) {}
             }
@@ -1524,6 +1590,19 @@ jQuery(function($) {
         // Redirect after add to cart
         $(document).on(
             'added_to_cart', function() {
+                var _d = sessionStorage
+                    .getItem('cm_tee_draft');
+                if (_d) {
+                    try {
+                        localStorage.setItem(
+                            'cm_good_tee', _d
+                        );
+                        sessionStorage
+                            .removeItem(
+                            'cm_tee_draft'
+                        );
+                    } catch(_le) {}
+                }
                 window.location.href =
                     cBase + '?resume=goods';
             }
