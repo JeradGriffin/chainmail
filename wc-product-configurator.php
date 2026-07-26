@@ -1141,27 +1141,29 @@ jQuery(function($) {
 
         var oh = '';
         if (step.kind === 'file') {
-            var isDone = step.val === 'done';
-            var btnC = isDone
-                ? 'tee-upload-btn done'
-                : 'tee-upload-btn';
-            var btnT = isDone
-                ? '✓ Logo uploaded'
-                : 'Tap to upload logo';
-            var hintT = isDone
-                ? 'Tap to replace'
-                : 'PNG, JPG or SVG';
-            oh = '<div class='
-                + '"tee-upload-wrap">';
-            oh += '<button class="'
-                + btnC + '"';
-            oh += ' type="button"';
-            oh += ' id="tee-logo-btn">';
-            oh += btnT + '</button>';
-            oh += '<div class='
-                + '"tee-upload-hint">';
-            oh += hintT + '</div>';
-            oh += '</div>';
+            if (isMob) {
+                var isDone = step.val === 'done';
+                var btnC = isDone
+                    ? 'tee-upload-btn done'
+                    : 'tee-upload-btn';
+                var btnT = isDone
+                    ? '✓ Logo uploaded'
+                    : 'Tap to upload logo';
+                var hintT = isDone
+                    ? 'Tap to replace'
+                    : 'PNG, JPG or SVG';
+                oh = '<div class='
+                    + '"tee-upload-wrap">';
+                oh += '<button class="'
+                    + btnC + '"';
+                oh += ' type="button"';
+                oh += ' id="tee-logo-btn">';
+                oh += btnT + '</button>';
+                oh += '<div class='
+                    + '"tee-upload-hint">';
+                oh += hintT + '</div>';
+                oh += '</div>';
+            }
         } else {
             var selTxt = 'tap to select';
             var selCls = 'tee-sel-val';
