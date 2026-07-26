@@ -587,6 +587,8 @@ add_action('wp_footer', function() {
 jQuery(function($) {
     var mq = '(max-width: 767px)';
     var isMob = window.matchMedia(mq).matches;
+    var isTee = window.location.href
+        .indexOf('/product/tee') !== -1;
 
     if (!$('form.variations_form').length
         && !$('.wc-pao-addon-wrap').length) {
@@ -1505,60 +1507,66 @@ jQuery(function($) {
             'click',
             '.single_add_to_cart_button',
             function() {
-                var _pts = [];
-                for (
-                    var _ci = 0;
-                    _ci < steps.length;
-                    _ci++
-                ) {
-                    var _cs = steps[_ci];
-                    if (_cs.kind === 'file') {
-                        if (_cs.val === 'done') {
-                            _pts.push('Logo');
-                        }
-                        continue;
-                    }
-                    if (!_cs.val) continue;
+                if (isTee) {
+                    var _pts = [];
                     for (
-                        var _co = 0;
-                        _co < _cs.opts.length;
-                        _co++
+                        var _ci = 0;
+                        _ci < steps.length;
+                        _ci++
                     ) {
-                        var _cop =
-                            _cs.opts[_co];
-                        if (_cop.v === _cs.val) {
-                            _pts.push(_cop.t);
-                            break;
+                        var _cs = steps[_ci];
+                        if (_cs.kind === 'file') {
+                            if (_cs.val === 'done') {
+                                _pts.push('Logo');
+                            }
+                            continue;
+                        }
+                        if (!_cs.val) continue;
+                        for (
+                            var _co = 0;
+                            _co < _cs.opts.length;
+                            _co++
+                        ) {
+                            var _cop =
+                                _cs.opts[_co];
+                            if (_cop.v ===
+                                _cs.val) {
+                                _pts.push(
+                                    _cop.t
+                                );
+                                break;
+                            }
                         }
                     }
-                }
-                var _ph = '';
-                var _pEl = document
-                    .getElementById(
-                    'tee-conf-photo'
-                );
-                if (_pEl) {
-                    _ph = _pEl.src || '';
-                }
-                if (!_ph) {
-                    var _gi = $(
-                        '.woocommerce-product'
-                        + '-gallery__image img'
+                    var _ph = '';
+                    var _pEl = document
+                        .getElementById(
+                        'tee-conf-photo'
                     );
-                    _ph = _gi.attr(
-                        'data-large_image'
-                    ) || _gi.attr('src') || '';
+                    if (_pEl) {
+                        _ph = _pEl.src || '';
+                    }
+                    if (!_ph) {
+                        var _gi = $(
+                            '.woocommerce-product'
+                            + '-gallery__image img'
+                        );
+                        _ph = _gi.attr(
+                            'data-large_image'
+                        ) || _gi.attr('src')
+                        || '';
+                    }
+                    try {
+                        sessionStorage.setItem(
+                            'cm_tee_draft',
+                            JSON.stringify({
+                                image: _ph,
+                                detail: _pts
+                                    .join(' | ')
+                            })
+                        );
+                    } catch(_se) {}
                 }
-                try {
-                    sessionStorage.setItem(
-                        'cm_tee_draft',
-                        JSON.stringify({
-                            image: _ph,
-                            detail: _pts
-                                .join(' | ')
-                        })
-                    );
-                } catch(_se) {}
                 var fSt = null;
                 for (
                     var _fi = 0;
@@ -1587,9 +1595,10 @@ jQuery(function($) {
             }
         );
 
-        // Redirect after add to cart
+        // Redirect after add to cart (Tee only)
         $(document).on(
             'added_to_cart', function() {
+                if (!isTee) return;
                 var _d = sessionStorage
                     .getItem('cm_tee_draft');
                 if (_d) {
