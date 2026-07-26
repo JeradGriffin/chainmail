@@ -1381,15 +1381,21 @@ jQuery(function($) {
             }
         );
 
+        var _varImg = imgSrc;
         // Image update on variation
         $('body').on(
             'found_variation'
             + '.wc-variation-form',
             'form.variations_form',
             function(ev, v) {
-                if (v.image && v.image.src) {
+                var _vs = v.image
+                    && (v.image.full_src
+                    || v.image.src)
+                    || '';
+                if (_vs) {
+                    _varImg = _vs;
                     $('#tee-conf-photo')
-                        .attr('src', v.image.src);
+                        .attr('src', _vs);
                 }
                 $('.single_add_to_cart_button')
                     .text('Add to Kit ›');
@@ -1613,22 +1619,14 @@ jQuery(function($) {
                     }
                 }
                 var _ph = '';
-                var _pEl = document
-                    .getElementById(
-                    'tee-conf-photo'
-                );
-                if (_pEl) {
-                    _ph = _pEl.src || '';
-                }
+                _ph = _varImg;
                 if (!_ph) {
-                    var _gi = $(
-                        '.woocommerce-product'
-                        + '-gallery__image img'
+                    var _pEl = document
+                        .getElementById(
+                        'tee-conf-photo'
                     );
-                    _ph = _gi.attr(
-                        'data-large_image'
-                    ) || _gi.attr('src')
-                    || '';
+                    _ph = (_pEl && _pEl.src)
+                        || '';
                 }
                 var _logo = $(
                     '#tee-conf-logo-img'
@@ -1636,6 +1634,15 @@ jQuery(function($) {
                 if (_logo.length > 500000) {
                     _logo = '';
                 }
+                console.log(
+                    'cm-conf capture:'
+                    + ' img=' + _ph
+                        .split('/').pop()
+                    + ' logo='
+                    + (_logo.length || 0)
+                    + ' detail='
+                    + _pts.join(' | ')
+                );
                 try {
                     sessionStorage.setItem(
                         'cm_tee_draft',
