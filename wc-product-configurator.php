@@ -1518,7 +1518,7 @@ jQuery(function($) {
                 }
             }
             if (!fSt || !fSt.fileObj) {
-                return;
+                return true;
             }
             try {
                 var _rdt = new DataTransfer();
@@ -1529,20 +1529,58 @@ jQuery(function($) {
                         this.files =
                             _rdt.files;
                     });
-            } catch(_re) {}
+            } catch(_re) {
+                return false;
+            }
+            var $fIn = $(
+                'input[type="file"]'
+            ).not('.variations *').first();
+            return !$fIn.length
+                || $fIn[0].files.length > 0;
+        }
+        function _showLogoWarn() {
+            $('#cm-logo-warn').remove();
+            $('<div id="cm-logo-warn">')
+                .text(
+                    'Logo not ready'
+                    + ' — tap again'
+                )
+                .css({
+                    position: 'fixed',
+                    bottom: '70px',
+                    right: '20px',
+                    background: '#c00',
+                    color: '#fff',
+                    padding: '8px 14px',
+                    borderRadius: '6px',
+                    fontSize: '13px',
+                    fontWeight: '700',
+                    zIndex: 9999999,
+                    pointerEvents: 'none'
+                })
+                .appendTo('body');
+            setTimeout(function() {
+                $('#cm-logo-warn').remove();
+            }, 3000);
         }
         $(document).on(
             'mousedown touchstart',
             '.single_add_to_cart_button',
-            _reapplyFile
+            function() { _reapplyFile(); }
         );
 
         // Capture config to sessionStorage
         $(document).on(
             'click',
             '.single_add_to_cart_button',
-            function() {
-                _reapplyFile();
+            function(e) {
+                var _ok = _reapplyFile();
+                if (_ok === false) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    _showLogoWarn();
+                    return;
+                }
                 if (!isTee) return;
                 var _pts = [];
                 for (
