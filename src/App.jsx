@@ -134,6 +134,7 @@ export default function KitBuilder() {
         ['tee','hoodie','cap','tote','bottle','journal'].forEach(id => {
           const raw = localStorage.getItem('cm_good_' + id);
           if (raw) { try { wcCaptured[id] = JSON.parse(raw); } catch(e) {} }
+          localStorage.removeItem('cm_good_' + id);
         });
         setGoodConfigurations({ ...baseCfg, ...wcCaptured });
         localStorage.removeItem('chainmail_kit_state');
