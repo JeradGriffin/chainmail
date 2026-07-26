@@ -16,7 +16,7 @@ const goodsConfig = {
   },
   hoodie: {
     name: 'Hoodie',
-    image: '/hoodie-placeholder.png',
+    image: null,
     dropdowns: [
       { id: 'style', label: 'STYLE', options: ['Pullover', 'Zip-Up'], key: 'style' }, // TODO: confirm options
       { id: 'color', label: 'COLOR', options: ['Black', 'Grey', 'Navy'], key: 'color' }, // TODO: confirm options
@@ -26,7 +26,7 @@ const goodsConfig = {
   },
   cap: {
     name: 'Cap',
-    image: '/cap-placeholder.png',
+    image: null,
     dropdowns: [
       { id: 'style', label: 'STYLE', options: ['Structured', 'Unstructured'], key: 'style' }, // TODO: confirm options
       { id: 'color', label: 'COLOR', options: ['Black', 'Navy', 'Grey'], key: 'color' }, // TODO: confirm options
@@ -36,7 +36,7 @@ const goodsConfig = {
   },
   tote: {
     name: 'Tote',
-    image: '/tote-placeholder.png',
+    image: null,
     dropdowns: [
       { id: 'style', label: 'STYLE', options: ['Standard', 'Large'], key: 'style' }, // TODO: confirm options
       { id: 'color', label: 'COLOR', options: ['Natural', 'Black'], key: 'color' }, // TODO: confirm options
@@ -46,7 +46,7 @@ const goodsConfig = {
   },
   bottle: {
     name: 'Tumbler',
-    image: '/bottle-placeholder.png',
+    image: null,
     dropdowns: [
       { id: 'style', label: 'STYLE', options: ['16oz', '20oz'], key: 'style' }, // TODO: confirm options
       { id: 'color', label: 'COLOR', options: ['Black', 'Silver', 'White'], key: 'color' }, // TODO: confirm options
@@ -56,7 +56,7 @@ const goodsConfig = {
   },
   journal: {
     name: 'Journal',
-    image: '/journal-placeholder.png',
+    image: null,
     dropdowns: [
       { id: 'style', label: 'STYLE', options: ['Hardcover', 'Softcover'], key: 'style' }, // TODO: confirm options
       { id: 'color', label: 'COLOR', options: ['Black', 'Brown', 'Navy'], key: 'color' }, // TODO: confirm options
@@ -1032,6 +1032,7 @@ const handleQuantitySelect = (idx) => {
         price: good?.price || 0,
         image,
         icon: good?.icon || null,
+        logoDataUrl: cfg.logoDataUrl || null,
       });
     });
     if (spiritObj) {
@@ -1087,7 +1088,14 @@ const handleQuantitySelect = (idx) => {
                 {inclusions.map((item, i) => (
                   <div key={i} className="review-inclusion-item">
                     {item.image
-                      ? <img src={item.image} alt={item.name} className="review-inclusion-thumb review-inclusion-img" />
+                      ? (
+                        <div className="review-inclusion-thumb review-inclusion-img-wrap">
+                          <img src={item.image} alt={item.name} className="review-inclusion-img" />
+                          {item.logoDataUrl && (
+                            <img src={item.logoDataUrl} alt="" className="review-inclusion-logo-overlay" />
+                          )}
+                        </div>
+                      )
                       : <div className="review-inclusion-thumb review-inclusion-icon">
                           {item.isSpirit
                             ? <Wine size={28} color="#6A449B" />

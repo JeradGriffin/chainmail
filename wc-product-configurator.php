@@ -1556,13 +1556,22 @@ jQuery(function($) {
                         ) || _gi.attr('src')
                         || '';
                     }
+                    var _logo = $(
+                        '#tee-conf-logo-img'
+                    ).attr('src') || '';
+                    if (_logo.length
+                        > 500000) {
+                        _logo = '';
+                    }
                     try {
                         sessionStorage.setItem(
                             'cm_tee_draft',
                             JSON.stringify({
                                 image: _ph,
                                 detail: _pts
-                                    .join(' | ')
+                                    .join(' | '),
+                                logoDataUrl:
+                                    _logo
                             })
                         );
                     } catch(_se) {}

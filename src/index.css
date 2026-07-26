@@ -1293,9 +1293,28 @@ input[type="range"]::-moz-range-track {
   flex-shrink: 0;
 }
 
+.review-inclusion-img-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
 .review-inclusion-img {
+  width: 100%;
+  height: 100%;
+  display: block;
   object-fit: cover;
   object-position: top center;
+}
+
+.review-inclusion-logo-overlay {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 55%;
+  max-height: 48%;
+  object-fit: contain;
+  pointer-events: none;
 }
 
 .review-inclusion-icon {
