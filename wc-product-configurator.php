@@ -587,8 +587,6 @@ add_action('wp_footer', function() {
 jQuery(function($) {
     var mq = '(max-width: 767px)';
     var isMob = window.matchMedia(mq).matches;
-    var isTee = window.location.href
-        .indexOf('/product/tee') !== -1;
 
     if (!$('form.variations_form').length
         && !$('.wc-pao-addon-wrap').length) {
@@ -603,37 +601,10 @@ jQuery(function($) {
             window.location.search
         );
         if (_qs.get('added-to-cart')) {
-            var _dr = sessionStorage
-                .getItem('cm_tee_draft');
-            var _dI = '', _dD = '';
-            if (_dr) {
-                try {
-                    var _dp = JSON.parse(_dr);
-                    _dI = _dp.image || '';
-                    _dD = _dp.detail || '';
-                    sessionStorage
-                        .removeItem(
-                        'cm_tee_draft'
-                    );
-                } catch(_le) {}
-            }
-            var _ru =
+            window.location.href =
                 'https://chainmail-pi'
                 + '.vercel.app'
-                + '/?resume=goods&gid=tee';
-            if (_dI) {
-                _ru += '&img='
-                    + encodeURIComponent(
-                        _dI
-                    );
-            }
-            if (_dD) {
-                _ru += '&detail='
-                    + encodeURIComponent(
-                        _dD
-                    );
-            }
-            window.location.href = _ru;
+                + '/?resume=goods';
             return;
         }
     }
@@ -1170,29 +1141,27 @@ jQuery(function($) {
 
         var oh = '';
         if (step.kind === 'file') {
-            if (isMob) {
-                var isDone = step.val === 'done';
-                var btnC = isDone
-                    ? 'tee-upload-btn done'
-                    : 'tee-upload-btn';
-                var btnT = isDone
-                    ? '✓ Logo uploaded'
-                    : 'Tap to upload logo';
-                var hintT = isDone
-                    ? 'Tap to replace'
-                    : 'PNG, JPG or SVG';
-                oh = '<div class='
-                    + '"tee-upload-wrap">';
-                oh += '<button class="'
-                    + btnC + '"';
-                oh += ' type="button"';
-                oh += ' id="tee-logo-btn">';
-                oh += btnT + '</button>';
-                oh += '<div class='
-                    + '"tee-upload-hint">';
-                oh += hintT + '</div>';
-                oh += '</div>';
-            }
+            var isDone = step.val === 'done';
+            var btnC = isDone
+                ? 'tee-upload-btn done'
+                : 'tee-upload-btn';
+            var btnT = isDone
+                ? '✓ Logo uploaded'
+                : 'Tap to upload logo';
+            var hintT = isDone
+                ? 'Tap to replace'
+                : 'PNG, JPG or SVG';
+            oh = '<div class='
+                + '"tee-upload-wrap">';
+            oh += '<button class="'
+                + btnC + '"';
+            oh += ' type="button"';
+            oh += ' id="tee-logo-btn">';
+            oh += btnT + '</button>';
+            oh += '<div class='
+                + '"tee-upload-hint">';
+            oh += hintT + '</div>';
+            oh += '</div>';
         } else {
             var selTxt = 'tap to select';
             var selCls = 'tee-sel-val';
@@ -1395,21 +1364,15 @@ jQuery(function($) {
             }
         );
 
-        var _varImg = imgSrc;
         // Image update on variation
         $('body').on(
             'found_variation'
             + '.wc-variation-form',
             'form.variations_form',
             function(ev, v) {
-                var _vs = v.image
-                    && (v.image.full_src
-                    || v.image.src)
-                    || '';
-                if (_vs) {
-                    _varImg = _vs;
+                if (v.image && v.image.src) {
                     $('#tee-conf-photo')
-                        .attr('src', _vs);
+                        .attr('src', v.image.src);
                 }
                 $('.single_add_to_cart_button')
                     .text('Add to Kit ›');
@@ -1521,190 +1484,46 @@ jQuery(function($) {
             }
         );
 
-        // Re-apply file BEFORE WC click
-        // handlers fire (mousedown/touchstart
-        // precede click on document.body)
-        function _reapplyFile() {
-            var fSt = null;
-            for (
-                var _ri = 0;
-                _ri < steps.length;
-                _ri++
-            ) {
-                if (steps[_ri].kind
-                    === 'file') {
-                    fSt = steps[_ri];
-                    break;
-                }
-            }
-            if (!fSt || !fSt.fileObj) {
-                return true;
-            }
-            try {
-                var _rdt = new DataTransfer();
-                _rdt.items.add(fSt.fileObj);
-                $('input[type="file"]')
-                    .not('.variations *')
-                    .each(function() {
-                        this.files =
-                            _rdt.files;
-                    });
-            } catch(_re) {
-                return false;
-            }
-            var $fIn = $(
-                'input[type="file"]'
-            ).not('.variations *').first();
-            return !$fIn.length
-                || $fIn[0].files.length > 0;
-        }
-        function _showLogoWarn() {
-            $('#cm-logo-warn').remove();
-            $('<div id="cm-logo-warn">')
-                .text(
-                    'Logo not ready'
-                    + ' — tap again'
-                )
-                .css({
-                    position: 'fixed',
-                    bottom: '70px',
-                    right: '20px',
-                    background: '#c00',
-                    color: '#fff',
-                    padding: '8px 14px',
-                    borderRadius: '6px',
-                    fontSize: '13px',
-                    fontWeight: '700',
-                    zIndex: 9999999,
-                    pointerEvents: 'none'
-                })
-                .appendTo('body');
-            setTimeout(function() {
-                $('#cm-logo-warn').remove();
-            }, 3000);
-        }
-        $(document).on(
-            'mousedown touchstart',
-            '.single_add_to_cart_button',
-            function() { _reapplyFile(); }
-        );
-
-        // Capture config to sessionStorage
+        // Re-apply logo file before submit
+        // (Dropzone recreates hidden input,
+        //  making ref stale; DataTransfer
+        //  restores it right before WC reads it)
         $(document).on(
             'click',
             '.single_add_to_cart_button',
-            function(e) {
-                var _ok = _reapplyFile();
-                if (_ok === false) {
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    _showLogoWarn();
+            function() {
+                var fSt = null;
+                for (
+                    var _fi = 0;
+                    _fi < steps.length;
+                    _fi++
+                ) {
+                    if (steps[_fi].kind
+                        === 'file') {
+                        fSt = steps[_fi];
+                        break;
+                    }
+                }
+                if (!fSt || !fSt.fileObj) {
                     return;
                 }
-                if (!isTee) return;
-                var _pts = [];
-                for (
-                    var _ci = 0;
-                    _ci < steps.length;
-                    _ci++
-                ) {
-                    var _cs = steps[_ci];
-                    if (_cs.kind === 'file') {
-                        if (_cs.val === 'done') {
-                            _pts.push('Logo');
-                        }
-                        continue;
-                    }
-                    if (!_cs.val) continue;
-                    for (
-                        var _co = 0;
-                        _co < _cs.opts.length;
-                        _co++
-                    ) {
-                        var _cop =
-                            _cs.opts[_co];
-                        if (_cop.v ===
-                            _cs.val) {
-                            _pts.push(
-                                _cop.t
-                            );
-                            break;
-                        }
-                    }
-                }
-                var _ph = '';
-                _ph = _varImg;
-                if (!_ph) {
-                    var _pEl = document
-                        .getElementById(
-                        'tee-conf-photo'
-                    );
-                    _ph = (_pEl && _pEl.src)
-                        || '';
-                }
-                var _logo = $(
-                    '#tee-conf-logo-img'
-                ).attr('src') || '';
-                if (_logo.length > 500000) {
-                    _logo = '';
-                }
-                console.log(
-                    'cm-conf capture:'
-                    + ' img=' + _ph
-                        .split('/').pop()
-                    + ' logo='
-                    + (_logo.length || 0)
-                    + ' detail='
-                    + _pts.join(' | ')
-                );
                 try {
-                    sessionStorage.setItem(
-                        'cm_tee_draft',
-                        JSON.stringify({
-                            image: _ph,
-                            detail: _pts
-                                .join(' | '),
-                            logoDataUrl: _logo
-                        })
-                    );
-                } catch(_se) {}
+                    var dt = new DataTransfer();
+                    dt.items.add(fSt.fileObj);
+                    $('input[type="file"]')
+                        .not('.variations *')
+                        .each(function() {
+                            this.files = dt.files;
+                        });
+                } catch(e) {}
             }
         );
 
-        // Redirect after add to cart (Tee only)
+        // Redirect after add to cart
         $(document).on(
             'added_to_cart', function() {
-                if (!isTee) return;
-                var _d = sessionStorage
-                    .getItem('cm_tee_draft');
-                var _aI = '', _aD = '';
-                if (_d) {
-                    try {
-                        var _dp2 =
-                            JSON.parse(_d);
-                        _aI = _dp2.image || '';
-                        _aD = _dp2.detail || '';
-                        sessionStorage
-                            .removeItem(
-                            'cm_tee_draft'
-                        );
-                    } catch(_le) {}
-                }
-                var _ru2 = cBase
-                    + '?resume=goods&gid=tee';
-                if (_aI) {
-                    _ru2 += '&img='
-                    + encodeURIComponent(
-                        _aI
-                    );
-                }
-                if (_aD) {
-                    _ru2 += '&detail='
-                    + encodeURIComponent(
-                        _aD
-                    );
-                }
-                window.location.href = _ru2;
+                window.location.href =
+                    cBase + '?resume=goods';
             }
         );
     }

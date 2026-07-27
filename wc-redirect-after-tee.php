@@ -63,32 +63,10 @@ jQuery(function($) {
         + ' justAdded=' + justAdded);
 
     function goResume() {
-        var _d = sessionStorage
-            .getItem('cm_tee_draft');
-        var _tI = '', _tD = '';
-        if (_d) {
-            try {
-                var _dp = JSON.parse(_d);
-                _tI = _dp.image || '';
-                _tD = _dp.detail || '';
-            } catch(_e) {}
-        }
         sessionStorage.removeItem(
             'cm_tee_kit'
         );
-        sessionStorage.removeItem(
-            'cm_tee_draft'
-        );
-        var _ru = resumeUrl + '&gid=tee';
-        if (_tI) {
-            _ru += '&img='
-                + encodeURIComponent(_tI);
-        }
-        if (_tD) {
-            _ru += '&detail='
-                + encodeURIComponent(_tD);
-        }
-        window.location.href = _ru;
+        window.location.href = resumeUrl;
     }
 
     // Post-add-to-cart reload
