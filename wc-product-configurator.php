@@ -773,8 +773,10 @@ jQuery(function($) {
             });
 
         // 3. First PEWC file input only
+        // Mobile only — desktop uses native
+        // Dropzone UI which is already visible
         var _addedFile = false;
-        $('input[type="file"]')
+        if (isMob) $('input[type="file"]')
             .not('.variations *')
             .each(function() {
                 if (_addedFile) return;
