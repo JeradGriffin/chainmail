@@ -141,10 +141,12 @@ export default function KitBuilder() {
           const urlGid    = params.get('gid');
           const urlImg    = params.get('img');
           const urlDetail = params.get('detail');
+          console.log('cm-resume: gid=' + urlGid + ' img=' + (urlImg ? urlImg.split('/').pop() : 'NONE') + ' detail=' + urlDetail);
           if (urlGid && (urlImg || urlDetail)) {
             wcCaptured[urlGid] = { image: urlImg || '', detail: urlDetail || '' };
           }
         }
+        console.log('cm-resume: wcCaptured=', JSON.stringify(wcCaptured));
         setGoodConfigurations({ ...baseCfg, ...wcCaptured });
         localStorage.removeItem('chainmail_kit_state');
       } catch (e) {}
