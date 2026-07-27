@@ -27,33 +27,86 @@ jQuery(function($) {
     var isKitPage = stored === window.location.pathname;
     if (!isKit && !isKitPage) return;
     if (isKit) {
-        sessionStorage.setItem('cm_kit', window.location.pathname);
+        sessionStorage.setItem(
+            'cm_kit', window.location.pathname
+        );
+        var _sg = params.get('gid');
+        if (_sg) sessionStorage.setItem(
+            'cm_kit_gid', _sg
+        );
     }
-    var resumeUrl = 'https://chainmail-pi.vercel.app/?resume=goods';
-    var backUrl = 'https://chainmail-pi.vercel.app/?back=goods';
+    var resumeUrl =
+        'https://chainmail-pi.vercel.app'
+        + '/?resume=goods';
+    var backUrl =
+        'https://chainmail-pi.vercel.app'
+        + '/?back=goods';
     function captureGood() {
-        var gid = params.get('gid');
-        if (!gid) return;
+        var gid = params.get('gid')
+            || sessionStorage
+                .getItem('cm_kit_gid')
+            || '';
+        if (!gid) return null;
         var d = {};
-        var im = $('img.wp-post-image').first().attr('src');
+        var $gi = $(
+            '.woocommerce-product'
+            + '-gallery__image img'
+        ).first();
+        var im =
+            $('img.wp-post-image')
+            .first().attr('src')
+            || $gi.attr('data-large_image')
+            || $gi.attr('src')
+            || '';
         if (im) d.image = im;
         var pts = [];
-        $('table.variations select').each(function() {
-            var v = $(this).find('option:selected').text().trim();
-            if (v && v.indexOf('Choose') < 0) pts.push(v);
+        $('table.variations select')
+            .each(function() {
+            var v = $(this)
+                .find('option:selected')
+                .text().trim();
+            if (v && v.indexOf('Choose') < 0)
+                pts.push(v);
         });
-        $('[class*="pewc"] input[type="radio"]:checked').each(function() {
-            var lb = $(this).closest('label').text().trim();
-            if (!lb) lb = $(this).val().replace(/_/g, ' ');
+        $(
+            'input[type="radio"]:checked'
+        ).not('.variations *')
+            .each(function() {
+            var lb = $(this)
+                .closest('label')
+                .text().trim();
+            if (!lb) lb = $(this).val()
+                .replace(/_/g, ' ');
             if (lb) pts.push(lb);
         });
-        if (pts.length) d.detail = pts.join(' | ');
-        localStorage.setItem('cm_good_' + gid, JSON.stringify(d));
+        if (pts.length)
+            d.detail = pts.join(' | ');
+        return {gid: gid, d: d};
     }
     function goResume() {
-        captureGood();
+        var cap = captureGood();
         sessionStorage.removeItem('cm_kit');
-        window.location.href = resumeUrl;
+        sessionStorage.removeItem(
+            'cm_kit_gid'
+        );
+        var _u = resumeUrl;
+        if (cap && cap.gid) {
+            _u += '&gid='
+                + encodeURIComponent(cap.gid);
+        }
+        if (cap && cap.d && cap.d.image) {
+            _u += '&img='
+                + encodeURIComponent(
+                    cap.d.image
+                );
+        }
+        if (cap && cap.d && cap.d.detail) {
+            _u += '&detail='
+                + encodeURIComponent(
+                    cap.d.detail
+                );
+        }
+        window.location.href = _u;
     }
     var msg = $('.woocommerce-message').length > 0;
     var justAdded = params.get('added-to-cart') !== null;
