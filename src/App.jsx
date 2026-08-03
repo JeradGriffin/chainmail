@@ -513,6 +513,10 @@ const handleQuantitySelect = (idx) => {
             Download our Shipping Template &gt; Fill it out &gt; Upload below for direct to customer shipping.
           </p>
 
+          <p style={{ fontSize: '14px', color: 'var(--color-brand)', lineHeight: '1.5', marginBottom: '16px' }}>
+            Please note, a COMPLETED Recipient List, including all sizes, is required to start production on your order.
+          </p>
+
         {/* Download template button */}
         <div className="shipping-template-band">
           <div className="shipping-template-band-inner">
@@ -555,7 +559,7 @@ const handleQuantitySelect = (idx) => {
         </div>
 
           {/* Ship to me */}
-          <label className="process-option" style={{ marginTop: '16px' }} onClick={() => setShippingOption('me')}>
+          <label className="process-option" style={{ marginTop: '28px', marginBottom: '28px' }} onClick={() => setShippingOption('me')}>
             <span className={`radio-circle ${shippingOption === 'me' ? 'selected' : ''}`} />
             <span className="option-text">
               <strong style={{ fontSize: '30px', color: shippingOption === 'me' ? 'var(--color-brand)' : '#000' }}>Ship to me</strong>
