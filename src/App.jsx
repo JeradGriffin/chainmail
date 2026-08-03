@@ -503,24 +503,8 @@ const handleQuantitySelect = (idx) => {
           */}
 
           <p className="process-description">
-            Download our Shipping Template &gt; Fill it out &gt; Upload below for direct to customer shipping.
+            Upload your recipient list or we can send it direct to you.
           </p>
-
-          <p style={{ fontSize: '14px', color: 'var(--color-brand)', lineHeight: '1.5', marginBottom: '16px' }}>
-            Please note, a COMPLETED Recipient List, including all sizes, is required to start production on your order.
-          </p>
-
-          {/* Ship to me */}
-          <label className="process-option" style={{ marginBottom: '16px' }} onClick={() => setShippingOption('me')}>
-            <span className={`radio-circle ${shippingOption === 'me' ? 'selected' : ''}`} />
-            <span className="option-text">
-              <strong style={{ fontSize: '30px', color: shippingOption === 'me' ? 'var(--color-brand)' : '#000' }}>Ship to me</strong>
-              <br />
-              <span style={{ fontSize: '14px', color: '#555' }}>
-                I will provide my shipping information during the checkout process.
-              </span>
-            </span>
-          </label>
 
           {/* Ship to my list */}
           <label className="process-option" style={{ marginBottom: '16px' }} onClick={() => setShippingOption('list')}>
@@ -570,6 +554,22 @@ const handleQuantitySelect = (idx) => {
             <p className="upload-hint">Tap or Drag to place file here</p>
           </div>
         </div>
+
+          <p style={{ fontSize: '14px', color: 'var(--color-brand)', lineHeight: '1.5', margin: '16px 0' }}>
+            Please note, a COMPLETED Recipient List, including all sizes, is required to start production on your order.
+          </p>
+
+          {/* Ship to me */}
+          <label className="process-option" style={{ marginBottom: '16px' }} onClick={() => setShippingOption('me')}>
+            <span className={`radio-circle ${shippingOption === 'me' ? 'selected' : ''}`} />
+            <span className="option-text">
+              <strong style={{ fontSize: '30px', color: shippingOption === 'me' ? 'var(--color-brand)' : '#000' }}>Ship to me</strong>
+              <br />
+              <span style={{ fontSize: '14px', color: '#555' }}>
+                I will provide my shipping information during the checkout process.
+              </span>
+            </span>
+          </label>
 
         </div>
 
