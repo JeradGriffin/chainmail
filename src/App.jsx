@@ -1191,7 +1191,7 @@ const handleQuantitySelect = (idx) => {
       <div className="min-h-screen bg-white flex flex-col process-page">
         {renderHeader()}
 
-        <div className="content-area">
+        <div className="content-area" style={{ overflow: 'hidden', paddingBottom: 'calc(310px + env(safe-area-inset-bottom))' }}>
           {renderStepIndicator()}
 
           <h2 className="process-title" style={{ color: 'var(--color-brand)' }}>Your message</h2>
