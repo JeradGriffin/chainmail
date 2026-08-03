@@ -91,6 +91,7 @@ export default function KitBuilder() {
   const [addProduct, setAddProduct] = useState(false);
   const [confirmSize, setConfirmSize] = useState(false);
   const [confirmPrice, setConfirmPrice] = useState(false);
+  const [confirmWeight, setConfirmWeight] = useState(false);
   const [shippingOption, setShippingOption] = useState('list'); // 'list' | 'me'
   const [shippingFile, setShippingFile] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
@@ -401,6 +402,13 @@ const handleQuantitySelect = (idx) => {
                 </span>
               </label>
 
+              <label className="process-checkbox" onClick={() => setConfirmWeight(!confirmWeight)}>
+                <span className={`checkbox-circle ${confirmWeight ? 'selected' : ''}`} />
+                <span className="checkbox-text">
+                  My product is under 4 lbs
+                </span>
+              </label>
+
               <div className="regulated-block">
                 <label className="process-checkbox" onClick={() => {
                   const next = !regulatedSubstance;
@@ -439,6 +447,7 @@ const handleQuantitySelect = (idx) => {
               setAddProduct(false);
               setConfirmSize(false);
               setConfirmPrice(false);
+              setConfirmWeight(false);
               setCurrentStep(1);
             }}
           >
@@ -451,11 +460,11 @@ const handleQuantitySelect = (idx) => {
           </button>
           <button
             className="continue-btn"
-            disabled={!addProduct || !confirmSize || !confirmPrice}
+            disabled={!addProduct || !confirmSize || !confirmPrice || !confirmWeight}
             onClick={() => setCurrentStep(1)}
           >
             Continue
-            <ChevronRight size={18} color={!addProduct || !confirmSize || !confirmPrice ? BRAND_COLOR : '#fff'} />
+            <ChevronRight size={18} color={!addProduct || !confirmSize || !confirmPrice || !confirmWeight ? BRAND_COLOR : '#fff'} />
           </button>
         </div>
       </div>
