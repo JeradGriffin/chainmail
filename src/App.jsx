@@ -1164,7 +1164,11 @@ const handleQuantitySelect = (idx) => {
             <button
               className="continue-btn"
               onClick={() => {
-                window.location.href = 'https://chainmail.store/checkout/';
+                const qty = quantities[kitQuantityIndex];
+                const base = 'https://chainmail.store/checkout/';
+                window.location.href = addProduct
+                  ? `${base}?cm_addfee=${qty}`
+                  : base;
               }}
             >
               Go to Checkout
