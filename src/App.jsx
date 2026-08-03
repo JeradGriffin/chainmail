@@ -1007,11 +1007,11 @@ const handleQuantitySelect = (idx) => {
           );
         })}
 
-        <p className="tbb-note">TBB Compliant Shipping: <em>Learn more</em></p>
       </div>
 
       <div className="bottom-area">
         <div className="bottom-skip">
+          <p className="tbb-note">TBB Compliant Shipping: <em>Learn more</em></p>
           <hr className="process-divider" />
           <button className="skip-btn" onClick={() => setCurrentStep(5)}>
             <strong className="skip-bold">Skip to next,</strong> do not include spirit.
