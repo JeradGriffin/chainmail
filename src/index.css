@@ -628,8 +628,8 @@ input[type="range"]::-moz-range-track {
 
 .message-textarea {
   width: 100%;
-  flex: 1;
-  min-height: 120px;
+  /* flex: 1; */
+  min-height: 56%;
   border: 1.5px solid #ccc;
   border-radius: 6px;
   padding: 14px;
