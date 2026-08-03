@@ -563,7 +563,7 @@ const handleQuantitySelect = (idx) => {
           <label className="process-option" style={{ marginBottom: '16px' }} onClick={() => setShippingOption('me')}>
             <span className={`radio-circle ${shippingOption === 'me' ? 'selected' : ''}`} />
             <span className="option-text">
-              <strong style={{ fontSize: '30px', color: shippingOption === 'me' ? 'var(--color-brand)' : '#000' }}>Ship to me</strong>
+              <strong style={{ fontSize: '24px', color: shippingOption === 'me' ? 'var(--color-brand)' : '#000' }}>Ship to me</strong>
               <br />
               <span style={{ fontSize: '14px', color: '#555' }}>
                 I will provide my shipping information during the checkout process.
