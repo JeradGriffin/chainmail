@@ -1214,6 +1214,11 @@ const handleQuantitySelect = (idx) => {
             <span className="message-confirm-label">I confirm this message</span>
             <span className={`radio-circle ${messageConfirmed ? 'selected' : ''}`} />
           </div>
+
+          <p style={{ fontSize: '14px', color: 'var(--color-brand)', textAlign: 'center', lineHeight: '1.6', marginTop: '16px' }}>
+            All messages are printed on an external note card that will be included with your kit.<br />
+            <strong>If left empty, we will not include a card.</strong>
+          </p>
         </div>
 
         <div className="bottom-area">
