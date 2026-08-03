@@ -63,8 +63,20 @@ jQuery(function($) {
         + ' justAdded=' + justAdded);
 
     function goResume() {
+        var _d = sessionStorage
+            .getItem('cm_tee_draft');
+        if (_d) {
+            try {
+                localStorage.setItem(
+                    'cm_good_tee', _d
+                );
+            } catch(_e) {}
+        }
         sessionStorage.removeItem(
             'cm_tee_kit'
+        );
+        sessionStorage.removeItem(
+            'cm_tee_draft'
         );
         window.location.href = resumeUrl;
     }
