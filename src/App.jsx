@@ -495,19 +495,12 @@ const handleQuantitySelect = (idx) => {
 
           <h2 className="process-title" style={{ color: 'var(--color-brand)' }}>Shipping</h2>
 
-          {/* Ship to my list */}
           {/*
             WooCommerce cart behavior (not yet implemented):
             - If list uploaded: parse list and show in cart line items
             - If no list (ship to me): auto-populate size distribution from kit quantity
               e.g. 24 kits → 30% XL / 50% Large / 20% Medium — send to cart for editing
           */}
-          <label className="process-option" onClick={() => setShippingOption('list')}>
-            <span className={`radio-circle ${shippingOption === 'list' ? 'selected' : ''}`} />
-            <span className="option-text">
-              <strong style={{ fontSize: '30px', color: shippingOption === 'list' ? 'var(--color-brand)' : '#000' }}>Ship to my list</strong>
-            </span>
-          </label>
 
           <p className="process-description">
             Download our Shipping Template &gt; Fill it out &gt; Upload below for direct to customer shipping.
@@ -526,6 +519,14 @@ const handleQuantitySelect = (idx) => {
               <span style={{ fontSize: '14px', color: '#555' }}>
                 I will provide my shipping information during the checkout process.
               </span>
+            </span>
+          </label>
+
+          {/* Ship to my list */}
+          <label className="process-option" style={{ marginBottom: '16px' }} onClick={() => setShippingOption('list')}>
+            <span className={`radio-circle ${shippingOption === 'list' ? 'selected' : ''}`} />
+            <span className="option-text">
+              <strong style={{ fontSize: '30px', color: shippingOption === 'list' ? 'var(--color-brand)' : '#000' }}>Ship to my list</strong>
             </span>
           </label>
 
