@@ -814,6 +814,12 @@ input[type="range"]::-moz-range-track {
   margin-block-start: 16px;
 }
 
+.spirits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
 .goods-option {
   display: flex;
   align-items: center;

@@ -987,25 +987,27 @@ const handleQuantitySelect = (idx) => {
         <h2 className="process-title" style={{ color: 'var(--color-brand)' }}>Add some booze</h2>
         <p className="process-description">Select one premium spirit (750mL)</p>
 
-        {spirits.map((spirit) => {
-          const isSelected = selectedSpirit === spirit.id;
-          return (
-            <div
-              key={spirit.id}
-              className={`goods-option ${isSelected ? 'selected' : ''}`}
-              onClick={() => setSelectedSpirit(spirit.id)}
-            >
-              <span className={`radio-circle ${isSelected ? 'selected' : ''}`} />
-              <span className="spirit-text">
-                <span className="spirit-top-row">
-                  <span className={`goods-name ${isSelected ? 'selected' : ''}`}>{spirit.name}</span>
-                  <span className={`goods-price ${isSelected ? 'selected' : ''}`}>${spirit.price}</span>
+        <div className="spirits-list">
+          {spirits.map((spirit) => {
+            const isSelected = selectedSpirit === spirit.id;
+            return (
+              <div
+                key={spirit.id}
+                className={`goods-option ${isSelected ? 'selected' : ''}`}
+                onClick={() => setSelectedSpirit(spirit.id)}
+              >
+                <span className={`radio-circle ${isSelected ? 'selected' : ''}`} />
+                <span className="spirit-text">
+                  <span className="spirit-top-row">
+                    <span className={`goods-name ${isSelected ? 'selected' : ''}`}>{spirit.name}</span>
+                    <span className={`goods-price ${isSelected ? 'selected' : ''}`}>${spirit.price}</span>
+                  </span>
+                  <span className="goods-subtitle">{spirit.type}</span>
                 </span>
-                <span className="goods-subtitle">{spirit.type}</span>
-              </span>
-            </div>
-          );
-        })}
+              </div>
+            );
+          })}
+        </div>
 
       </div>
 
