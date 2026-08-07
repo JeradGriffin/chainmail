@@ -1,14 +1,21 @@
 <?php
 // Adds spirit and/or send-in product to cart when kit builder
 // redirects to checkout with ?cm_spirit_id=&cm_spirit_qty= and/or ?cm_addfee=
+// Uses wp hook so it fires for both classic and block checkout.
 
 define('SENDIN_PRODUCT_ID', 5269);
 
-add_action('woocommerce_before_checkout_form', function() {
+add_action('wp', function() {
+    if (!function_exists('WC') || !WC()->cart) return;
+
+    $needs_spirit  = isset($_GET['cm_spirit_id'], $_GET['cm_spirit_qty']);
+    $needs_sendin  = isset($_GET['cm_addfee']);
+    if (!$needs_spirit && !$needs_sendin) return;
+
     $added = false;
 
     // Spirit
-    if (isset($_GET['cm_spirit_id'], $_GET['cm_spirit_qty'])) {
+    if ($needs_spirit) {
         $spirit_id  = intval($_GET['cm_spirit_id']);
         $spirit_qty = intval($_GET['cm_spirit_qty']);
         if ($spirit_id > 0 && $spirit_qty > 0) {
@@ -23,7 +30,7 @@ add_action('woocommerce_before_checkout_form', function() {
     }
 
     // Send-in fee
-    if (isset($_GET['cm_addfee'])) {
+    if ($needs_sendin) {
         $qty = intval($_GET['cm_addfee']);
         $pid = SENDIN_PRODUCT_ID;
         if ($qty > 0 && $pid) {
@@ -35,5 +42,12 @@ add_action('woocommerce_before_checkout_form', function() {
             WC()->cart->add_to_cart($pid, $qty);
             $added = true;
         }
+    }
+
+    // Redirect to clean checkout URL so params
+    // don't re-add items on every page refresh
+    if ($added && is_checkout()) {
+        wp_safe_redirect(wc_get_checkout_url());
+        exit;
     }
 });
