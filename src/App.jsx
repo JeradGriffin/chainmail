@@ -1171,46 +1171,18 @@ const handleQuantitySelect = (idx) => {
             </button>
             <button
               className="continue-btn"
-              onClick={async () => {
+              onClick={() => {
                 const qty = quantities[kitQuantityIndex];
                 const base = 'https://chainmail.store/checkout/';
-                const storeApi = 'https://chainmail.store/wp-json/wc/store/v1/cart/add-item';
-
-                const addToCart = async (id) => {
-                  console.log('[checkout] adding to cart — id:', id, 'qty:', qty);
-                  const res = await fetch(storeApi, {
-                    method: 'POST',
-                    credentials: 'include',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, quantity: qty }),
-                  });
-                  const data = await res.json();
-                  console.log('[checkout] store api response for', id, '— status:', res.status, 'body:', JSON.stringify(data));
-                  if (!res.ok) throw new Error('HTTP ' + res.status);
-                  return data;
-                };
-
+                const params = new URLSearchParams();
                 const spiritObj = spirits.find(s => s.id === selectedSpirit);
-                console.log('[checkout] selectedSpirit:', selectedSpirit, '→ spiritObj:', spiritObj);
-                console.log('[checkout] addProduct:', addProduct, 'qty:', qty);
-
-                try {
-                  if (spiritObj) {
-                    await addToCart(spiritObj.wcId);
-                  } else {
-                    console.warn('[checkout] no spirit selected, skipping spirit add');
-                  }
-                  if (addProduct) {
-                    await addToCart(5269);
-                  }
-                  console.log('[checkout] all items added, redirecting to checkout');
-                } catch (e) {
-                  console.error('[checkout] store api error:', e);
+                if (spiritObj) {
+                  params.set('cm_spirit_id', spiritObj.wcId);
+                  params.set('cm_spirit_qty', qty);
                 }
-
-                const dest = addProduct ? `${base}?cm_addfee=${qty}` : base;
-                console.log('[checkout] redirecting to:', dest);
-                window.location.href = dest;
+                if (addProduct) params.set('cm_addfee', qty);
+                const qs = params.toString();
+                window.location.href = qs ? `${base}?${qs}` : base;
               }}
             >
               Go to Checkout
