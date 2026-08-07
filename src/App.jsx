@@ -67,13 +67,13 @@ const goodsConfig = {
 };
 
 const spirits = [
-  { id: 'kettle-one',         name: 'Kettle One',         type: 'Vodka',                     price: 30 },
-  { id: 'manojo',             name: 'Manojo',             type: 'Mezcal',                    price: 48 },
-  { id: 'jonnie-walker-black',name: 'Jonnie Walker Black', type: 'Blended Scotch',            price: 36 },
-  { id: 'jameson',            name: 'Jameson',            type: 'Irish Whiskey',             price: 30 },
-  { id: 'four-roses',         name: 'Four Roses',         type: 'Yellow Label Bourbon', price: 60 },
-  { id: 'casamigos',          name: 'Casamigos',          type: 'Tequila Blanco',            price: 42 },
-  { id: 'maestro-dobel',      name: 'Maestro Dobel',      type: 'Tequila Blanco',            price: 48 },
+  { id: 'kettle-one',          wcId: 5252, name: 'Kettle One',           type: 'Vodka',                price: 30 },
+  { id: 'manojo',              wcId: 5253, name: 'Manojo',               type: 'Mezcal',               price: 48 },
+  { id: 'jonnie-walker-black', wcId: 5255, name: 'Johnnie Walker Black', type: 'Blended Scotch',       price: 36 },
+  { id: 'jameson',             wcId: 5256, name: 'Jameson',              type: 'Irish Whiskey',        price: 30 },
+  { id: 'four-roses',          wcId: 5258, name: 'Four Roses',           type: 'Small Batch Bourbon',  price: 60 },
+  { id: 'casamigos',           wcId: 5259, name: 'Casamigos',            type: 'Tequila Blanco',       price: 42 },
+  { id: 'maestro-dobel',       wcId: 5260, name: 'Maestro Dobel',        type: 'Tequila Blanco',       price: 48 },
 ];
 
 const goodsWcUrls = {
@@ -1171,9 +1171,23 @@ const handleQuantitySelect = (idx) => {
             </button>
             <button
               className="continue-btn"
-              onClick={() => {
+              onClick={async () => {
                 const qty = quantities[kitQuantityIndex];
                 const base = 'https://chainmail.store/checkout/';
+                const storeApi = 'https://chainmail.store/wp-json/wc/store/v1/cart/add-item';
+                const addToCart = (id) => fetch(storeApi, {
+                  method: 'POST',
+                  credentials: 'include',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ id, quantity: qty }),
+                });
+                try {
+                  const spiritObj = spirits.find(s => s.id === selectedSpirit);
+                  if (spiritObj) await addToCart(spiritObj.wcId);
+                  if (addProduct) await addToCart(/* SENDIN_PRODUCT_ID */ 0);
+                } catch (e) {
+                  console.warn('Store API failed, proceeding to checkout anyway', e);
+                }
                 window.location.href = addProduct
                   ? `${base}?cm_addfee=${qty}`
                   : base;
