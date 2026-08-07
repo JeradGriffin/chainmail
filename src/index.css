@@ -818,6 +818,7 @@ input[type="range"]::-moz-range-track {
   display: flex;
   flex-direction: column;
   gap: 0;
+  margin-block-start: 16px;
 }
 
 .goods-option {
