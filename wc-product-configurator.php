@@ -812,6 +812,7 @@ jQuery(function($) {
                     .on('change.cf', function() {
                         var _f = this.files[0]
                             || null;
+                        if (_f) _keptFile = _f;
                         for (
                             var _fs = 0;
                             _fs < steps.length;
@@ -963,6 +964,7 @@ jQuery(function($) {
 
     var _moTimer;
     var _ownChange = false;
+    var _keptFile = null;
     var _mo = new MutationObserver(
         function() {
             if (_ownChange) return;
@@ -1451,6 +1453,8 @@ jQuery(function($) {
                             (this.files &&
                             this.files[0])
                             || null;
+                        if (_fc)
+                            _keptFile = _fc;
                         if (_fc) {
                             for (
                                 var _di = 0;
@@ -1491,37 +1495,32 @@ jQuery(function($) {
         );
 
         // Re-apply logo file before submit
-        // (Dropzone recreates hidden input,
-        //  making ref stale; DataTransfer
-        //  restores it right before WC reads it)
+        // using module-level _keptFile so it
+        // survives detectAddons() rebuilds
         $(document).on(
             'click',
             '.single_add_to_cart_button',
             function() {
-                var fSt = null;
-                for (
-                    var _fi = 0;
-                    _fi < steps.length;
-                    _fi++
-                ) {
-                    if (steps[_fi].kind
-                        === 'file') {
-                        fSt = steps[_fi];
-                        break;
-                    }
-                }
-                if (!fSt || !fSt.fileObj) {
-                    return;
-                }
+                if (!_keptFile) return;
+                console.log(
+                    '[cm-atk] file: '
+                    + _keptFile.name
+                );
                 try {
                     var dt = new DataTransfer();
-                    dt.items.add(fSt.fileObj);
+                    dt.items.add(_keptFile);
                     $('input[type="file"]')
                         .not('.variations *')
                         .each(function() {
-                            this.files = dt.files;
+                            this.files =
+                                dt.files;
                         });
-                } catch(e) {}
+                } catch(e) {
+                    console.log(
+                        '[cm-atk] err: '
+                        + e
+                    );
+                }
             }
         );
 
