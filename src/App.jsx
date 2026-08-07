@@ -69,9 +69,9 @@ const goodsConfig = {
 const spirits = [
   { id: 'kettle-one',         name: 'Kettle One',         type: 'Vodka',                     price: 30 },
   { id: 'manojo',             name: 'Manojo',             type: 'Mezcal',                    price: 48 },
-  { id: 'jonnie-walker-black',name: 'Jonnie Walker Black', type: 'Scotch Whiskey',            price: 36 },
+  { id: 'jonnie-walker-black',name: 'Jonnie Walker Black', type: 'Blended Scotch',            price: 36 },
   { id: 'jameson',            name: 'Jameson',            type: 'Irish Whiskey',             price: 30 },
-  { id: 'four-roses',         name: 'Four Roses',         type: 'Kentucky Straight Bourbon', price: 60 },
+  { id: 'four-roses',         name: 'Four Roses',         type: 'Yellow Label Bourbon', price: 60 },
   { id: 'casamigos',          name: 'Casamigos',          type: 'Tequila Blanco',            price: 42 },
   { id: 'maestro-dobel',      name: 'Maestro Dobel',      type: 'Tequila Blanco',            price: 48 },
 ];
