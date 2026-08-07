@@ -817,7 +817,7 @@ input[type="range"]::-moz-range-track {
 .spirits-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 8px;
   margin-block-start: 16px;
 }
 
