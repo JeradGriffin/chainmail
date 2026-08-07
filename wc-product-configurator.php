@@ -595,18 +595,22 @@ jQuery(function($) {
 
     // Logo upload forces form submit (not
     // AJAX) — detect page reload & redirect
-    if (window.location.href
-        .indexOf('/product/tee') !== -1) {
-        var _qs = new URLSearchParams(
-            window.location.search
-        );
-        if (_qs.get('added-to-cart')) {
-            window.location.href =
-                'https://chainmail-pi'
-                + '.vercel.app'
-                + '/?resume=goods';
-            return;
-        }
+    // Applies to ALL kit product pages, not
+    // just /product/tee
+    var _cqs = new URLSearchParams(
+        window.location.search
+    );
+    var _cSt = sessionStorage
+        .getItem('cm_kit');
+    var _cPath =
+        window.location.pathname;
+    if (_cqs.get('added-to-cart')
+        && _cSt === _cPath) {
+        window.location.href =
+            'https://chainmail-pi'
+            + '.vercel.app'
+            + '/?resume=goods';
+        return;
     }
 
     var uP = new URLSearchParams(
