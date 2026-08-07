@@ -1184,7 +1184,7 @@ const handleQuantitySelect = (idx) => {
                 try {
                   const spiritObj = spirits.find(s => s.id === selectedSpirit);
                   if (spiritObj) await addToCart(spiritObj.wcId);
-                  if (addProduct) await addToCart(/* SENDIN_PRODUCT_ID */ 0);
+                  if (addProduct) await addToCart(5269);
                 } catch (e) {
                   console.warn('Store API failed, proceeding to checkout anyway', e);
                 }
