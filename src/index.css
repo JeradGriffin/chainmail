@@ -811,6 +811,7 @@ input[type="range"]::-moz-range-track {
   flex-direction: column;
   justify-content: flex-start;
   gap: 1.25rem;
+  margin-block-start: 16px;
 }
 
 .goods-option {
