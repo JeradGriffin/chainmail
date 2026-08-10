@@ -123,6 +123,19 @@ add_action('wp_head', function() {
   display: block;
 }
 
+#tee-conf-logo-overlay {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+#tee-conf-logo-img {
+  max-width: 70px;
+  max-height: 70px;
+  object-fit: contain;
+}
 
 #tee-conf-counter {
   position: absolute;
@@ -835,6 +848,7 @@ jQuery(function($) {
                                 });
                             } catch(_e) {}
                         }
+                        updateLogoOverlay();
                         paint(cur);
                     });
             });
@@ -888,6 +902,65 @@ jQuery(function($) {
                 );
             }
             if (isMob || !isMob) paint(cur);
+        }
+    }
+
+    function updateLogoOverlay() {
+        var fSt = null;
+        for (
+            var _f = 0;
+            _f < steps.length;
+            _f++
+        ) {
+            if (steps[_f].kind === 'file') {
+                fSt = steps[_f]; break;
+            }
+        }
+        var file = fSt && fSt.fileObj;
+        var $li = $('#tee-conf-logo-img');
+        if (file) {
+            var rd = new FileReader();
+            rd.onload = function(e) {
+                $li.attr('src',
+                    e.target.result);
+            };
+            rd.readAsDataURL(file);
+        } else {
+            $li.attr('src', '');
+        }
+        var posVal = '';
+        $('input[type="radio"]:checked')
+            .not('.variations *')
+            .each(function() {
+                var v = $(this).val()
+                    .toLowerCase();
+                if (
+                    v.indexOf('left') !== -1
+                    || v.indexOf('center') !== -1
+                    || v.indexOf('right') !== -1
+                ) { posVal = v; }
+            });
+        var $ov = $('#tee-conf-logo-overlay');
+        if (posVal.indexOf('left') !== -1) {
+            $ov.css({
+                left: 'auto',
+                right: '33%',
+                transform: 'none'
+            });
+        } else if (
+            posVal.indexOf('right') !== -1
+        ) {
+            $ov.css({
+                left: '22%',
+                right: 'auto',
+                transform: 'none'
+            });
+        } else {
+            $ov.css({
+                left: '50%',
+                right: 'auto',
+                transform: 'translateX(-50%)'
+            });
         }
     }
 
@@ -983,6 +1056,9 @@ jQuery(function($) {
             h += '<img id="tee-conf-photo"';
             h += ' src="' + imgSrc + '">';
         }
+        h += '<div id="tee-conf-logo-overlay">';
+        h += '<img id="tee-conf-logo-img" src="">';
+        h += '</div>';
         h += '<div id="tee-conf-counter"></div>';
         h += '<div id="tee-conf-tabs"></div>';
         h += '</div>';
@@ -1215,6 +1291,7 @@ jQuery(function($) {
                 }
             }
             paint(idx);
+            updateLogoOverlay();
         }
     );
 
@@ -1258,17 +1335,36 @@ jQuery(function($) {
                     top: 0, left: 0,
                     right: 0, bottom: 0,
                     zIndex: 1000001,
-                    background: 'rgba(0,0,0,0.92)',
+                    background:
+                        'rgba(0,0,0,0.92)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center'
                 });
-                $('<img>').attr('src', src).css({
+                var $wrap = $('<div>').css({
+                    position: 'relative',
+                    display: 'inline-block',
                     maxWidth: '100%',
-                    maxHeight: '90%',
-                    objectFit: 'contain',
-                    display: 'block'
-                }).appendTo($pv);
+                    maxHeight: '90%'
+                });
+                $('<img>').attr('src', src)
+                    .css({
+                        maxWidth: '100%',
+                        maxHeight: '90vh',
+                        display: 'block'
+                    }).appendTo($wrap);
+                var $li = $(
+                    '#tee-conf-logo-img'
+                );
+                if ($li.attr('src')) {
+                    $(
+                        '#tee-conf-logo-overlay'
+                    ).clone().css({
+                        'pointer-events':
+                            'none'
+                    }).appendTo($wrap);
+                }
+                $wrap.appendTo($pv);
                 $('<button>').text('Close').css({
                     position: 'absolute',
                     top: '16px', right: '16px',
@@ -1439,6 +1535,7 @@ jQuery(function($) {
                                 '[cm-cmu] '
                                 + _fc.name
                             );
+                            updateLogoOverlay();
                             paint(cur);
                         }
                         setTimeout(
