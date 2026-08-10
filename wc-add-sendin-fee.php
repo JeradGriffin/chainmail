@@ -3,6 +3,13 @@
 // redirects to checkout with ?cm_spirit_id=&cm_spirit_qty= and/or ?cm_addfee=
 // Uses wp hook so it fires for both classic and block checkout.
 
+// Allow kit builder origins to call the WC Store API.
+add_filter('allowed_http_origins', function($origins) {
+    $origins[] = 'https://chainmail-pi.vercel.app';
+    $origins[] = 'http://localhost:5173';
+    return $origins;
+});
+
 define('SENDIN_PRODUCT_ID', 5269);
 
 add_action('wp', function() {
