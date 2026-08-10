@@ -86,12 +86,12 @@ const goodsWcUrls = {
 };
 
 const premiumGoods = [
-  { id: 'tee',     name: 'Tee',     icon: '/icon-tee.svg',     wcSlug: 'tee'     },
-  { id: 'hoodie',  name: 'Hoodie',  icon: '/icon-hoodie.svg',  wcSlug: 'hoodie'  },
-  { id: 'cap',     name: 'Cap',     icon: '/icon-cap.svg',     wcSlug: 'cap'     },
-  { id: 'tote',    name: 'Tote',    icon: '/icon-tote.svg',    wcSlug: 'tote'    },
-  { id: 'bottle',  name: 'Tumbler', icon: '/icon-bottle.svg',  wcSlug: 'tumbler' },
-  { id: 'journal', name: 'Journal', icon: '/icon-journal.svg', wcSlug: 'journal' },
+  { id: 'tee',     name: 'Tee',     price: 20, icon: '/icon-tee.svg'     },
+  { id: 'hoodie',  name: 'Hoodie',  price: 60, icon: '/icon-hoodie.svg'  },
+  { id: 'cap',     name: 'Cap',     price: 15, icon: '/icon-cap.svg'     },
+  { id: 'tote',    name: 'Tote',    price: 25, icon: '/icon-tote.svg'    },
+  { id: 'bottle',  name: 'Tumbler', price: 30, icon: '/icon-bottle.svg'  },
+  { id: 'journal', name: 'Journal', price: 20, icon: '/icon-journal.svg' },
 ];
 
 export default function KitBuilder() {
@@ -170,35 +170,21 @@ export default function KitBuilder() {
   useEffect(() => {
     async function fetchPrices() {
       try {
-        const base = 'https://chainmail.store/wp-json/wc/store/v1/products';
-        const toPrice = (item) => {
-          const raw = parseInt(item.prices.price, 10);
-          const minor = item.prices.currency_minor_unit ?? 2;
-          return raw / Math.pow(10, minor);
-        };
-        const [spiritResults, goodResults] = await Promise.all([
-          Promise.all(
-            spirits.map(s =>
-              fetch(`${base}/${s.wcId}`)
-                .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-                .then(data => [s.id, toPrice(data)])
-            )
-          ),
-          Promise.all(
-            premiumGoods.map(g =>
-              fetch(`${base}?slug=${g.wcSlug}`)
-                .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-                .then(data => {
-                  if (!data.length) throw new Error();
-                  return [g.id, toPrice(data[0])];
-                })
-            )
-          ),
-        ]);
-        setPrices({
-          spirits: Object.fromEntries(spiritResults),
-          goods: Object.fromEntries(goodResults),
+        const ids = spirits.map(s => s.wcId).join(',');
+        const res = await fetch(
+          `https://chainmail.store/wp-json/wc/store/v1/products?include=${ids}&per_page=10`
+        );
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const spiritPrices = {};
+        data.forEach(item => {
+          const s = spirits.find(s => s.wcId === item.id);
+          if (s) {
+            const minor = item.prices.currency_minor_unit ?? 2;
+            spiritPrices[s.id] = parseInt(item.prices.price, 10) / Math.pow(10, minor);
+          }
         });
+        setPrices({ spirits: spiritPrices });
       } catch {
         setPricesError(true);
       }
@@ -947,12 +933,6 @@ const handleQuantitySelect = (idx) => {
           <p className="process-description">
             Select up to 3 of our curated premium items to be branded with your logo.
           </p>
-          {pricesError && (
-            <p style={{ color: '#c00', fontSize: '13px', marginBottom: '8px' }}>
-              Couldn't load pricing — please refresh.
-            </p>
-          )}
-
           <div className="goods-list">
           {premiumGoods.map((good) => {
             const isSelected = selectedGoods.includes(good.id);
@@ -988,9 +968,7 @@ const handleQuantitySelect = (idx) => {
                 <span className={`radio-circle ${isSelected ? 'selected' : ''}`} />
                 <img src={good.icon} alt={good.name} className={`goods-icon ${isSelected ? 'selected' : ''}`} />
                 <span className={`goods-name ${isSelected ? 'selected' : ''}`}>{good.name}</span>
-                <span className={`goods-price ${isSelected ? 'selected' : ''}`}>
-                  {pricesError ? '—' : prices ? `$${prices.goods[good.id]}` : '…'}
-                </span>
+                <span className={`goods-price ${isSelected ? 'selected' : ''}`}>${good.price}</span>
               </div>
             );
           })}
@@ -1097,7 +1075,8 @@ const handleQuantitySelect = (idx) => {
     const numQty = Number.isInteger(quantity) ? quantity : 24;
 
     const goodsPriceTotal = selectedGoods.reduce((sum, gid) => {
-      return sum + (prices?.goods[gid] ?? 0);
+      const g = premiumGoods.find((p) => p.id === gid);
+      return sum + (g ? g.price : 0);
     }, 0);
     const spiritObj = selectedSpirit ? spirits.find((s) => s.id === selectedSpirit) : null;
     const spiritPrice = spiritObj ? (prices?.spirits[spiritObj.id] ?? 0) : 0;
@@ -1114,7 +1093,7 @@ const handleQuantitySelect = (idx) => {
       inclusions.push({
         name: g?.name || gid,
         detail,
-        price: prices?.goods[gid] ?? null,
+        price: good?.price || 0,
         image,
         icon: good?.icon || null,
         logoDataUrl: cfg.logoDataUrl || null,
@@ -1148,7 +1127,7 @@ const handleQuantitySelect = (idx) => {
             <div className="review-stat">
               <span className="review-stat-label">Price Per Kit:</span>
               <span className="review-stat-num">
-                {pricesError ? 'Error' : prices ? `$${pricePerKit}` : '…'}
+                {selectedSpirit && pricesError ? 'Error' : selectedSpirit && !prices ? '…' : `$${pricePerKit}`}
               </span>
             </div>
           </div>
@@ -1199,7 +1178,7 @@ const handleQuantitySelect = (idx) => {
                       )}
                     </div>
                     <span className="review-inclusion-price">
-                      {pricesError ? '—' : item.price !== null ? `$${item.price}` : '…'}
+                      {item.price !== null ? `$${item.price}` : pricesError ? '—' : '…'}
                     </span>
                   </div>
                 ))}
