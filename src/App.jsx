@@ -85,6 +85,15 @@ const goodsWcUrls = {
   journal: 'https://chainmail.store/product/journal/',
 };
 
+const premiumGoods = [
+  { id: 'tee',     name: 'Tee',     icon: '/icon-tee.svg',     wcSlug: 'tee'     },
+  { id: 'hoodie',  name: 'Hoodie',  icon: '/icon-hoodie.svg',  wcSlug: 'hoodie'  },
+  { id: 'cap',     name: 'Cap',     icon: '/icon-cap.svg',     wcSlug: 'cap'     },
+  { id: 'tote',    name: 'Tote',    icon: '/icon-tote.svg',    wcSlug: 'tote'    },
+  { id: 'bottle',  name: 'Tumbler', icon: '/icon-bottle.svg',  wcSlug: 'tumbler' },
+  { id: 'journal', name: 'Journal', icon: '/icon-journal.svg', wcSlug: 'journal' },
+];
+
 export default function KitBuilder() {
   const [currentStep, setCurrentStep] = useState(-1);
   const [kitQuantityIndex, setKitQuantityIndex] = useState(0);
@@ -110,6 +119,8 @@ export default function KitBuilder() {
   const [showRegulatedForm, setShowRegulatedForm] = useState(false);
   const [regulatedName, setRegulatedName] = useState('');
   const [regulatedEmail, setRegulatedEmail] = useState('');
+  const [prices, setPrices] = useState(null);
+  const [pricesError, setPricesError] = useState(false);
 
   const quantities = [24, 48, 72, 96, '120+'];
 
@@ -155,6 +166,46 @@ export default function KitBuilder() {
       window.history.replaceState({}, '', window.location.pathname);
     }
   }, []);
+
+  useEffect(() => {
+    async function fetchPrices() {
+      try {
+        const base = 'https://chainmail.store/wp-json/wc/store/v1/products';
+        const toPrice = (item) => {
+          const raw = parseInt(item.prices.price, 10);
+          const minor = item.prices.currency_minor_unit ?? 2;
+          return raw / Math.pow(10, minor);
+        };
+        const [spiritResults, goodResults] = await Promise.all([
+          Promise.all(
+            spirits.map(s =>
+              fetch(`${base}/${s.wcId}`)
+                .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+                .then(data => [s.id, toPrice(data)])
+            )
+          ),
+          Promise.all(
+            premiumGoods.map(g =>
+              fetch(`${base}?slug=${g.wcSlug}`)
+                .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+                .then(data => {
+                  if (!data.length) throw new Error();
+                  return [g.id, toPrice(data[0])];
+                })
+            )
+          ),
+        ]);
+        setPrices({
+          spirits: Object.fromEntries(spiritResults),
+          goods: Object.fromEntries(goodResults),
+        });
+      } catch {
+        setPricesError(true);
+      }
+    }
+    fetchPrices();
+  }, []);
+
 const handleQuantitySelect = (idx) => {
     setKitQuantityIndex(idx);
   };
@@ -593,15 +644,6 @@ const handleQuantitySelect = (idx) => {
     );
   };
 
-  const premiumGoods = [
-    { id: 'tee', name: 'Tee', price: 20, icon: '/icon-tee.svg' },
-    { id: 'hoodie', name: 'Hoodie', price: 60, icon: '/icon-hoodie.svg' },
-    { id: 'cap', name: 'Cap', price: 15, icon: '/icon-cap.svg' },
-    { id: 'tote', name: 'Tote', price: 25, icon: '/icon-tote.svg' },
-    { id: 'bottle', name: 'Tumbler', price: 30, icon: '/icon-bottle.svg' },
-    { id: 'journal', name: 'Journal', price: 20, icon: '/icon-journal.svg' },
-  ];
-
   const vectorExts = ['svg', 'ai', 'eps', 'pdf'];
   const rasterExts = ['png', 'jpg', 'jpeg'];
   const allLogoExts = ['svg', 'ai', 'eps', 'pdf', 'png', 'jpg', 'jpeg'];
@@ -905,6 +947,11 @@ const handleQuantitySelect = (idx) => {
           <p className="process-description">
             Select up to 3 of our curated premium items to be branded with your logo.
           </p>
+          {pricesError && (
+            <p style={{ color: '#c00', fontSize: '13px', marginBottom: '8px' }}>
+              Couldn't load pricing — please refresh.
+            </p>
+          )}
 
           <div className="goods-list">
           {premiumGoods.map((good) => {
@@ -941,7 +988,9 @@ const handleQuantitySelect = (idx) => {
                 <span className={`radio-circle ${isSelected ? 'selected' : ''}`} />
                 <img src={good.icon} alt={good.name} className={`goods-icon ${isSelected ? 'selected' : ''}`} />
                 <span className={`goods-name ${isSelected ? 'selected' : ''}`}>{good.name}</span>
-                <span className={`goods-price ${isSelected ? 'selected' : ''}`}>${good.price}</span>
+                <span className={`goods-price ${isSelected ? 'selected' : ''}`}>
+                  {pricesError ? '—' : prices ? `$${prices.goods[good.id]}` : '…'}
+                </span>
               </div>
             );
           })}
@@ -986,6 +1035,11 @@ const handleQuantitySelect = (idx) => {
 
         <h2 className="process-title" style={{ color: 'var(--color-brand)' }}>Add some booze</h2>
         <p className="process-description">Select one premium spirit (750mL)</p>
+        {pricesError && (
+          <p style={{ color: '#c00', fontSize: '13px', marginBottom: '8px' }}>
+            Couldn't load pricing — please refresh.
+          </p>
+        )}
 
         <div className="spirits-list">
           {spirits.map((spirit) => {
@@ -1000,7 +1054,9 @@ const handleQuantitySelect = (idx) => {
                 <span className="spirit-text">
                   <span className="spirit-top-row">
                     <span className={`goods-name ${isSelected ? 'selected' : ''}`}>{spirit.name}</span>
-                    <span className={`goods-price ${isSelected ? 'selected' : ''}`}>${spirit.price}</span>
+                    <span className={`goods-price ${isSelected ? 'selected' : ''}`}>
+                      {pricesError ? '—' : prices ? `$${prices.spirits[spirit.id]}` : '…'}
+                    </span>
                   </span>
                   <span className="goods-subtitle">{spirit.type}</span>
                 </span>
@@ -1041,11 +1097,11 @@ const handleQuantitySelect = (idx) => {
     const numQty = Number.isInteger(quantity) ? quantity : 24;
 
     const goodsPriceTotal = selectedGoods.reduce((sum, gid) => {
-      const g = premiumGoods.find((p) => p.id === gid);
-      return sum + (g ? g.price : 0);
+      return sum + (prices?.goods[gid] ?? 0);
     }, 0);
     const spiritObj = selectedSpirit ? spirits.find((s) => s.id === selectedSpirit) : null;
-    const pricePerKit = goodsPriceTotal + (spiritObj ? spiritObj.price : 0) + (addProduct ? 1 : 0);
+    const spiritPrice = spiritObj ? (prices?.spirits[spiritObj.id] ?? 0) : 0;
+    const pricePerKit = goodsPriceTotal + spiritPrice + (addProduct ? 1 : 0);
 
     const inclusions = [];
     selectedGoods.forEach((gid) => {
@@ -1058,7 +1114,7 @@ const handleQuantitySelect = (idx) => {
       inclusions.push({
         name: g?.name || gid,
         detail,
-        price: good?.price || 0,
+        price: prices?.goods[gid] ?? null,
         image,
         icon: good?.icon || null,
         logoDataUrl: cfg.logoDataUrl || null,
@@ -1068,7 +1124,7 @@ const handleQuantitySelect = (idx) => {
       inclusions.push({
         name: `Spirits – ${spiritObj.name}`,
         detail: spiritObj.type,
-        price: spiritObj.price,
+        price: prices?.spirits[spiritObj.id] ?? null,
         isSpirit: true,
       });
     }
@@ -1091,7 +1147,9 @@ const handleQuantitySelect = (idx) => {
             <div className="review-stat-sep" />
             <div className="review-stat">
               <span className="review-stat-label">Price Per Kit:</span>
-              <span className="review-stat-num">${pricePerKit}</span>
+              <span className="review-stat-num">
+                {pricesError ? 'Error' : prices ? `$${pricePerKit}` : '…'}
+              </span>
             </div>
           </div>
 
@@ -1140,7 +1198,9 @@ const handleQuantitySelect = (idx) => {
                         <span className="review-inclusion-detail">{item.detail}</span>
                       )}
                     </div>
-                    <span className="review-inclusion-price">${item.price}</span>
+                    <span className="review-inclusion-price">
+                      {pricesError ? '—' : item.price !== null ? `$${item.price}` : '…'}
+                    </span>
                   </div>
                 ))}
               </div>

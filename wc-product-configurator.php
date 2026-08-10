@@ -123,19 +123,6 @@ add_action('wp_head', function() {
   display: block;
 }
 
-#tee-conf-logo-overlay {
-  position: absolute;
-  top: 38%;
-  left: 50%;
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-
-#tee-conf-logo-img {
-  max-width: 70px;
-  max-height: 70px;
-  object-fit: contain;
-}
 
 #tee-conf-counter {
   position: absolute;
@@ -848,7 +835,6 @@ jQuery(function($) {
                                 });
                             } catch(_e) {}
                         }
-                        updateLogoOverlay();
                         paint(cur);
                     });
             });
@@ -902,60 +888,6 @@ jQuery(function($) {
                 );
             }
             if (isMob || !isMob) paint(cur);
-        }
-    }
-
-    function updateLogoOverlay() {
-        var fSt = null;
-        for (var _f = 0; _f < steps.length; _f++) {
-            if (steps[_f].kind === 'file') {
-                fSt = steps[_f]; break;
-            }
-        }
-        var file = fSt && fSt.fileObj;
-        var $li = $('#tee-conf-logo-img');
-        if (file) {
-            var rd = new FileReader();
-            rd.onload = function(e) {
-                $li.attr('src', e.target.result);
-            };
-            rd.readAsDataURL(file);
-        } else {
-            $li.attr('src', '');
-        }
-        var posVal = '';
-        $('input[type="radio"]:checked')
-            .not('.variations *')
-            .each(function() {
-                var v = $(this).val()
-                    .toLowerCase();
-                if (v.indexOf('left') !== -1
-                    || v.indexOf('center') !== -1
-                    || v.indexOf('right') !== -1) {
-                    posVal = v;
-                }
-            });
-        var $ov = $('#tee-conf-logo-overlay');
-        if (posVal.indexOf('left') !== -1) {
-            $ov.css({
-                left: 'auto',
-                right: '33%',
-                transform: 'none'
-            });
-        } else if (
-            posVal.indexOf('right') !== -1
-        ) {
-            $ov.css({
-                left: '22%',
-                right: 'auto',
-                transform: 'none'
-            });
-        } else {
-            $ov.css({
-                left: '50%',
-                right: 'auto',
-                transform: 'translateX(-50%)'
-            });
         }
     }
 
@@ -1051,9 +983,6 @@ jQuery(function($) {
             h += '<img id="tee-conf-photo"';
             h += ' src="' + imgSrc + '">';
         }
-        h += '<div id="tee-conf-logo-overlay">';
-        h += '<img id="tee-conf-logo-img" src="">';
-        h += '</div>';
         h += '<div id="tee-conf-counter"></div>';
         h += '<div id="tee-conf-tabs"></div>';
         h += '</div>';
@@ -1286,7 +1215,6 @@ jQuery(function($) {
                 }
             }
             paint(idx);
-            updateLogoOverlay();
         }
     );
 
@@ -1475,7 +1403,42 @@ jQuery(function($) {
                                     'done';
                                 break;
                             }
-                            updateLogoOverlay();
+                            // Push file into
+                            // any other file
+                            // inputs so PEWC
+                            // Dropzone picks
+                            // it up via its
+                            // own pipeline
+                            var _self = this;
+                            $(
+                                'input'
+                                + '[type="file"]'
+                            ).not(
+                                '.variations *'
+                            ).each(function() {
+                                if (
+                                    this ===
+                                    _self
+                                ) return;
+                                try {
+                                    var _pd =
+                                    new DataTransfer();
+                                    _pd.items
+                                    .add(_fc);
+                                    this.files
+                                    = _pd.files;
+                                    this
+                                    .dispatchEvent(
+                                    new Event(
+                                    'change',
+                                    {bubbles:true}
+                                    ));
+                                } catch(_pe) {}
+                            });
+                            console.log(
+                                '[cm-cmu] '
+                                + _fc.name
+                            );
                             paint(cur);
                         }
                         setTimeout(
