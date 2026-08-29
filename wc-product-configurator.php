@@ -849,6 +849,7 @@ jQuery(function($) {
                             } catch(_e) {}
                         }
                         updateLogoOverlay();
+                        buildComposite();
                         paint(cur);
                     });
             });
@@ -970,6 +971,110 @@ jQuery(function($) {
     var _moTimer;
     var _ownChange = false;
     var _keptFile = null;
+    var _compositeSrc = null;
+
+    function buildComposite() {
+        var _ps = $(
+            '#tee-conf-photo'
+        ).attr('src');
+        var _ls = $(
+            '#tee-conf-logo-img'
+        ).attr('src');
+        if (!_ps || !_ls) {
+            _compositeSrc = null;
+            return;
+        }
+        var _cv =
+            document.createElement('canvas');
+        var _cx = _cv.getContext('2d');
+        var _ph = new Image();
+        _ph.onload = function() {
+            var _mw = 800;
+            var _sc = _ph.naturalWidth > _mw
+                ? _mw / _ph.naturalWidth
+                : 1;
+            _cv.width = Math.round(
+                _ph.naturalWidth * _sc
+            );
+            _cv.height = Math.round(
+                _ph.naturalHeight * _sc
+            );
+            _cx.drawImage(
+                _ph, 0, 0,
+                _cv.width, _cv.height
+            );
+            var _lg = new Image();
+            _lg.onload = function() {
+                var _sz = _cv.width * 0.15;
+                var _lw, _lh;
+                if (_lg.naturalWidth
+                    > _lg.naturalHeight) {
+                    _lw = _sz;
+                    _lh = _sz
+                        * _lg.naturalHeight
+                        / _lg.naturalWidth;
+                } else {
+                    _lh = _sz;
+                    _lw = _sz
+                        * _lg.naturalWidth
+                        / _lg.naturalHeight;
+                }
+                var _ly = _cv.height * 0.38;
+                var _lx;
+                var _pv = '';
+                $(
+                    'input[type="radio"]'
+                    + ':checked'
+                ).not('.variations *')
+                .each(function() {
+                    var v = $(this).val()
+                        .toLowerCase();
+                    if (
+                        v.indexOf('left')
+                            !== -1
+                        || v.indexOf('center')
+                            !== -1
+                        || v.indexOf('right')
+                            !== -1
+                    ) _pv = v;
+                });
+                if (
+                    _pv.indexOf('left') !== -1
+                ) {
+                    _lx = _cv.width * 0.67
+                        - _lw;
+                } else if (
+                    _pv.indexOf('right')
+                        !== -1
+                ) {
+                    _lx = _cv.width * 0.22;
+                } else {
+                    _lx =
+                        (_cv.width - _lw) / 2;
+                }
+                _cx.drawImage(
+                    _lg,
+                    _lx, _ly, _lw, _lh
+                );
+                _compositeSrc =
+                    _cv.toDataURL(
+                        'image/jpeg', 0.82
+                    );
+                var _gid = uP.get('gid');
+                if (_gid) {
+                    try {
+                        localStorage.setItem(
+                            'cm_composited_'
+                            + _gid,
+                            _compositeSrc
+                        );
+                    } catch(_ce) {}
+                }
+            };
+            _lg.src = _ls;
+        };
+        _ph.src = _ps;
+    }
     var _mo = new MutationObserver(
         function() {
             if (_ownChange) return;
@@ -1292,6 +1397,7 @@ jQuery(function($) {
             }
             paint(idx);
             updateLogoOverlay();
+            buildComposite();
         }
     );
 
@@ -1323,12 +1429,15 @@ jQuery(function($) {
             }
         );
 
-        // Preview button
+        // Preview button — uses canvas
+        // composite if logo uploaded,
+        // otherwise plain product photo
         $('#tee-conf-preview').on(
             'click', function() {
-                var src = $(
-                    '#tee-conf-photo'
-                ).attr('src');
+                var src = _compositeSrc
+                    || $(
+                        '#tee-conf-photo'
+                    ).attr('src');
                 if (!src) return;
                 var $pv = $('<div>').css({
                     position: 'fixed',
@@ -1341,33 +1450,18 @@ jQuery(function($) {
                     alignItems: 'center',
                     justifyContent: 'center'
                 });
-                var $wrap = $('<div>').css({
-                    position: 'relative',
-                    display: 'inline-block',
-                    maxWidth: '100%',
-                    maxHeight: '90%'
-                });
                 $('<img>').attr('src', src)
                     .css({
                         maxWidth: '100%',
-                        maxHeight: '90vh',
+                        maxHeight: '90%',
+                        objectFit: 'contain',
                         display: 'block'
-                    }).appendTo($wrap);
-                var $li = $(
-                    '#tee-conf-logo-img'
-                );
-                if ($li.attr('src')) {
-                    $(
-                        '#tee-conf-logo-overlay'
-                    ).clone().css({
-                        'pointer-events':
-                            'none'
-                    }).appendTo($wrap);
-                }
-                $wrap.appendTo($pv);
-                $('<button>').text('Close').css({
+                    }).appendTo($pv);
+                $('<button>')
+                    .text('Close').css({
                     position: 'absolute',
-                    top: '16px', right: '16px',
+                    top: '16px',
+                    right: '16px',
                     background: 'none',
                     border: '2px solid #fff',
                     color: '#fff',
@@ -1536,6 +1630,7 @@ jQuery(function($) {
                                 + _fc.name
                             );
                             updateLogoOverlay();
+                            buildComposite();
                             paint(cur);
                         }
                         setTimeout(

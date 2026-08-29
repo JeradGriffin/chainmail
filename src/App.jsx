@@ -158,7 +158,15 @@ export default function KitBuilder() {
             wcCaptured[urlGid] = { image: urlImg || '', detail: urlDetail || '' };
           }
         }
-        console.log('cm-resume: wcCaptured=', JSON.stringify(wcCaptured));
+        // Canvas-composited images (product + logo) override plain product images
+        ['tee','hoodie','cap','tote','bottle','journal'].forEach(id => {
+          const composited = localStorage.getItem('cm_composited_' + id);
+          if (composited) {
+            wcCaptured[id] = { ...(wcCaptured[id] || {}), image: composited };
+            localStorage.removeItem('cm_composited_' + id);
+          }
+        });
+        console.log('cm-resume: wcCaptured=', JSON.stringify(Object.keys(wcCaptured)));
         setGoodConfigurations({ ...baseCfg, ...wcCaptured });
         localStorage.removeItem('chainmail_kit_state');
       } catch (e) {}
