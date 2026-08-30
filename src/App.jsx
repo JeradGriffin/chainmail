@@ -986,7 +986,6 @@ const handleQuantitySelect = (idx) => {
                 <span className={`radio-circle ${isSelected ? 'selected' : ''}`} />
                 <img src={good.icon} alt={good.name} className={`goods-icon ${isSelected ? 'selected' : ''}`} />
                 <span className={`goods-name ${isSelected ? 'selected' : ''}`}>{good.name}</span>
-                <span className={`goods-price ${isSelected ? 'selected' : ''}`}>${good.price}</span>
               </div>
             );
           })}
