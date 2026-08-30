@@ -7,14 +7,14 @@ const BRAND_COLOR = 'var(--color-brand)';
 // TODO: swap all placeholder images for real per-variant product images once assets are ready
 const goodsConfig = {
   'tee-short': {
-    name: 'Short Sleeve Tee',
+    name: 'Short Sleeve',
     image: '/tee-preview.jpg',
     dropdowns: [
       { id: 'color', label: 'COLOR', options: ['Black', 'Dust', 'White'], key: 'color' },
     ],
   },
   'tee-long': {
-    name: 'Long Sleeve Tee',
+    name: 'Long Sleeve',
     image: null,
     dropdowns: [
       { id: 'color', label: 'COLOR', options: ['Black', 'Dust', 'White'], key: 'color' },
