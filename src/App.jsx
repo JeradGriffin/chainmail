@@ -6,12 +6,18 @@ const BRAND_COLOR = 'var(--color-brand)';
 // Per-good dropdown config — TODO: confirm all options with client before launch
 // TODO: swap all placeholder images for real per-variant product images once assets are ready
 const goodsConfig = {
-  tee: {
-    name: 'Tee',
+  'tee-short': {
+    name: 'Short Sleeve Tee',
     image: '/tee-preview.jpg',
     dropdowns: [
-      { id: 'sleeve', label: 'SLEEVE LENGTH', options: ['Long Sleeve', 'Short Sleeve'], key: 'sleeve' },
-      { id: 'color', label: 'COLOR', options: ['Black', 'Tan', 'White'], key: 'color' },
+      { id: 'color', label: 'COLOR', options: ['Black', 'Dust', 'White'], key: 'color' },
+    ],
+  },
+  'tee-long': {
+    name: 'Long Sleeve Tee',
+    image: null,
+    dropdowns: [
+      { id: 'color', label: 'COLOR', options: ['Black', 'Dust', 'White'], key: 'color' },
     ],
   },
   hoodie: {
@@ -77,21 +83,23 @@ const spirits = [
 ];
 
 const goodsWcUrls = {
-  tee:     'https://chainmail.store/product/tee/',
-  hoodie:  'https://chainmail.store/product/hoodie/',
-  cap:     'https://chainmail.store/product/cap/',
-  tote:    'https://chainmail.store/product/tote/',
-  bottle:  'https://chainmail.store/product/tumbler/',
-  journal: 'https://chainmail.store/product/journal/',
+  'tee-short': 'https://chainmail.store/product/tee/',
+  'tee-long':  'https://chainmail.store/product/long-sleeve-tee/',
+  hoodie:      'https://chainmail.store/product/hoodie/',
+  cap:         'https://chainmail.store/product/cap/',
+  tote:        'https://chainmail.store/product/tote/',
+  bottle:      'https://chainmail.store/product/tumbler/',
+  journal:     'https://chainmail.store/product/journal/',
 };
 
 const premiumGoods = [
-  { id: 'tee',     name: 'Tee',     price: 20, icon: '/icon-tee.svg'     },
-  { id: 'hoodie',  name: 'Hoodie',  price: 60, icon: '/icon-hoodie.svg'  },
-  { id: 'cap',     name: 'Cap',     price: 15, icon: '/icon-cap.svg'     },
-  { id: 'tote',    name: 'Tote',    price: 25, icon: '/icon-tote.svg'    },
-  { id: 'bottle',  name: 'Tumbler', price: 30, icon: '/icon-bottle.svg'  },
-  { id: 'journal', name: 'Journal', price: 20, icon: '/icon-journal.svg' },
+  { id: 'tee-short', name: 'Short Sleeve Tee', price: 20, icon: '/icon-tee-short.svg' },
+  { id: 'tee-long',  name: 'Long Sleeve Tee',  price: 20, icon: '/icon-tee-long.svg'  },
+  { id: 'hoodie',    name: 'Hoodie',            price: 60, icon: '/icon-hoodie.svg'   },
+  { id: 'cap',       name: 'Cap',               price: 15, icon: '/icon-cap.svg'      },
+  { id: 'tote',      name: 'Tote',              price: 25, icon: '/icon-tote.svg'     },
+  { id: 'bottle',    name: 'Tumbler',           price: 30, icon: '/icon-bottle.svg'   },
+  { id: 'journal',   name: 'Journal',           price: 20, icon: '/icon-journal.svg'  },
 ];
 
 export default function KitBuilder() {
@@ -143,7 +151,7 @@ export default function KitBuilder() {
         }
         const baseCfg = saved.goodConfigurations || {};
         const wcCaptured = {};
-        ['tee','hoodie','cap','tote','bottle','journal'].forEach(id => {
+        ['tee-short','tee-long','hoodie','cap','tote','bottle','journal'].forEach(id => {
           const raw = localStorage.getItem('cm_good_' + id);
           if (raw) { try { wcCaptured[id] = JSON.parse(raw); } catch(e) {} }
           localStorage.removeItem('cm_good_' + id);
@@ -159,7 +167,7 @@ export default function KitBuilder() {
           }
         }
         // Canvas-composited images (product + logo) override plain product images
-        ['tee','hoodie','cap','tote','bottle','journal'].forEach(id => {
+        ['tee-short','tee-long','hoodie','cap','tote','bottle','journal'].forEach(id => {
           const composited = localStorage.getItem('cm_composited_' + id);
           if (composited) {
             wcCaptured[id] = { ...(wcCaptured[id] || {}), image: composited };
@@ -185,14 +193,16 @@ export default function KitBuilder() {
         if (!res.ok) throw new Error();
         const data = await res.json();
         const spiritPrices = {};
+        const spiritImages = {};
         data.forEach(item => {
           const s = spirits.find(s => s.wcId === item.id);
           if (s) {
             const minor = item.prices.currency_minor_unit ?? 2;
             spiritPrices[s.id] = parseInt(item.prices.price, 10) / Math.pow(10, minor);
+            if (item.images?.[0]?.src) spiritImages[s.id] = item.images[0].src;
           }
         });
-        setPrices({ spirits: spiritPrices });
+        setPrices({ spirits: spiritPrices, spiritImages });
       } catch {
         setPricesError(true);
       }
@@ -1112,6 +1122,7 @@ const handleQuantitySelect = (idx) => {
         name: `Spirits – ${spiritObj.name}`,
         detail: spiritObj.type,
         price: prices?.spirits[spiritObj.id] ?? null,
+        image: prices?.spiritImages?.[spiritObj.id] || null,
         isSpirit: true,
       });
     }
