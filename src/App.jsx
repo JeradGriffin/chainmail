@@ -93,7 +93,7 @@ const goodsWcUrls = {
 };
 
 const premiumGoods = [
-  { id: 'tee-short', name: 'Short Sleeve', price: 20, icon: '/icon-tee-short.svg' },
+  { id: 'tee-short', name: 'Short Sleeve', price: 20, icon: '/icon-tee.svg' },
   { id: 'tee-long',  name: 'Long Sleeve',  price: 20, icon: '/icon-tee-long.svg'  },
   { id: 'hoodie',    name: 'Hoodie',            price: 60, icon: '/icon-hoodie.svg'   },
   { id: 'cap',       name: 'Cap',               price: 15, icon: '/icon-cap.svg'      },
@@ -949,7 +949,7 @@ const handleQuantitySelect = (idx) => {
 
           <h2 className="process-title" style={{ color: 'var(--color-brand)' }}>Add premium goods</h2>
           <p className="process-description">
-            Select up to 3 of our curated premium items to be branded with your logo.
+            Each kit includes space to hold one of every item customized with your logo. 
           </p>
           <div className="goods-list">
           {premiumGoods.map((good) => {
