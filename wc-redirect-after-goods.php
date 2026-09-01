@@ -115,11 +115,19 @@ jQuery(function($) {
     // form submit, ?kit=1 stripped — rely on sessionStorage
     if (!isKit && isKitPage && msg) { goResume(); return; }
     document.documentElement.style.visibility = 'visible';
-    if (!document.querySelector('.cm-back-link')) {
+    var _hasBack = false;
+    var _als = document.querySelectorAll('a');
+    for (var _ai = 0; _ai < _als.length; _ai++) {
+        if (_als[_ai].textContent.trim()
+            === 'Back to Kit Builder') {
+            _hasBack = true; break;
+        }
+    }
+    if (!_hasBack) {
         var backLink = document.createElement('a');
         backLink.href = backUrl;
-        backLink.textContent = 'Back to Kit Builder';
-        backLink.className = 'cm-back-link';
+        backLink.textContent =
+            'Back to Kit Builder';
         backLink.style.cssText =
             'display:block;color:#6A449B;'
             + 'font-size:14px;font-weight:600;'
