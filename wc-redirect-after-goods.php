@@ -115,38 +115,47 @@ jQuery(function($) {
     // form submit, ?kit=1 stripped — rely on sessionStorage
     if (!isKit && isKitPage && msg) { goResume(); return; }
     document.documentElement.style.visibility = 'visible';
-    var _hasBack = false;
-    var _als = document.querySelectorAll('a');
-    for (var _ai = 0; _ai < _als.length; _ai++) {
-        if (_als[_ai].textContent.trim()
-            === 'Back to Kit Builder') {
-            _hasBack = true; break;
-        }
-    }
-    if (!_hasBack) {
-        var backLink = document.createElement('a');
-        backLink.href = backUrl;
-        backLink.textContent =
-            'Back to Kit Builder';
-        backLink.style.cssText =
-            'display:block;color:#6A449B;'
-            + 'font-size:14px;font-weight:600;'
-            + 'text-decoration:none;'
-            + 'margin-bottom:16px';
-        var target =
-            document.querySelector(
-                '.summary.entry-summary'
-            )
-            || document.querySelector(
-                '.product_title'
-            )
-            || document.querySelector(
-                'form.cart'
-            );
-        if (target) target.insertBefore(
-            backLink, target.firstChild
+    var backLink = document.createElement('a');
+    backLink.href = backUrl;
+    backLink.textContent =
+        'Back to Kit Builder';
+    backLink.style.cssText =
+        'display:block;color:#6A449B;'
+        + 'font-size:14px;font-weight:600;'
+        + 'text-decoration:none;'
+        + 'margin-bottom:16px';
+    var target =
+        document.querySelector(
+            '.summary.entry-summary'
+        )
+        || document.querySelector(
+            '.product_title'
+        )
+        || document.querySelector(
+            'form.cart'
         );
-    }
+    if (target) target.insertBefore(
+        backLink, target.firstChild
+    );
+    // Remove any duplicate back links
+    // injected by other snippets, after
+    // all ready callbacks have run
+    setTimeout(function() {
+        var _bls = [];
+        $('a').each(function() {
+            if ($(this).text().trim()
+                === 'Back to Kit Builder') {
+                _bls.push(this);
+            }
+        });
+        for (
+            var _bi = 1;
+            _bi < _bls.length;
+            _bi++
+        ) {
+            $(_bls[_bi]).remove();
+        }
+    }, 0);
     var qty = parseInt(params.get('quantity'), 10);
     if (qty > 0) {
         var qin = document.querySelector('input.qty');
