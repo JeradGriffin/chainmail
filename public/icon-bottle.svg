@@ -1,29 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_3" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 56 56">
-  <!-- Generator: Adobe Illustrator 30.7.0, SVG Export Plug-In . SVG Version: 2.1.4 Build 114)  -->
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47.34 51.28">
   <defs>
     <style>
-      .st0 {
+      .cls-1 {
         stroke-miterlimit: 10;
       }
 
-      .st0, .st1 {
+      .cls-1, .cls-2 {
         fill: none;
         stroke: #000;
         stroke-linecap: round;
         stroke-width: 3.5px;
       }
 
-      .st1 {
+      .cls-2 {
         stroke-linejoin: round;
       }
     </style>
   </defs>
-  <line class="st0" x1="28" y1="5.83" x2="28" y2="12.77"/>
-  <ellipse class="st0" cx="28" cy="14.04" rx="9.63" ry="3.21"/>
-  <path class="st1" d="M28,50.17h-6.34"/>
-  <path class="st1" d="M37.63,13.85"/>
-  <path class="st1" d="M28,50.17h6.34"/>
-  <line class="st1" x1="21.66" y1="49.72" x2="18.47" y2="14.48"/>
-  <line class="st1" x1="34.34" y1="49.72" x2="37.63" y2="14.04"/>
+  <line class="cls-1" x1="23.5" y1="3.47" x2="23.5" y2="10.41"/>
+  <ellipse class="cls-1" cx="23.5" cy="11.68" rx="9.63" ry="3.21"/>
+  <path class="cls-2" d="M23.5,47.81h-6.34"/>
+  <path class="cls-2" d="M23.5,47.81h6.34"/>
+  <line class="cls-2" x1="17.16" y1="47.36" x2="13.97" y2="12.12"/>
+  <line class="cls-2" x1="29.84" y1="47.36" x2="33.13" y2="11.68"/>
 </svg>
