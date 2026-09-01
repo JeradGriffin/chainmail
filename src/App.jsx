@@ -93,7 +93,7 @@ const goodsWcUrls = {
 };
 
 const premiumGoods = [
-  { id: 'tee-short', name: 'Short Sleeve', price: 20, icon: '/icon-tee.svg' },
+  { id: 'tee-short', name: 'Short Sleeve', price: 20, icon: '/icon-tee-short.svg' },
   { id: 'tee-long',  name: 'Long Sleeve',  price: 20, icon: '/icon-tee-long.svg'  },
   { id: 'hoodie',    name: 'Hoodie',            price: 60, icon: '/icon-hoodie.svg'   },
   { id: 'cap',       name: 'Cap',               price: 15, icon: '/icon-cap.svg'      },

@@ -1,27 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47.34 51.28">
-  <defs>
-    <style>
-      .cls-1 {
-        stroke-miterlimit: 10;
-      }
-
-      .cls-1, .cls-2 {
-        fill: none;
-        stroke: #000;
-        stroke-linecap: round;
-        stroke-width: 3.5px;
-      }
-
-      .cls-2 {
-        stroke-linejoin: round;
-      }
-    </style>
-  </defs>
-  <line class="cls-1" x1="23.5" y1="3.47" x2="23.5" y2="10.41"/>
-  <ellipse class="cls-1" cx="23.5" cy="11.68" rx="9.63" ry="3.21"/>
-  <path class="cls-2" d="M23.5,47.81h-6.34"/>
-  <path class="cls-2" d="M23.5,47.81h6.34"/>
-  <line class="cls-2" x1="17.16" y1="47.36" x2="13.97" y2="12.12"/>
-  <line class="cls-2" x1="29.84" y1="47.36" x2="33.13" y2="11.68"/>
+<svg width="23" height="48" viewBox="0 0 23 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.38 1.75V8.69" stroke="black" stroke-width="3.5" stroke-miterlimit="10" stroke-linecap="round"/>
+<path d="M11.38 13.17C16.6985 13.17 21.01 11.7328 21.01 9.96C21.01 8.18717 16.6985 6.75 11.38 6.75C6.0615 6.75 1.75 8.18717 1.75 9.96C1.75 11.7328 6.0615 13.17 11.38 13.17Z" stroke="black" stroke-width="3.5" stroke-miterlimit="10" stroke-linecap="round"/>
+<path d="M11.38 46.0898H5.03998" stroke="black" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M11.38 46.0898H17.72" stroke="black" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M5.03998 45.6384L1.84998 10.3984" stroke="black" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M17.72 45.639L21.01 9.95898" stroke="black" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
