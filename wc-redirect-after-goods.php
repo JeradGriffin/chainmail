@@ -115,17 +115,30 @@ jQuery(function($) {
     // form submit, ?kit=1 stripped — rely on sessionStorage
     if (!isKit && isKitPage && msg) { goResume(); return; }
     document.documentElement.style.visibility = 'visible';
-    console.log('chainmail: goods running on ' + window.location.pathname);
-    var backLink = document.createElement('a');
-    backLink.href = backUrl;
-    backLink.textContent = 'Back to Kit Builder';
-    backLink.style.cssText = 'display:block;color:#6A449B;' +
-        'font-size:14px;font-weight:600;' +
-        'text-decoration:none;margin-bottom:16px';
-    var target = document.querySelector('.summary.entry-summary')
-        || document.querySelector('.product_title')
-        || document.querySelector('form.cart');
-    if (target) target.insertBefore(backLink, target.firstChild);
+    if (!document.querySelector('.cm-back-link')) {
+        var backLink = document.createElement('a');
+        backLink.href = backUrl;
+        backLink.textContent = 'Back to Kit Builder';
+        backLink.className = 'cm-back-link';
+        backLink.style.cssText =
+            'display:block;color:#6A449B;'
+            + 'font-size:14px;font-weight:600;'
+            + 'text-decoration:none;'
+            + 'margin-bottom:16px';
+        var target =
+            document.querySelector(
+                '.summary.entry-summary'
+            )
+            || document.querySelector(
+                '.product_title'
+            )
+            || document.querySelector(
+                'form.cart'
+            );
+        if (target) target.insertBefore(
+            backLink, target.firstChild
+        );
+    }
     var qty = parseInt(params.get('quantity'), 10);
     if (qty > 0) {
         var qin = document.querySelector('input.qty');
