@@ -1449,4 +1449,51 @@ input[type="range"]::-moz-range-track {
     font-size: 12px;
     margin-top: 4px;
   }
+
+  /* Welcome screen */
+  .welcome-content {
+    padding: 12px 28px 16px;
+    gap: 12px !important;
+    justify-content: flex-start;
+  }
+
+  .welcome-body h1 {
+    font-size: 24px;
+    line-height: 30px;
+  }
+
+  .welcome-body {
+    font-size: 15px;
+  }
+
+  .welcome-body p:last-of-type {
+    margin-top: 8px;
+  }
+
+  .welcome-qty-heading {
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  .qty-selector {
+    padding: 4px 0;
+    margin-bottom: 0 !important;
+  }
+
+  .start-kit-btn {
+    font-size: 22px;
+    line-height: 32px;
+    padding: 6px 16px;
+  }
+
+  .large-order-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 14px;
+    line-height: 18px;
+  }
+
+  .back-btn {
+    margin-top: 12px !important;
+  }
 }
