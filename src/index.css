@@ -1398,3 +1398,26 @@ input[type="range"]::-moz-range-track {
 .review-footer-italic {
   font-style: italic;
 }
+
+/* ===================== */
+/* SE / small screen     */
+/* ===================== */
+@media (max-width: 390px) {
+  .process-divider {
+    display: none;
+  }
+
+  .bottom-skip {
+    padding-top: 8px;
+  }
+
+  .continue-btn {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .bottom-bar-buttons {
+    padding-top: 10px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+}
