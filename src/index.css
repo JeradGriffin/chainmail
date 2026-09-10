@@ -465,12 +465,9 @@ input[type="range"]::-moz-range-track {
 
 /* Bottom area (fixed) */
 .bottom-area {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
   width: 100%;
   max-width: 430px;
+  flex-shrink: 0;
 }
 
 .bottom-skip {
