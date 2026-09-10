@@ -1455,8 +1455,8 @@ input[type="range"]::-moz-range-track {
 @media (max-width: 375px) {
   /* Welcome screen — SE only */
   .welcome-content {
-    padding: 12px 28px 16px;
-    gap: 12px !important;
+    padding: 18px 28px 20px;
+    gap: 18px !important;
     justify-content: flex-start;
   }
 
@@ -1470,7 +1470,7 @@ input[type="range"]::-moz-range-track {
   }
 
   .welcome-body p:last-of-type {
-    margin-top: 8px;
+    margin-top: 6px;
   }
 
   .welcome-qty-heading {
@@ -1497,6 +1497,6 @@ input[type="range"]::-moz-range-track {
   }
 
   .back-btn {
-    margin-top: 12px !important;
+    margin-top: auto !important;
   }
 }
