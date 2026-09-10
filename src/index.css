@@ -575,11 +575,15 @@ input[type="range"]::-moz-range-track {
   margin-top: 10px;
 }
 
+.process-option strong {
+  font-size: clamp(18px, 5.6vw, 24px) !important;
+}
+
 .shipping-template-band {
   background: var(--color-surface-alt);
   margin-left: -28px;
   margin-right: -28px;
-  padding: 16px 28px;
+  padding: clamp(8px, 3.7vw, 16px) 28px;
 }
 
 .shipping-template-band-inner {
