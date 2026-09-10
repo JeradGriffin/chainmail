@@ -1417,4 +1417,36 @@ input[type="range"]::-moz-range-track {
     padding-top: 10px;
     padding-bottom: calc(10px + env(safe-area-inset-bottom));
   }
+
+  .shipping-upload-band {
+    padding: 8px 28px 8px;
+  }
+
+  .shipping-template-band {
+    padding: 8px 28px;
+  }
+
+  .upload-dropzone {
+    padding: 8px 16px;
+    gap: 2px;
+  }
+
+  .upload-dropzone svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .upload-dropzone-title {
+    font-size: 15px;
+    margin-top: 0;
+  }
+
+  .upload-dropzone-formats {
+    font-size: 13px;
+  }
+
+  .upload-hint {
+    font-size: 12px;
+    margin-top: 4px;
+  }
 }
