@@ -271,7 +271,10 @@ input[type="range"]::-moz-range-track {
 
 /* Step indicator */
 .step-indicator-wrap {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fff;
   margin-left: -28px;
   margin-right: -28px;
   /* margin-bottom: 16px; */
@@ -286,7 +289,9 @@ input[type="range"]::-moz-range-track {
 /* Content scroll area — clears the fixed bottom bar including safe area inset on iPhone */
 .content-area {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   /* padding: 24px 28px calc(130px + env(safe-area-inset-bottom)); */
   padding: 0 24px;
   display: flex;
