@@ -370,7 +370,7 @@ input[type="range"]::-moz-range-track {
   align-items: flex-start;
   gap: 12px;
   cursor: pointer;
-  padding: 12px 0;
+  padding: 8px 0;
   margin-left: 36px;
 }
 
