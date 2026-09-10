@@ -1399,7 +1399,7 @@ input[type="range"]::-moz-range-track {
 /* ===================== */
 /* SE / small screen     */
 /* ===================== */
-@media (max-width: 390px) {
+@media (max-width: 375px) {
   .process-divider {
     display: none;
   }
@@ -1450,7 +1450,10 @@ input[type="range"]::-moz-range-track {
     margin-top: 4px;
   }
 
-  /* Welcome screen */
+}
+
+@media (max-width: 375px) {
+  /* Welcome screen — SE only */
   .welcome-content {
     padding: 12px 28px 16px;
     gap: 12px !important;
