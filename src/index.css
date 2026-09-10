@@ -333,6 +333,10 @@ input[type="range"]::-moz-range-track {
   margin-top: 6px;
 }
 
+.shipping-list-option {
+  margin-bottom: 16px;
+}
+
 .radio-circle {
   width: 24px;
   height: 24px;
@@ -1416,6 +1420,10 @@ input[type="range"]::-moz-range-track {
   .bottom-bar-buttons {
     padding-top: 10px;
     padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+
+  .shipping-list-option {
+    margin-bottom: 0;
   }
 
   .shipping-upload-band {

@@ -562,7 +562,7 @@ const handleQuantitySelect = (idx) => {
           </p>
 
           {/* Ship to my list */}
-          <label className="process-option" style={{ marginBottom: '16px' }} onClick={() => setShippingOption('list')}>
+          <label className="process-option shipping-list-option" onClick={() => setShippingOption('list')}>
             <span className={`radio-circle ${shippingOption === 'list' ? 'selected' : ''}`} />
             <span className="option-text">
               <strong style={{ fontSize: '24px', color: shippingOption === 'list' ? 'var(--color-brand)' : '#000' }}>Ship to my list</strong>
